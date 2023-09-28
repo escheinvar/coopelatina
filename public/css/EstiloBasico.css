@@ -1,0 +1,18 @@
+/*nav{background-color: white; ;width:100%; height:120px; position: fixed; z-index:100;}*/
+nav{background-color: white; ;width:100%; height:120px; }
+            
+.recuadro {border:3px rgb(0, 0, 120) solid; background-color:whitesmoke; margin:0.1rem;  padding:0.7rem; border-radius:0rem; display:inline;}
+select.producto {padding:0.6rem; border-radius:1rem; font-size:1.5rem; }
+select.producto option {font-size:1.3rem;}
+input.producto{width:80px; padding:0.3rem;font-size:2rem;text-align:center;font-weight: bold; border:1px solid gray;}
+input.producto:disabled{width:80px; padding:0.3rem;font-size:2rem;text-align:center;  border:dashed 1px rgb(218, 215, 215); color:white;  background-color: whitesmoke;}
+input.producto:read-only{background-color: whitesmoke;border:solid 1px rgb(218, 215, 215);}
+input.producto::placeholder{font-size:1rem; color:gray;text-align:center;font-weight: normal;}
+.CantSubtotal{color:rgb(0, 0, 120); border-radius:5rem; border:1px solid white; font-weight:bold; padding:0.4rem; height:24px;  vertical-align:top; }
+button.agregar{padding:0.3rem; vertical-align:baseline; float: right;border-radius: 3rem;    background-color:green;color:white;margin-left:1rem;width:90px;height:50px;}
+error {color:red; font-size: 1rem; }
+.error {border:1px solid red;}
+ch{font-size: 0.8rem;}
+.nolink{text-decoration:none;}
+
+.center {  margin: auto; }
