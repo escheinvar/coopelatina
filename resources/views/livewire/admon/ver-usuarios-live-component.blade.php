@@ -3,12 +3,12 @@
     <!-- --------------------------------------------- NUEVO USUARIO --------------------------------------------- -->
     <!-- --------------------------------------------------------------------------------------------------------- -->
     <div>
-        <div class="row col-md-16">
+        <!--div class="row"-->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NuevoUsr" style="float: right; wire:ignore.self" wire:click="defineType('nuevo','0')">
                 <i class="fas fa-plus"></i> 
                 Nuevo cooperativista
             </button>
-        </div>
+        <!--/div-->
         
 
         <!-- --------------------------------------------------------------------------------------------------------- -->
@@ -43,7 +43,7 @@
                         
                         <th wire:click="orden('tel')" style="cursor:pointer;" scope="col">Teléfono </th>
                         <th wire:click="orden('mail')" style="cursor:pointer;" scope="col">Correo</th>
-                        <th wire:click="orden('datemembre')" style="cursor:pointer;" scope="col">Membresia<br>Año/mes/dia</th>
+                        <th wire:click="orden('membrefin')" style="cursor:pointer;" scope="col">Fin de Membresia<br>Año/mes/dia</th>
                         <th wire:click="orden('dateregistro')" style="cursor:pointer;" scope="col">Antigüedad<br>Año/mes/dia</th>
                         <th wire:click="orden('priv')" style="cursor:pointer;" scope="col">Privs</th>
                         <th wire:click="orden('estatus')" style="cursor:pointer;" scope="col">Estatus</th>
@@ -63,7 +63,7 @@
                             
                             <td> <!-- ---------------------------  Membresía ------------------------- -->
                                 <?php 
-                                    $reg = new DateTime($i->datemembre);
+                                    $reg = new DateTime($i->membrefin);
                                     $hoy= new DateTime(date("Y-m-d"));
                                     $dif1 = $hoy ->diff($reg);
                                 ?>
@@ -231,7 +231,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <div class="row" style="padding: 1rem;  ">
+                    <div class="row" style="padding: 1rem;">
                         <button type="reset"  wire:click="CancelSubmit" class="btn btn-default"  data-dismiss="modal"><i class="fa fa-close"></i> Cancelar</button>
                         
                         @if($text1=='Agregar')

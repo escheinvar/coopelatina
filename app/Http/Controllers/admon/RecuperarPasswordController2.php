@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admon;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\TockenRecuperaPass;
+use App\Models\TockenRecuperaPassModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,7 +12,7 @@ class RecuperarPasswordController2 extends Controller
 {
     public function index(string $tocken, string $usr){
         ### Busca tocken y correo y que esté activo y vigente
-        $ganones=TockenRecuperaPass::where('act','1')
+        $ganones=TockenRecuperaPassModel::where('act','1')
             ->where('usr',$usr)
             ->where('tocken',$tocken)
             ->first();
@@ -36,7 +36,7 @@ class RecuperarPasswordController2 extends Controller
         $request->validate([
             'pass' => 'required|confirmed|min:1',
         ]);
-        $ganones=TockenRecuperaPass::where('act','1')
+        $ganones=TockenRecuperaPassModel::where('act','1')
             ->where('usr',$usr)
             ->where('tocken',$tocken)
             ->where('caduca','>',now())
@@ -50,7 +50,7 @@ class RecuperarPasswordController2 extends Controller
             ]);
 
             ### Inactiva todos los tockens del usuario
-            TockenRecuperaPass::where('usr',$usr)->where('act','1')->update(['act'=>'0']);
+            TockenRecuperaPassModel::where('usr',$usr)->where('act','1')->update(['act'=>'0']);
 
             ### Envía correo electrónico de confirmación
             #Mail::to($usuario->mail)->send(new RecuperarContrasena($datos) );

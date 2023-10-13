@@ -4,15 +4,18 @@
 --\c dgit_solicitudes;
 
 
-
+/*
 INSERT INTO users
-(id, nombre, ap_pat, ap_mat, usr,    activo, estatus, priv,   tel,        mail,                 direccion,                 dateregistro,         datemembre,          password) VALUES
-('1','Admin','admin','admin','admin','1',    'act',   'root','5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2020-07-01 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i');
-
+(id,  nombre,   ap_pat,    ap_mat,      usr,       activo, estatus,  priv,    tel,        mail,                 direccion,                 dateregistro,         membrefin,          password) VALUES
+('2','Enrique','Scheinvar','Gottdiener','enrique', '1',    'act',    'root', '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2024-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
+('3','Niza',   'Gámez',    'Tamariz',   'niza',    '1',    'act',    'teso', '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2024-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
+('4','Camilo', 'Scheinvar','Gamez',     'camilo',  '1',    'act',    'admon','5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2024-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
+('5','Luciana','Scheinvar','Gamez',     'luciana', '1',    'reg',    'usr',  '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2023-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
+('6','Chia',   'Scheinvar','Gottdiener','chia',    '1',    'pru',    'usr',  '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2023-01-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i');
+*/
 
 INSERT INTO productos
 (id,activo,gpo,nombre,variantes,presentacion,entrega,venta,existencias,costo,precioact,precioreg,preciopub,proveedor,categoria,responsable,descripcion,img,orden,created_at,updated_at) VALUES
-('1','1','Verduras','Jitomate saladet',NULL,'1 kg','no','si','0','25.0','25.0','25.0','25.0','Jitomate','FrutasVerduras','Soledad',NULL,NULL,'9999',NULL,NULL),
 ('2','0','Verduras','Limon persa',NULL,'1 kg','no','no','0','12.0','12.0','15.0','25.0','Agris','FrutasVerduras','Paola',NULL,NULL,'9999',NULL,NULL),
 ('3','1','Verduras','Aguacate',NULL,'1 kg','com1','si','0','35.0','35.0','40.0','40.0','BarzonAguacate','FrutasVerduras','Guadalupe','Aguacate criollo producido de manera agroecológico por familias de la organización El Barzón.','Aguacate_Barzon.jpeg','1',NULL,NULL),
 ('4','0','Alfajor','Alfajores',NULL,'8 pz','com1','no','0','95.0','95.0','110.0','115.0','Maria Chimal','CafeteriaAbarrotes','Maria',NULL,'Alfajor_Maria.jpeg','2',NULL,NULL),

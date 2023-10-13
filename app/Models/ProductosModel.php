@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class productosModel extends Model
+class ProductosModel extends Model
 {
     protected $conection='mysql';
     protected $table = 'productos';
@@ -24,6 +24,7 @@ class productosModel extends Model
         'precioact',
         'precioreg',
         'preciopub',
+        'cantmin',
         'proveedor',
         'categoria',
         'responsable',
@@ -45,6 +46,7 @@ class productosModel extends Model
         'precioact',
         'precioreg',
         'preciopub',
+        'cantmin',
         'proveedor',
         'categoria',
         'responsable',

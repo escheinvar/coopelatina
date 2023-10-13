@@ -29,7 +29,7 @@ class User extends Authenticatable
         'mail',
         'direccion',
         'dateregistro',
-        'datemembre',
+        'membrefin',
         'password',
     ];
 

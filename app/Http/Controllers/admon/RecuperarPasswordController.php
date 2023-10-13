@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Mail\RecuperarContrasena;
 use App\Http\Controllers\Controller;
-use App\Models\TockenRecuperaPass;
+use App\Models\TockenRecuperaPassModel;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Mail\Mailable;
 
@@ -52,13 +52,13 @@ class RecuperarPasswordController extends Controller
             $date2=date("Y-m-d G:i:s", strtotime('+20 minutes'));
             
             #Si ya existe un registro previo, y vigente lo inactiva
-            TockenRecuperaPass::where('usr',$usuario->usr)
+            TockenRecuperaPassModel::where('usr',$usuario->usr)
                 #->where('caduca','>',now())
                 ->Where('act','1')
                 ->update(['act'=>'0']);
 
             #Crea el nuevo registro
-            TockenRecuperaPass::create([
+            TockenRecuperaPassModel::create([
                 'usr' => $usuario->usr,
                 'tocken' => $tocken, 
                 'creacion' => $date,
@@ -66,7 +66,7 @@ class RecuperarPasswordController extends Controller
                 'act'=>'1',
             ]);     
             
-            $dir=$request->root()."/".$tocken."/".$usuario->usr;
+            $dir=$request->root()."/recupera_pass/".$tocken."/".$usuario->usr;
             #Envía correo
             $datos=['texto'=>$testado,'tocken'=>$tocken,'dir'=>$dir,'vence'=>$date2];
             Mail::to($usuario->mail)->send(new RecuperarContrasena($datos) );

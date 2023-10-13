@@ -12,10 +12,11 @@
         
 
         <!--- ----------------------- Boostrap ----------------------- -->
-        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     
         <!--- ----------------------- w3 fontawesome escheinvar----------------------- -->
         <script src='https://kit.fontawesome.com/c94ac3fa5d.js' crossorigin='anonymous'></script>
@@ -27,38 +28,268 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/EstiloBasico.css') }}" />
         <script type="text/javascript" src="{{ asset('/js/MyJs.js') }}"></script>
 
+
         <style>
-           
+           *{font-size: 20px;}
         </style>    
         
         @livewireStyles
     </head>
-    <body>
-        <header>
-            <nav>
-                Hola {{session('usr_name')}} | 
-                Estatus: {{session('usr_estatus')}} | 
-                Privilegios: {{session('usr_privs')}} | 
-                Antigüedad: {{session('usr_membre')}}
-                <br>
-                Pizarrón | <a href="/prepedido">Pedidos</a> | Ventas | caja | <a href="/usuarios">Usuarios</a> | Entrega | Logística | <a href="/login">Salir</a>
-                <br>
-                @yield('menu')
+
+
+
+        <header>  
+            <div class="cintillo">
+                <a href="/"><img src="{{ asset('/logo.png') }}" style="width:30px;"></a> &nbsp; 
+                Hola {{auth()->user()['nombre']}} | 
+                Estatus: {{auth()->user()['estatus']}} | 
+                Privilegios: {{auth()->user()['priv']}} | 
+                @if(auth()->user()->estatus == 'pru' and session('vigencia') =='1' )
+                    Estás en período de prueba. Te quedan {{session('FinMembre')}} días
+                @elseif(auth()->user()->estatus == 'pru' and session('vigencia') =='0' )
+                    <span class="cintillo" style="background-color:red; color:black;">Tu período de prueba ya venció</span>
+                @else
+                    @if(session('vigencia') == '0')
+                        <span class="cintillo" style="background-color:red; color:black;">Tu anualidad venció hace {{session('FinMembre')}} días </span>
+                            
+                    
+
+                    @elseif(session('FinMembre') <= '45')
+                            <span class="cintillo" style="color:orange;">Tu anualidad está por vencer. Le quedan {{session('FinMembre')}} días</span>
+                    @else
+                        <?php 
+                            $fecha=new DateTime(auth()->user()->membrefin);
+                            $diaMes=date("d",strtotime(auth()->user()->membrefin));
+                            $Mes=session('arrayMeses')[date("m",strtotime(auth()->user()->membrefin))];
+                            $Anio=date("y",strtotime(auth()->user()->membrefin));
+                        ?>
+                        Anualidad vigente (vence el {{$diaMes}} de {{$Mes}} del {{$Anio}})
+                    @endif
+                @endif
+            </div>
+         
+        
+        
+            <!-- ----------------------------------------------------------Inicia Barra Menú Superior -------------------------------------------- -->
+            <!-- ----------------------------------------------------------Inicia Barra Menú Superior -------------------------------------------- -->
+            <!-- ----------------------------------------------------------Inicia Barra Menú Superior -------------------------------------------- -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">@yield('title')</a>
+                
+                <!-- ------------ Icono para chico ----------------- -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        
+                        
+                        @if( in_array(auth()->user()['priv']  ,  ['root','admon','teso']) )
+                            <!---------------------------------------------- INICIA MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="/usuarios">Pedidos</a> <!--span>&#9773;  &#9776;</span-->
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Caja
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Caja</a>
+                                    <a class="dropdown-item" href="#">Pagar prepedidos</a>
+                                    <a class="dropdown-item" href="#">Trabajos</a>
+                                    <a class="dropdown-item" href="#">Corte de caja</a>
+                                    <a class="dropdown-item" href="#">Caja activa</a>
+                                    <a class="dropdown-item" href="#">Cajas históricas</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/usuarios">Usuarios</a> <!--span>&#9773;  &#9776;</span-->
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Logística
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Pago prepedidos</a>
+                                    <a class="dropdown-item disabled" href="#">Pizarrón</a>
+                                    <a class="dropdown-item disabled href="#">Inventario Tienda</a>
+                                    <a class="dropdown-item disabled" href="#">Catálogo productos</a>
+                                    <a class="dropdown-item disabled" href="#">Catálogo Proveedores</a>
+
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item disabled" href="#">Something else here</a>
+                                </div>
+                            </li>
+                            <!---------------------------------------------- FIN MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
+                        @endif
+                    </ul>
+                </div>
+                
+                <!---------------------------------------------- INICIA MENÚ SUPERIOR IZQUIERDA --------------------------- -->
+                <div style="float: right;">
+                    <ul class="navbar-nav mr-auto" style="display:inline-block;">
+
+                        <li class="nav-item"  style="display:inline-block;">
+                            <div class="iconito">
+                                <a class="nav-link" href="/inicio/{{auth()->user()->usr}}"> <i class="fas fa-home"></i></a>
+                            </div>  
+                        </li>
+                        
+                        <li class="nav-item" style="display:inline-block;">
+                            <div class="iconito">
+                                <a class="nav-link" href="/prepedido"> <i class="bi bi-cart4"></i></a>
+                            </div>  
+                        </li>
+
+                        
+                        <li class="nav-item" style="display:inline-block;">
+                            <form method="POST" action="/fin" class="form-inline my-2 my-lg-0" style="display:inline;">
+                                @csrf 
+                                <a class="nav-link" href="#"><button class="btn btn-link" type="submit"><i class='fas fa-door-open'></i></button></a>
+                            </form>
+                        </li>
+                        
+                    </ul>
+                </div>
+            <!-- ---------------------------------------------------------- Termina Barra Menú Superior -------------------------------------------- -->               
+            <!-- ----------------------------------------------------------Inicia Barra Menú Superior -------------------------------------------- -->
             </nav>
         </header>
 
-        <main>
-            <div class="container"><div style="height: 125px;"></div>
-                @yield('content')
-            </div>
-        </main>
+
+
+
+
+        <div class="container-fluid">
+            <!-- -------------------------------------------------- Inicia Opción de página con menú izquierdo home ------------------------------------ --> 
+            <!-- -------------------------------------------------- Inicia Opción de página con menú izquierdo home ------------------------------------ --> 
+            <!-- -------------------------------------------------- Inicia Opción de página con menú izquierdo home ------------------------------------ -->  
+            @if(isset($GranVariable) AND $GranVariable=='conMenuHome')                  
+                <div class="row flex-nowrap">
+                    <div class="col-auto col-xs-1 col-md-2 col-xl-1 px-sm-1 px-0 bg-light">
+                        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-gray min-vh-75">
+                          <small> Bienvedid@</small>
+                            <hr>
+                            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menuHome">
+                               
+                                <li class="nav-item"> <!-- ------------ Menú: Home ----- -->
+                                    <a href="/inicio/{{auth()->user()->usr}}" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="fas fa-home"></i> <span class="ms-1 d-none d-sm-inline">Inicio / Avisos</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item"> <!-- ------------ Menú: Prod-ocasión ----- -->
+                                    <a href="#" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="bi bi-gift-fill"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item"> <!-- ------------ Menú: Prepedido ----- -->
+                                    <a href="/prepedido" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="bi bi-cart-fill"></i>  <span class="ms-1 d-none d-sm-inline">Levantar mi pre-pedido</span>
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item"> <!-- ------------ Menú: Pedidos Activos ----- -->
+                                    <a href="/MisPedidos/{{auth()->user()->usr}}" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="bi bi-cart-check-fill"></i>  <span class="ms-1 d-none d-sm-inline">Mis Pedidos activos</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
+                                    <a href="/calendario" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="fas fa-calendar-alt"></i>  <span class="ms-1 d-none d-sm-inline">Calendario de entregas</span>
+                                    </a>
+                                </li>
+                                
+                                <li><!-- ------------ Menú: Desplegable ----- -->
+                                    <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="fs-4 bi-speedometer2 disabled"></i> <span class="ms-1 d-none d-sm-inline">Mi Historial</span> 
+                                    </a>
+                                    <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menuHome"><!-- quitar show-->
+                                        <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Trabajos</span>  </a></li>
+                                        <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Pedidos</span> P </a></li>
+                                        <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Compras</span> C </a></li>
+                                        <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Anualidades</span> A </a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
+                                    <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="bi bi-chat-dots-fill"></i>  <span class="ms-1 d-none d-sm-inline">Opinar</span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <hr>
+                            <!-- --------------------------------------- Dropdown de Usuario ------------------ -->
+                            <div class="dropdown pb-4">
+                                <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle"  style="font-size:20px;" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i>
+                                    <!--img src="#" alt="hugenerd" width="30" height="30" class="rounded-circle"-->
+                                    <span class="d-none d-sm-inline mx-1">{{auth()->user()['usr']}}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="font-size:20px;">
+                                    <li><a class="dropdown-item" href="#">Editar mis datos</a></li>
+                                    <li><a class="dropdown-item" href="#">Mis Anualidades</a></li>
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <form method="POST" action="/fin"  style="display:inline;">
+                                        @csrf 
+                                        <li><a class="dropdown-item" href="#"><button class="btn btn-link" type="submit" style="color:black;"><i class='fas fa-door-open'> Salir</i> </button></a></li>
+                                    </form>
+
+                                    
+                                </ul>
+                            </div>
+                            <hr>
+                            aaa
+                        </div>
+                    </div>
+
+                    <div class="container col-xs-10 col-md-10 col-xl-10" >
+                    
+                        @yield('content')
+                        
+                    </div>
+                </div>
+            <!-- -------------------------------- Termina Opción de página con menú izquierdo Home---------------------------------- -->
+                
+            @else
+            <!-- -------------------------------- Termina Opción de página normal ---------------------------------- -->
+                <div class="px-sm-0 px-md-5">
+                    @yield('content') 
+                </div>
+            
+            @endif
+        </div>
+
+
+
+
 
         <footer>
-            <div>Cooperativa de Consumo: Unidad Latinoamericana.</div>
+            <div style="height:50px;">
+                &nbsp;
+            </div>
+
+            <div class="cintillo">
+                Sistema de la Cooperativa de Consumo Unidad Latinoamericana.
+            </div>
         </footer>
+
+
 
         @livewireScripts
         <script src="{{ asset('/js/MyJs.js') }}"></script>       
-    </main>
+
+        
+        @stack('scripts')
     </body>
 </html> 

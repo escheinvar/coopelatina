@@ -3,5 +3,7 @@
 1.- Livewire
 
 
-
+2.- Generé liga en storage: 
+$php artisan storage:link 
+(lo cual hace que todos los archivos en /storege/app/public se publiquen en : www.com/storage/bla.png)
 

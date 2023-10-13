@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('mail');
             $table->string('direccion')->nullable();;
             $table->timestamp('dateregistro')->nullable();
-            $table->timestamp('datemembre')->nullable();
+            $table->timestamp('membrefin')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

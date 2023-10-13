@@ -5,8 +5,6 @@
 
 
 <?php $GranVariable='conMenuHome'; ?>
-@section('content') 
-    @livewire('prepedidos-livewire-component')
+@section('content')
+    @livewire('prepedidos01-livewire-component',['prepedido'=>$confirma,'anualidad'=>$anualidad,])
 @endsection
-
-

@@ -123,7 +123,7 @@ class VerUsuariosLiveComponent extends Component {
             'nombre' => $this->nombre,
             'ap_pat' => $this->ap_1, 
             'ap_mat' => $this->ap_2, 
-            'usr' => $this->usr,
+            'usr' => strtolower($this->usr),
             'activo' => '1', 
             'estatus' => $this->estatus, 
             'priv' => $this->privs,

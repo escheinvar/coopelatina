@@ -25,12 +25,16 @@ return new class extends Migration
             $table->decimal('precioact',6,1)->default('0');
             $table->decimal('precioreg',6,1)->default('0');
             $table->decimal('preciopub',6,1)->default('0');
+            
+            $table->enum('mintipo',['0','1','2'])->default('0');  ##0=no 1=producto (num de prods.) 2=proovedor(monto $)
+            $table->decimal('min',6,1)->default('0');
+
             $table->string('proveedor');
             $table->string('categoria');
             $table->string('responsable');
             $table->longText('descripcion')->nullable();
             $table->string('img')->nullable();
-            $table->integer('orden')->default('9999');  
+            $table->integer('orden')->default('9999');
             $table->timestamps();
         });
     }
