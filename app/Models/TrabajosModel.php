@@ -17,6 +17,7 @@ class TrabajosModel extends Model
 
     protected $fillable = [
         'work_usrid',
+        'work_act',
         'work_usr',
         'work_mes',
         'work_anio',

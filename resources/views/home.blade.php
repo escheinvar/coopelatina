@@ -20,8 +20,9 @@
     <div class="row" style="margin:1rem;">
         <!-- ------------------------------------------------ ARRIBA ----------------------------------------------- -->
         <div class="col-md-12" style="text-align:right;">
-                Hoy es {{ session('arraySemana')[0] }}  {{date('n')}} de {{session('arrayMeses')[date('j')]}} de {{date('Y')}}
-        </div>
+            
+            Hoy es {{ session('arraySemana')[0] }}  {{date('n')}} de {{session('arrayMeses')[date('n')]}} de {{date('Y')}}
+    </div>
     </div>
 
     <div>
@@ -34,7 +35,7 @@
                 $iniMembre = strtotime ('-1 year' , strtotime($finMembre));
                 $iniMembre = date("Y-m-d", $iniMembre);  
 
-                $hoy=new DateTime(today());
+                $hoy=new DateTime(today());  
                 #$FinaleMembre=new DateTime( auth()->user()->membrefin );
                 $Finale=new DateTime($finMembre);     
                 $Dif=$Finale->diff($hoy);

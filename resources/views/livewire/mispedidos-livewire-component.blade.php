@@ -47,8 +47,8 @@
        
             <!-- ---------------------- Cintillo de cabecera con nombre de estado de pedido --- ------------------------ -->
             <div style="background-color:{{$col}}; padding:7px; border-radius:5px;" >
-                <i class="bi bi-bag-plus-fill"></i>
-                {{sprintf('%04d', $folio->fol_id)}} {{$title}} 
+                <i class="bi bi-bag-plus-fill"></i><span style="@if($folio->fol_edo == '0')text-decoration:line-through; @endif">
+                {{sprintf('%04d', $folio->fol_id)}}</span> {{$title}} 
                 @if($folio->fol_edo == '5') <span style="padding:1rem; color:red; padding:5px;border:1px solid rgb(230, 233, 253);border-radius:14px;"><b>Anualidad</b> @endif </span>
                 
             </div>
@@ -73,7 +73,7 @@
 
                     <div class="col-lg-2 col-md-2 col-sm-12" style="display:inline-block;" >
                         @if(is_null($folio->fol_pagoimg) || $folio->fol_pagoimg == '')
-                            <span style="cursor:pointer;" data-toggle="modal" data-target="#confirmacion">
+                            <span style="cursor:pointer;" data-toggle="modal" data-target="#confirmacion{{$folio->fol_id}}">
                                 <i class="bi bi-trash"></i> <span class="d-none d-sm-inline"> Cancelar</span>
                             </span>
                         @else
@@ -92,17 +92,17 @@
            
                 
                 <div class="col-lg-3 col-md-3 col-sm-12" style="display:inline-block;"> 
-                    <span onclick="VerNoVer('com1','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});" id="com1Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(214, 219, 249); border-radius:5px;">Entrega1</span>
-                    <span onclick="VerNoVer('com2','{{$folio->fol_id}}');VerColor('com2Boton',{{$folio->fol_id}});" id="com2Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(230, 233, 253); border-radius:5px;">Entrega2</span>
+                    <span onclick="VerNoVer('com1','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});" id="com1Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(214, 219, 249); border-radius:5px; @if($folio->fol_edo == '0')text-decoration:line-through; @endif">Entrega1</span>
+                    <span onclick="VerNoVer('com2','{{$folio->fol_id}}');VerColor('com2Boton',{{$folio->fol_id}});" id="com2Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(230, 233, 253); border-radius:5px; @if($folio->fol_edo == '0')text-decoration:line-through; @endif">Entrega2</span>
                 </div>
             </div>
 
             <!-- --------------------------- Modal de confirmación de borrado ---------------------- -->
-            <div class="modal fade" id="confirmacion">
+            <div class="modal fade" id="confirmacion{{$folio->fol_id}}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Estás por <b>CANCELAR</b> tu pre pedido</h4>
+                            <h4 class="modal-title">Estás por <b>CANCELAR</b> tu pre pedido {{$folio->fol_id}}</h4>
                         </div>
                         <div class="modal-body">
                             <p>¿Continuamos con la cancelación?</p>
@@ -121,13 +121,13 @@
                 <?php $num1=0;$num2=0; $tot1=0; $tot2=0; ?>
                 <!-- ------------------------- lista de com1 ------------------------ -->
                 <div class="col-lg-6 col-md-6 col-sm-12" style="border:0px solid {{$col}}; display:none"  id="sale_com1{{$folio->fol_id}}" >
-                    <div style="padding:2rem;"><b style="cursor:pointer; text-align:center;" onclick="VerNoVer('com1','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});">Primer Entrega</b></div>
+                    <div style="padding:2rem;"><b style="cursor:pointer; @if($folio->fol_edo == '0')text-decoration:line-through; @endif;" onclick="VerNoVer('com1','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});">Primer Entrega</b></div>
                     @foreach($prods as $prod)
                         <?php $subt=0; ?>
                         @if($prod->ped_folio == $folio->fol_id  && $prod->ped_entrega =='com1')
                         <?php       $num1=$num1 + $prod->ped_cant;      $subt = $prod->ped_cant * $prod->ped_costo;    $tot1= $tot1+$subt; ?>
                             <div style="border-bottom:1px solid {{$col}};"> 
-                                @if($folio->fol_edo <= '3')<input type="checkbox" style="width:20px;height:20px;"> @else <span style="color:gray">&#9745;</span> @endif
+                                @if($folio->fol_edo <= '3' && $folio->fol_edo <'0')<input type="checkbox" style="width:20px;height:20px;"> @else <span style="color:gray">&#9745;</span>    @endif
                                 {{$prod->ped_cant}} {{$prod->ped_prod}} {{$prod->ped_prodvar}} <small style="color:gray;">({{$prod->ped_prodpresenta}} ${{$prod->ped_costo}})</small>
                                 @if($folio->fol_edo >='4' &&  (is_null($folio->fol_pagoimg) || $folio->fol_pagoimg=='' ) ) &nbsp; <small style="color:gray;"><i class="bi bi-trash" style="cursor:pointer;" wire:click="borrarProducto({{$prod->ped_id}})"></i> </small>@endif
                                 <span style="float: right;">${{$subt}}                                    
@@ -139,13 +139,13 @@
                 </div>
                 <!-- ------------------------- lista de com2 ------------------------ -->
                 <div class="col-lg-6 col-md-6 col-sm-12" style="border:0px solid {{$col}}; display:none;" id="sale_com2{{$folio->fol_id}}">
-                    <div style="padding:2rem;"><b style="cursor:pointer;" onclick="VerNoVer('com2','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});">Segunda Entrega</b></div> 
+                    <div style="padding:2rem;"><b style="cursor:pointer;@if($folio->fol_edo == '0')text-decoration:line-through; @endif" onclick="VerNoVer('com2','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});">Segunda Entrega</b></div> 
                     @foreach($prods as $prod)
                         <?php $subt=0; ?>
                         @if($prod->ped_folio == $folio->fol_id && $prod->ped_entrega =='com2')
                             <?php       $num2=$num2 + $prod->ped_cant;      $subt = $prod->ped_cant * $prod->ped_costo;   $tot2= $tot2 + $subt; ?>
                             <div style="border-bottom:1px solid {{$col}};"> 
-                                @if($folio->fol_edo <= '3')<input type="checkbox" style="width:20px;height:20px;"> @else <span style="color:gray">&#9745;</span> @endif
+                                @if($folio->fol_edo <= '3' && $folio->fol_edo <'0'  )<input type="checkbox" style="width:20px;height:20px;"> @else <span style="color:gray">&#9745;</span> @endif
                                 {{$prod->ped_cant}} {{$prod->ped_prod}} {{$prod->ped_prodvar}} <small style="color:gray;">({{$prod->ped_prodpresenta}} ${{$prod->ped_costo}})</small>
                                 @if($folio->fol_edo >='4' &&  (is_null($folio->fol_pagoimg)|| $folio->fol_pagoimg=='' )) &nbsp; <small style="color:gray;"><i class="bi bi-trash" style="cursor:pointer;" wire:click="borrarProducto({{$prod->ped_id}})"></i> </small>@endif
                                 <span style="float: right;">${{$subt}}
@@ -165,7 +165,7 @@
             </div>
 
             <!-- ------------------------ Barra Inferior de Total    ----------------------------- -->
-            <div class="col-lg-12 col-md-12" style="background-color:{{$col}}"  >
+            <div class="col-lg-12 col-md-12" style="background-color:{{$col}}; @if($folio->fol_edo == '0')text-decoration:line-through; @endif"  >
                 <span>&#9312;<b>{{$num1}}</b> &nbsp;</span> <span>&#9313;<b>{{$num2}}</b>  prods.</span>  &nbsp;   <span><b>$&nbsp;{{$tot1+$tot2}}</b></span>
                 <?php 
                     //-------------vars para enviar a Inicia subir comprobante
@@ -217,7 +217,7 @@
             </form>                   
         @endif  
     </div>
-    <div style="color:rgb(229, 251, 240)">
+    
 
     @push('scripts')
         <script >           

@@ -87,9 +87,6 @@
                         
                         @if( in_array(auth()->user()['priv']  ,  ['root','admon','teso']) )
                             <!---------------------------------------------- INICIA MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
-                            <li class="nav-item">
-                                <a class="nav-link disabled" href="/usuarios">Pedidos</a> <!--span>&#9773;  &#9776;</span-->
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Caja
@@ -110,15 +107,32 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Logística
+                                    Pre-entrega
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Pago prepedidos</a>
+                                    <a class="dropdown-item disabled" href="#">1) Alta de apoyos</a>
+                                    <a class="dropdown-item" href="/pagoprepedidos">2) Pago prepedidos</a>
+                                    <a class="dropdown-item disabled" href="#">3) Pedir para tienda</a>
+                                    <a class="dropdown-item disabled" href="#">4) Confirmar pedidos</a>
+                                    <a class="dropdown-item disabled" href="#">5) Recibir proveedores</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item disabled" href="#">Pizarrón</a>
                                     <a class="dropdown-item disabled href="#">Inventario Tienda</a>
-                                    <a class="dropdown-item disabled" href="#">Catálogo productos</a>
-                                    <a class="dropdown-item disabled" href="#">Catálogo Proveedores</a>
+                                    <a class="dropdown-item disabled" href="#">Something else here</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Entrega
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">1) Inventario de tienda</a>
+                                    <a class="dropdown-item disabled" href="#">2) Corte de caja</a>
+                                    <a class="dropdown-item disabled" href="#">3) Entregar productos</a>
+                                    <a class="dropdown-item disabled" href="#"></a>
 
+                                    <a class="dropdown-item disabled" href="#">Pizarrón</a>
+                                    <a class="dropdown-item disabled href="#">Inventario Tienda</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item disabled" href="#">Something else here</a>
                                 </div>

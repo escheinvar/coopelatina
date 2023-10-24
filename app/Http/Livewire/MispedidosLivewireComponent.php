@@ -68,7 +68,6 @@ class MispedidosLivewireComponent extends Component
             ->update([
                 'ped_act'=>'0'
             ]);
-        
     }
 
 

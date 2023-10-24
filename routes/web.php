@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admon\PagoPedidosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
@@ -50,6 +51,10 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Usuarios
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios');
     Route::post('/usuarios', [UsuariosController::class, 'store']);
+
+    ################################ Administración de Pago de prepedidos
+    Route::get('/pagoprepedidos', [PagoPedidosController::class, 'index'])->name('pagoprepedidos');
+
 });
 
 
@@ -67,7 +72,7 @@ Route::middleware(['soloCoops'])->group(function(){
 
     ################################ MisPedidos
     Route::get('/MisPedidos/{usr}',[coop_misPedidos::class,'index'])->name('MisPedidos');
-    #Route::post('/MisPedidos/{usr}',[coop_misPedidos::class,'store']);
+#Route::post('/MisPedidos/{usr}',[coop_misPedidos::class,'store']);
 
     ################################ Ver Calendario 
     Route::get('/calendario',[coop_calendarController::class,'index'])->middleware('EstatusDeEntrega')->name('calendario');

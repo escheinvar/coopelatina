@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('trabajos', function (Blueprint $table) {
             $table->id('work_id');
             $table->integer('work_usrid');
+            $table->enum('work_act',['0','1'])->default('1');
             $table->string('work_usr');
             $table->integer('work_mes');
             $table->integer('work_anio');
