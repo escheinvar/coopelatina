@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\PagoPedidosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
@@ -54,6 +55,11 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
 
     ################################ Administración de Pago de prepedidos
     Route::get('/pagoprepedidos', [PagoPedidosController::class, 'index'])->name('pagoprepedidos');
+    Route::post('/pagoprepedidos', [PagoPedidosController::class, 'store']);
+
+    ################################ Administración de Listas de abasto
+    Route::get('/listasabasto', [ListasAbastoController::class, 'index'])->name('listasabasto');
+    Route::post('/listasabasto', [ListasAbastoController::class, 'store']);
 
 });
 

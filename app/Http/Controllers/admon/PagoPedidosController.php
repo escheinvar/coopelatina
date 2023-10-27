@@ -10,4 +10,8 @@ class PagoPedidosController extends Controller
     public function index(){
         return view('admon.PagoPedidos');
     }
+    public function store(){
+        return view('admon.PagoPedidos');
+    }
 }
+

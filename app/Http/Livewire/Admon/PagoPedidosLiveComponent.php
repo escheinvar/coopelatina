@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admon;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\CajaModel;
+use App\Models\EstadosModel;
 use App\Models\FoliosModel;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
@@ -15,14 +16,15 @@ class PagoPedidosLiveComponent extends Component
     public $pedidos, $prods, $SubeComprobPago, $SubeComprTipo, $destinoLanas;
     public $EnPagos;
     public $petitCmte=['root','teso'];
-    #public $petitCmte=['teso'];
     use WithFileUploads;
+    protected $proxies = '*';
     
     public function SubirPago(Request $request){
+        
         ##### Valida campos
         $this->validate([
             'SubeComprTipo'=>'required',
-            'SubeComprobPago'=>'file|mimes:png,jpg,pdf|max:10240',
+            'SubeComprobPago'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
         ]);
         
         ##### Genera nombre
@@ -32,6 +34,8 @@ class PagoPedidosLiveComponent extends Component
         $rutaStorage="public/".$ArchMes;
         $rutaPublica="/storage/".$ArchMes;
         
+        #dd($rutaStorage,$nombre);
+
         ##### Guarda archivo
         $this->SubeComprobPago->storeAs($rutaStorage, $nombre);
 
@@ -121,10 +125,31 @@ class PagoPedidosLiveComponent extends Component
 
     }
 
-    public function render() {        
+    public function CambiaEstado(){
+        if(session('EnPagos') == false){$nvo=true;}else{$nvo=false;}
+        EstadosModel::where('edo_name','EnPagos')->update(['edo_edo'=>$nvo]);
+        session(['EnPagos'=>$nvo]);
+        
+        ###### Genera folio de tienda
+        FoliosModel::firstOrCreate(['fol_anio'=>session('ProxCom2date')['anio'], 'fol_mes'=>session('ProxCom2date')['mes'], 'fol_usrid'=>'0'],[
+            'fol_act'=>'1',
+            'fol_edo'=>'4',
+            'fol_anio'=>session('ProxCom2date')['anio'],
+            'fol_mes'=>session('ProxCom2date')['mes'],
+            'fol_usrid'=>'0',
+            'fol_usr'=>'Coope',
+        ]);
+        
+    }
+
+    public function mount(){
+        $this->EnPagos=session('EnPagos');
+    }
+
+    public function render() {
+        
         $mesHoy=Date("m");
         $anioHoy=Date("Y");
-
         $this->pedidos=DB::table('folios')
             ->join('users','fol_usrid','=','id')
             ->where('fol_act','1')

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use DateTime;
 use App\Models\Calendario;
+use App\Models\EstadosModel;
 use Illuminate\Http\Request;
 use App\Models\TrabajosModel;
 use Symfony\Component\HttpFoundation\Response;
@@ -136,13 +137,15 @@ class EstatusDeEntrega
         $dia1 =$fecha1->format("d");     
         $mes1 =$fecha1->format("m");      
         $diames1 =$fecha1->format("w");   
-        $ProxCom1date=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1]; #ej: ['jue', '31', 'dic'] -> [4,31,12]
+        $anio1 =$fecha1->format("Y");
+        $ProxCom1date=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1, 'anio'=>$anio1]; #ej: ['jue', '31', 'dic', '2023'] -> [4,31,12,2023]
 
         $fecha2=new DateTime($ProxCom2->start); 
         $dia2 =$fecha2->format("d");
         $mes2 =$fecha2->format("m");
         $diames2 =$fecha2->format("w");
-        $ProxCom2date=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2]; #ej: ['jue', '31', 'dic'] -> [4,31,12]
+        $anio2 =$fecha2->format("Y");
+        $ProxCom2date=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2, 'anio'=>$anio2]; #ej: ['jue', '31', 'dic', '2023'] -> [4,31,12,2023]
 
         ##################################################################
         ################# Obtiene datos de próximo inicio y fin de pedidos
@@ -174,11 +177,17 @@ class EstatusDeEntrega
             ->orderBy('work_fechatrabajo','asc')
             ->get();
 
+        if($EnPedido=='1'){
+            $EnPagos=true;
+        }else{
+            $EnPagos=EstadosModel::where('edo_name','EnPagos')->value('edo_edo');
+        }
         ##################################################################
         ################################  Guarda variables en sesión
         session([
             'EnPedido'=>$EnPedido,          ### 0=no en pedido ó 1=si en pedido
             'EnEntrega'=>$EnEntrega,        ### 0=no en entrega ó 1=si en entrega
+            'EnPagos'=>$EnPagos,
 
             'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
             'ProxChoro'=>$SigEvento,        ### texto explicativo de situación del calendario

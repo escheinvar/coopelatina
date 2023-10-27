@@ -7,3 +7,17 @@
 $php artisan storage:link 
 (lo cual hace que todos los archivos en /storege/app/public se publiquen en : www.com/storage/bla.png)
 
+
+3.- Instalé SweetAlert:
+a) composer require realrashid/sweet-alert
+b) After installing the sweet-alert package, register the service provider
+    RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+c) in your config/app.php configuration file:
+    'providers' => [
+        /*
+        * Package Service Providers...
+        */
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+    ],
+d) Also, add the Alert facade to the aliases array in your app configuration file:
+    'Alert' => RealRashid\SweetAlert\Facades\Alert::class,

@@ -10,34 +10,35 @@
     <div>
         Hay {{$est['preps'] + $est['peds']}} registros: {{$est['peds']}} pedidos y {{$est['preps']}} prepedidos ({{$est['prepsSinPago']}} sin comprobante de pago)
         @if( $est['prepsSinPago'] > 0)
-            <span style="color:red;">
+            <div style="color:red;">
                 Faltan subir {{$est['prepsSinPago']}} comprobantes de pago
-            </span><br>
+            </div>
         @endif
         @if($est['preps'] > 0)
-            <span style="color:red;">
+            <div style="color:red;">
                 Faltan validar {{$est['preps']}} prepedidos
-            </span>  <br>    
+            </div>    
         @endif
         @if($est['prepsSinPago']=='0' && $est['preps']=='0')
-            <span style="color:orange;">
+            <div style="color:orange;">
                 Todo en orden
-            </span>
+            </div>
         @endif
     </div>
 
-    <!-- ----------------------- Estado ------------------------ -->
-    @if( in_array(auth()->user()->priv, $petitCmte) )
+    <!-- ----------------------- Switch de Estado ------------------------ -->
+    @if( in_array(auth()->user()->priv, $petitCmte) && session('EnPedido')=='0') 
+        
         <div>
-            <label> Estado</label><br>
+            <label> Activar / Desactivar Abasto</label><br>
             <label class="switch">
-                <input type="checkbox" wire:model="EnPagos" >
-                <div class="slider round"></div>
-            </label>
-            @if($EnPagos==false)
-                <span style="color:gray;">Pagos inactivos. Abasto activo.</span>
+                <input type="checkbox" wire:model="EnPagos" wire:click="CambiaEstado" >
+                <div class="slider round"></div> 
+            </label>  
+            @if(session('EnPagos')==false)
+                <span style="color:gray;">Validación de pagos Finalizada.</span> <span style="color:darkgreen;"> Abasto Activo.</span>
             @else
-            <span style="color:darkgreen;">Estamos en pagos. Abasto desactivado</span>
+                <span style="color:darkgreen;">Pagos en validación.</span> <span style="color:gray;"> Abasto Desactivo</span>
             @endif
         </div>
     @endif
@@ -70,7 +71,7 @@
         </thead>
 
         <tbody>
-            @if( in_array(auth()->user()->priv, $petitCmte) && $EnPagos==true)
+            @if( in_array(auth()->user()->priv, $petitCmte) && (session('EnPagos')==true || session('EnPedido')=='1'))
                 <div style="display:inline-block;" wire:model="destinoLanas"> 
                     <label>Indica el destino de la transacción:</label> 
                     <select  class="form-control">
@@ -145,16 +146,16 @@
 
                     <!-- ---------- acciones: validar, rechazar o regresar ---------- -->
                     <div style="display:inline-block; "> 
-                        @if( in_array(auth()->user()->priv, $petitCmte)   && $EnPagos==true)
+                        @if( in_array(auth()->user()->priv, $petitCmte)   && ($EnPagos==true|| session('EnPedido')=='1'))
                             @if($p->fol_edo >= '4') <!-- 4= pre pedido, 5= prepedido con anualidad -->
                                 @if($destinoLanas !='') 
-                                    <button class="btn btn-success" type="button" style="margin:0.5rem;" wire:click="AceptarPrepedido('{{$p->fol_id}}','{{$total}}','{{$p->fol_usrid}}','{{$p->fol_edo}}')"><i class="bi bi-hand-thumbs-up-fill"></i> Valida en {{$destinoLanas}} @if($p->fol_pagoimg =='')sin comprobante @endif </button> 
+                                    <button class="btn btn-success" type="button" style="margin:0.5rem; width:250px;" wire:click="AceptarPrepedido('{{$p->fol_id}}','{{$total}}','{{$p->fol_usrid}}','{{$p->fol_edo}}')"><i class="bi bi-hand-thumbs-up-fill"></i> Valida en {{$destinoLanas}} @if($p->fol_pagoimg =='')sin comprobante @endif </button> 
                                 @endif
-                                <button class="btn btn-danger" type="button" wire:click="RechazarPrepedido('{{$p->fol_id}}')"><i class="bi bi-hand-thumbs-down-fill"></i> Rechazar Pre pedido </button>
+                                <button class="btn btn-danger" type="button" style="margin:0.5rem; width:250px;" wire:click="RechazarPrepedido('{{$p->fol_id}}')"><i class="bi bi-hand-thumbs-down-fill"></i> Rechazar Pre pedido </button>
                             @elseif($p->fol_edo == '3' )<!-- 3=Pedido -->
-                                <button class="btn btn-warning"  type="button" wire:click="RegresarAprepedido('{{$p->fol_id}}','{{$total}}')"> Regresar a pre pedido <i class="bi bi-exclamation-octagon"></i></button>
+                                <button class="btn btn-warning"  type="button" style="margin:0.5rem; width:250px;" wire:click="RegresarAprepedido('{{$p->fol_id}}','{{$total}}')"> Regresar a pre pedido <i class="bi bi-exclamation-octagon"></i></button>
                             @elseif($p->fol_edo == '0' )<!-- 3=Cancelado -->
-                                <button class="btn btn-secondary"  type="button" wire:click="DesRechazar('{{$p->fol_id}}')"> Des rechazar <i class="bi bi-exclamation-octagon"></i></button>
+                                <button class="btn btn-secondary"  type="button" style="margin:0.5rem; width:250px;" wire:click="DesRechazar('{{$p->fol_id}}')"> Des rechazar <i class="bi bi-exclamation-octagon"></i></button>
                             @endif
                         @endif
                     </div>
@@ -162,7 +163,7 @@
                     <!-- ---------- MUESTRA IMAGEN ---------- -->
                     <div id="sale_imagenPago{{$p->fol_id}}" style="display:none; width:100%;"> 
                         <a href="{{$p->fol_pagoimg}}" target="new"><img src="{{$p->fol_pagoimg}}" style="width:300px;"></a><br><br>
-                        @if( in_array(auth()->user()->priv, $petitCmte) && $p->fol_edo >= '4'  && $EnPagos==true)
+                        @if( in_array(auth()->user()->priv, $petitCmte) && $p->fol_edo >= '4'  && ($EnPagos==true|| session('EnPedido')=='1'))
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmacion{{$p->fol_id}}">  <i class="bi bi-trash"></i> Borrar comprobante</button>
                         @endif
                         <!-- --------------------------- Modal de confirmación de borrado de imagen ---------------------- -->
@@ -192,12 +193,12 @@
     
     <!------------------------------------------ sube nuevos comprobantes --------------------------------------------------- -->
     <div class="row" id="sale_pagarA" style="display:block; padding:5px;">
-        @if(count($mandaAbajo)>0  && in_array(auth()->user()->priv, $petitCmte) && $EnPagos==true) 
-            <form wire:submit.prevent="SubirPago"> <!-- prevent --> 
+        @if(count($mandaAbajo)>0  && in_array(auth()->user()->priv, $petitCmte) && ($EnPagos=true|| session('EnPedido')=='1')) 
+            <form wire:submit.prevent="SubirPago" enctype="multipart/form-data"> <!-- prevent --> 
                 @csrf
                 <div class="mb-1">
                     <div class="col-md-4">
-                        <label class="form-label">Subir imagen de comprobante de pago:</label>
+                        <label class="form-label">Subir comprobante de pago:</label>
                         <select class="form-control" wire:model="SubeComprTipo">
                             <option value="">Indica el pedido</option>
                             @foreach($mandaAbajo as $i)
@@ -209,7 +210,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="SubeComprobPago" class="form-label">Sube el comprobante de pago</label>
-                        <input class="form-control" type="file" id="SubeComprobPago" wire:model="SubeComprobPago">
+                        <input class="form-control" type="file" id="SubeComprobPago" wire:model="SubeComprobPago" accept="image/png, image/jpeg" >
                         @error('SubeComprobPago') <error>{{$message}}</error> @enderror
                         <div wire:loading wire:target="SubeComprobPago">Cargando archivo....</div>
                     </div>
@@ -220,12 +221,14 @@
                             Previsualización de {{ $SubeComprobPago->getMimeType() }} :<br>
                             <img src="{{$SubeComprobPago->temporaryUrl()}}" style="width:200px; border=1px solid black;">
                         </div>
-                    @endif
                         
-                    <div class="col-md-1">
-                        <label>  </label>
-                        <button class="btn btn-primary" type="submit" style="margin:10px;" id="botonsubir"><i class="bi bi-camera-fill"></i> Subir</button>
-                    </div>
+                        <div class="col-md-1">
+                            <label>  </label>
+                            <button class="btn btn-primary" type="submit" style="margin:10px;" id="botonsubir"><i class="bi bi-camera-fill"></i> Subir</button>
+                        </div>
+                    @endif
+                    
+                   
                    
                 </div>
             </form>                   
@@ -234,7 +237,7 @@
     <br>
     Nota:
     <br><small><small>
-    @if(in_array(auth()->user()->priv, $petitCmte) && $EnPagos==true)
+    @if(in_array(auth()->user()->priv, $petitCmte) && ($EnPagos=true|| session('EnPedido')=='1'))
         Al validar el pago, se generará el ingreso a la caja correspondiente<br>
         Al regresar a pre-pedido,  se genera la cancelación del pago<br>
         Al validar el pago CON ANUALIDAD, además se actualiza la anualidad del Cooperativista por un año<br>

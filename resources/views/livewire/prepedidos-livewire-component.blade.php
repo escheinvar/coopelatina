@@ -3,8 +3,7 @@
 <form method="post">
     @csrf
     <?php $ped=session('ProxPedido'); $com1=session('ProxCom1'); $com2=session('ProxCom2'); ?>
-
-    <div style="text-align: left;" > 
+    <div class="row" style="text-align:left;" > 
         <!-- ----------------------------Texto de aviso de estado -------------------------------------------------- -->
         @if(session('EnPedido')=='1') 
             <?php
@@ -13,8 +12,8 @@
                 $Dif=$Fin->diff( $hoy );
             ?>            <h1>Pre-pedido para {{session('arrayMeses')[$ped->mes]}} </h1>
             <div>
-                <div class="col-lg-4 col-md-4 col-sm-12">Primer entrega:  {{session('arraySemana')[session('ProxCom1date')['diasem']]}} {{session('ProxCom1date')['dia']}} de {{session('arrayMeses')[session('ProxCom1date')['mes']]}}  </div> 
-                <div class="col-lg-4 col-md-4 col-sm-12">Segunda entrega: {{session('arraySemana')[session('ProxCom2date')['diasem']]}} {{session('ProxCom2date')['dia']}} de {{session('arrayMeses')[session('ProxCom2date')['mes']]}}  </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">Primer entrega:  {{session('arraySemana')[session('ProxCom1date')['diasem']]}} {{session('ProxCom1date')['dia']}} de {{session('arrayMeses')[session('ProxCom1date')['mes']]}}  </div> 
+                <div class="col-lg-6 col-md-6 col-sm-12">Segunda entrega: {{session('arraySemana')[session('ProxCom2date')['diasem']]}} {{session('ProxCom2date')['dia']}} de {{session('arrayMeses')[session('ProxCom2date')['mes']]}}  </div>
             </div>
         @else
             <?php 
@@ -40,7 +39,7 @@
     <br>
 
     <!-- -------------------------------------- MUESTRA BOTONES DE PAGO O DE ANUALIDAD -------------------------- -->
-    <div class="row" style="">
+    <div class="sticky-top row" style="padding:2rem; background-color:white;">
         <div class="col-lg-10 col-md-10 col-sm-10" style="font-size:3rem; text-align:right;">
             Total $ <span id="GranTotal">0</span>   <input type="hidden" name="total" id="totalEsconde">          
      
@@ -216,11 +215,11 @@
                                             <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"   min="0" step="1"   {{$com2act}} >  <!-- placeholder="{{$com2text}}"-->
                                         @endif
 
-                                        @if($value->cantmin > 0)
+                                        {{--@if($value->cantmin > 0)--}}
                                             <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:50%; margin:2px; border-radius:100%;padding:2px;">
-                                                {{$value->cantmin}}
+                                                5{{--$value->cantmin--}}
                                             </span>
-                                        @endif
+                                        {{--@endif--}}
                                     </div>     
                                 </div>   
                             </div>
