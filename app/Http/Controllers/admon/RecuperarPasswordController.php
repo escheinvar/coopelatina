@@ -17,7 +17,8 @@ class RecuperarPasswordController extends Controller
     }
 
     public function store(request $request){    
-
+        $request['usr'] = strtolower($request->usr);
+        
         $request->validate([
             'usr' => 'required|exists:users,usr',
         ]);

@@ -8,7 +8,7 @@ WHITE='\033[1;37m' #bLANCO
 
 
 echo "################################### Instalar composer "
-cd $1
+#cd $1
 composer install
 
 echo "################################### Instalar npm"

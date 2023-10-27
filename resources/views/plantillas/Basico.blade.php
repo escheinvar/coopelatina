@@ -132,7 +132,7 @@
                     </ul>
                 </div>
                 
-                <!---------------------------------------------- INICIA MENÚ SUPERIOR IZQUIERDA --------------------------- -->
+                <!---------------------------------------------- INICIA MENÚ SUPERIOR DERECHA ÍCONOS --------------------------- -->
                 <div style="float: right;">
                     <ul class="navbar-nav mr-auto" style="display:inline-block;">
 
@@ -185,44 +185,46 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item"> <!-- ------------ Menú: Prod-ocasión ----- -->
+                                <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
+                                    <a href="/calendario" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="fas fa-calendar-alt"></i>  <span class="ms-1 d-none d-sm-inline">Calendario de entregas</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item disabled" > <!-- ------------ Menú: Prod-ocasión ----- -->
                                     <a href="#" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="bi bi-gift-fill"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
+                                        <i class="bi bi-gift"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
                                     </a>
                                 </li>
 
                                 <li class="nav-item"> <!-- ------------ Menú: Prepedido ----- -->
                                     <a href="/prepedido" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="bi bi-cart-fill"></i>  <span class="ms-1 d-none d-sm-inline">Levantar mi pre-pedido</span>
+                                        <i class="bi bi-cart4"></i> <!--i class="bi bi-cart-fill"></i-->  <span class="ms-1 d-none d-sm-inline">Levantar mi pre-pedido</span>
                                     </a>
                                 </li>
 
 
                                 <li class="nav-item"> <!-- ------------ Menú: Pedidos Activos ----- -->
                                     <a href="/MisPedidos/{{auth()->user()->usr}}" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="bi bi-cart-check-fill"></i>  <span class="ms-1 d-none d-sm-inline">Mis Pedidos activos</span>
+                                        <i class="bi bi-cart-check-fill"></i>  <span class="ms-1 d-none d-sm-inline">Mis Pedidos</span>
                                     </a>
                                 </li>
 
-                                <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
-                                    <a href="/calendario" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="fas fa-calendar-alt"></i>  <span class="ms-1 d-none d-sm-inline">Calendario de entregas</span>
-                                    </a>
-                                </li>
                                 
-                                <li><!-- ------------ Menú: Desplegable ----- -->
+                                <!-- ------------ Menú: Desplegable ----- -->
+                                <!--li>
                                     <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="fs-4 bi-speedometer2 disabled"></i> <span class="ms-1 d-none d-sm-inline">Mi Historial</span> 
                                     </a>
-                                    <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menuHome"><!-- quitar show-->
+                                    <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menuHome">
                                         <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Trabajos</span>  </a></li>
                                         <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Pedidos</span> P </a></li>
                                         <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Compras</span> C </a></li>
                                         <li><a href="#" class="nav-link px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;"> <span class="d-none d-sm-inline">Mis Anualidades</span> A </a></li>
                                     </ul>
-                                </li>
+                                </li-->
 
-                                <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
+                                <li class="nav-item disabled"> <!-- ------------ Menú: Calendario de entregas ----- -->
                                     <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="bi bi-chat-dots-fill"></i>  <span class="ms-1 d-none d-sm-inline">Opinar</span>
                                     </a>
@@ -239,6 +241,9 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="font-size:20px;">
                                     <li><a class="dropdown-item" href="#">Editar mis datos</a></li>
+                                    <li><a class="dropdown-item"  href="/MisPedidos/{{auth()->user()->usr}}">Mis Pedidos</a></li>
+                                    <li><a class="dropdown-item" href="#">Mis Trabajos</a></li>
+                                    <li><a class="dropdown-item" href="#">Mis Compras</a></li>
                                     <li><a class="dropdown-item" href="#">Mis Anualidades</a></li>
                                     <li><a class="dropdown-item" href="#">Profile</a></li>
                                     <li>
@@ -253,7 +258,7 @@
                                 </ul>
                             </div>
                             <hr>
-                            aaa
+                            
                         </div>
                     </div>
 

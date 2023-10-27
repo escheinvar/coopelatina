@@ -3,12 +3,14 @@
     <!-- --------------------------------------------- NUEVO USUARIO --------------------------------------------- -->
     <!-- --------------------------------------------------------------------------------------------------------- -->
     <div>
-        <!--div class="row"-->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NuevoUsr" style="float: right; wire:ignore.self" wire:click="defineType('nuevo','0')">
-                <i class="fas fa-plus"></i> 
-                Nuevo cooperativista
-            </button>
-        <!--/div-->
+        <div class="row">
+            <div style="margin:2rem;">
+                <button type="button" class="btn btn-primary" style="float:right; width:200px;" data-toggle="modal" data-target="#NuevoUsr" wire:ignore.self wire:click="defineType('nuevo','0')">
+                    <i class="fas fa-plus"></i> 
+                    Nuevo cooperativista
+                </button>
+            </div>
+        </div>
         
 
         <!-- --------------------------------------------------------------------------------------------------------- -->
@@ -17,7 +19,9 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <input type="search" wire:model="buscar" placeholder="Buscar..." >
-                <button style='font-size:14px' wire:click="borrabuscar"><i class='far fa-times-circle'> limpiar</i></button>
+                @if($buscar != "")
+                    <button type="button" class="btn btn-light" style='font-size:14px' wire:click="borrabuscar"><i class='far fa-times-circle'> Borrar</i></button>
+                @endif
             </div>
 
             @if(session('usr_privs') == 'root' )
@@ -114,9 +118,9 @@
                 </div>
                
                 <div class="modal-body">
-                    <div class="row">
-                        <form method="POST">
-                            @csrf
+                    <form method="POST">
+                        @csrf
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="nombre">Nombre de Usuario:</label>
                                 <input type="text" class="form-control @error('usr')error @enderror" wire:model="usr" value="{{old('usr')}}" @if($text1=='Editar') readonly @endif>
@@ -128,7 +132,8 @@
                                 <input type="text" class="form-control @error('nombre')error @enderror" wire:model="nombre" >
                                 @error('nombre') <error>Se requiere indicar el(los) nombres del Cooperativista </error>@enderror
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="nombre">Primer Apellido:</label>
                                 <input type="text" class="form-control @error('ap_1')error @enderror" wire:model="ap_1" value="{{old('ap_1')}}">
@@ -140,26 +145,29 @@
                                 <input type="text" class="form-control @error('ap_2')error @enderror" wire:model="ap_2" value="{{old('ap_2')}}">
                                 @error('ap_2')<error>Se requiere el segundo apellido</error> @enderror
                             </div>
+                        </div>
 
-
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="nombre">Teléfono:</label>
                                 <input type="text" class="form-control @error('tel')error @enderror" wire:model="tel" value="{{old('tel')}}">
                                 @error('tel')<error> Se requiere un teléfono celular válido</error> @enderror
                             </div>
 
-
                             <div class="form-group col-md-6">
                                 <label for="nombre">Correo electrónico:</label>
                                 <input type="text" class="form-control @error('mail')error @enderror" wire:model="mail" value="{{old('mail')}}">
                                 @error('mail')<error> Se requiere un correo electrónico válido</error> @enderror
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-12"> 
                                 <label for="nombre">Dirección:</label>
                                 <input type="text" class="form-control @error('dir')error @enderror" wire:model="dir" value="{{old('dir')}}">
                                 @error('dir')<error> Se requiere la dirección</error> @enderror
-                            </div>
+                            </div> 
+                        </div>
+                        <div class="row"> 
                             @if($text1=='Editar')
                                 <div class="form-group col-md-12">
                                     <input type="checkbox" id="scales" name="scales" wire:model="CambiaPass">
@@ -169,7 +177,7 @@
                             @endif
                             @if($text1=='Agregar' OR $CambiaPass=='1')
                                 <div class="form-group col-md-6">
-                                    <label for="nombre">Contraseña:</label>
+                                    <label for="nombre">Ingresa Nueva Contraseña:</label>
                                     <input type="{{$InputType}}" class="form-control @error('password')error @enderror" wire:model="password" value="{{old('password')}}" style="display:inline;width:90%;">
                                     <i class="{{$IconoType}}" style='font-size:15px;' wire:click="MuestraUoculta()"></i>
                                     @error('password')<error> Se requiere una contraseña {{$message}}</error> @enderror
@@ -181,7 +189,8 @@
                                     @error('password_confirmation') <error>Las contraseñas ingresadas no coinciden {{$message}}</error> @enderror
                                 </div>
                             @endif
-
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="nombre">Estatus:</label>
                                 <select class="form-control @error('estatus')error @enderror" wire:model="estatus" value="{{old('estatus')}}">
@@ -212,7 +221,8 @@
                                 </select>
                                 @error('privs')<error> Se requiere indicar un privilegio</error> @enderror
                             </div>
-                            
+                        </div>
+                        <div class="row">
                             @if(session('usr_privs') == 'root' )
                                 @if($text1 == "Editar")
                                     <div class="form-group col-md-3">
@@ -225,23 +235,18 @@
                                     </div>
                                 @endif
                             @endif
-                            
-                        </form>
-                    </div>
+                        </div>
+                    </form>
+                   
                 </div>
-
-                <div class="modal-footer">
-                    <div class="row" style="padding: 1rem;">
-                        <button type="reset"  wire:click="CancelSubmit" class="btn btn-default"  data-dismiss="modal"><i class="fa fa-close"></i> Cancelar</button>
-                        
+                <div class="row">
+                    <div class="modal-footer">
+                        <button type="reset"  class="btn btn-secondary col-4" wire:click="CancelSubmit"  data-dismiss="modal"><i class="fa fa-close"></i> Cancelar</button>
                         @if($text1=='Agregar')
-                            <button type="button" wire:click="GuardaElNuevo" class="btn btn-default"><i class="fas fa-plus"></i> Agregar cooperativista</button>
-
+                            <button type="button" class="btn btn-success col-5" wire:click="GuardaElNuevo" ><i class="fas fa-plus"></i> Agregar cooperativista</button>
                         @elseif($text1=="Editar")
-                            <button type="button" wire:click="GuardaEdita" class="btn btn-default"><i class="fas fa-plus"></i> Editar datos</button>
+                            <button type="button" class="btn btn-success col-5" wire:click="GuardaEdita" ><i class="fas fa-plus"></i> Editar datos</button>
                         @endif
-                        
-                        
                     </div>
                 </div>
             </div>

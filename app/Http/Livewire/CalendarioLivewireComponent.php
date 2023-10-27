@@ -154,7 +154,6 @@ class CalendarioLivewireComponent extends Component
             #    $TodoElDia=false;
             #}
             
-
             $eventos[]=[
                 'title'=> $cal->titulo,
                 'start'=> $cal->start,
@@ -167,7 +166,6 @@ class CalendarioLivewireComponent extends Component
                 'allDay'=>$todoDia,
                 'editable'=>false,
                 'forceEventDuration'=>true,  
-                
             ];
         }
         return view('livewire.calendario-livewire-component',compact('eventos'));

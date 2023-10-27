@@ -101,7 +101,7 @@ class VerUsuariosLiveComponent extends Component {
 
     ############################################################ Emergente: Guardar nuevo usuario
     public function GuardaElNuevo(request $request){
-
+        $request['usr'] = strtolower($request->usr);
         $this->rules=[
             'nombre' => 'required',
             'ap_1' => 'required', 

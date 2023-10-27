@@ -18,6 +18,7 @@ class LoginController extends Controller
     }
 
     public function store(Request $request){
+        $request['usr']=strtolower($request->usr);
         ### Valida el formulario de inicio        
         $this->validate($request,[
             'usr'=>'required',
@@ -25,7 +26,7 @@ class LoginController extends Controller
         ]);
         
         ### Autentica
-        $request['usr']=strtolower($request->usr);
+        
         if(!auth()->attempt($request->only('usr','password'))){
             session([]);
             return view('acceso.login')->with('mensaje','Usuario o contraseña incorrectas');

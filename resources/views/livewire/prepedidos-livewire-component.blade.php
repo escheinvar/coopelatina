@@ -214,12 +214,18 @@
                                         @else
                                             <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"   min="0" step="1"   {{$com2act}} >  <!-- placeholder="{{$com2text}}"-->
                                         @endif
-
-                                        {{--@if($value->cantmin > 0)--}}
-                                            <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:50%; margin:2px; border-radius:100%;padding:2px;">
-                                                5{{--$value->cantmin--}}
+                                        <!-- ------- Pedido mínimo ---------- -->
+                                        @if($value->mintipo > 0)     
+                                            <?php $faltan = $value->min ;?>
+                                            <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:50%; font-size:50%; margin:2px; border-radius:100%;padding:2px;">
+                                                @foreach($YaPedido as $ya)
+                                                    @if($ya->ped_prodid == $value->id)
+                                                        <?php $faltan=$value->min - $ya->total; ?>
+                                                    @endif
+                                                @endforeach
+                                                 @if($faltan >0) {{$faltan}} @endif
                                             </span>
-                                        {{--@endif--}}
+                                        @endif
                                     </div>     
                                 </div>   
                             </div>
@@ -237,23 +243,43 @@
                             <!--- ------------------------------- Seccion DE INFO OCULTA ------------------------------------------------>
                             <div class="col-lg-12 col-md-12 col-sm-12 " id="sale_{{$key}}{{$value->id}}{{$sabor}}" style='display:none; font-size:0.9rem; margin-top:1rem;'> 
                                 <div style="overflow:auto;">
-                                    <img src='http://coopelatina.org/sistema/img/productos/Aguacate_Barzon.jpeg' style='width:150px;margin:15px; float:left;'><br>
-                                    <p style="font-size:1.5rem;"> {{$value->descripcion}}<br> <i>Presentación: <b>{{$value->presentacion}}</b></i> </p>
-                                    @if( session("usr_estatus") == 'act')
-                                    <div style="font-size:1.3rem;font-style:italic;display:inline-block;">Act $ {{$value->precioact}} </div>  &nbsp; &nbsp;
-                                    <div style="font-size:1.3rem;font-style:italic;display:inline-block;">Reg <b>$ {{$value->precioreg}}</b></div>   &nbsp; &nbsp;
-                                    <div style="font-size:1.3rem;font-style:italic;display:inline-block;">Pub $ {{$value->preciopub}}</div> 
+                                    @if($value->img == '' || is_null($value->img))
+                                        <img src="{{ asset('/logo.png') }}" style='width:150px; margin:15px; float:left;'><br>
+                                    @else                                        
+                                        <!--img src={{asset("/productos/$value->img")}} style="width:150px; margin:15px; float:left;"><br-->
+                                        <img src='http://coopelatina.org/sistema/img/productos/Aguacate_Barzon.jpeg' style='width:150px; margin:15px; float:left;'><br>
+                                    @endif
+
+                                    <p style="font-size:1.5rem;"> {{$value->descripcion}}</p>
+                                    <p style="font-size:1.5rem;">Presentación: {{$value->presentacion}} </p>
+                                    @if( auth()->user()->estatus == 'act')
+                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Act $ {{$value->precioact}} </div>  &nbsp; &nbsp;
+                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Reg $ {{$value->precioreg}} </div>   &nbsp; &nbsp;
+                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Pub $ {{$value->preciopub}} </div> 
+                                    @endif
+
+                                    @if($value->mintipo == '0')
+                                        <p style="font-size:1.5rem;"> Este producto no requiere ningún mínimo de volumen para que el proveedor lo traiga.</p>
+                                    @elseif($value->mintipo =='1')
+                                        <p style="font-size:1.5rem;"> Se requiere un mínimo de {{$value->min}} unidades de este producto para que el proveedor lo traiga.</p>
+                                    @elseif($value->mintipo =='2')
+                                        <p style="font-size:1.5rem;"> Se requiere un mínimo de compra de $ {{$value->min}} pesos al proveedor para que nos  traiga sus productos.</p>
                                     @endif
                                 </div>
 
-                                @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
-                                    <div style="font-size:2rem;">
-                                        {{$value->id}}Si con permiso
-                                    </div>
-                                @endif
-                                <div style='background-color:#A7A7A7; color:white;font-size:1.5rem;'>
+                                <div>
                                     <b> &nbsp; Productor:</b>  <a href='../productores.php#{{$value->proveedor}}' style='color: inherit; text-decoration: none' target='new'>{{$value->proveedor}}</a>
                                 </div>
+
+                                <!-- ------------------------------ BOTÓN DE EDITAR ----------------------- -->
+                                @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
+                                    <div style="font-size:2rem;margin:1rem;">
+                                        <button type="button" style="float:right;" class="btn btn-primary" wire:click="AbrirModal('edit',{{$value->id}})" data-toggle="modal" data-target="#EditarProducto">
+                                            <i class="bi bi-pencil-square"></i> 
+                                            Editar producto
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -261,42 +287,151 @@
             @endforeach
         </tbody>
     </table>
+    <!-- ------------------------- BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ------------------- -->
+    @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
+        <div style="font-size:2rem;margin:1rem;">
+            <button type="button" class="btn btn-primary" wire:click="AbrirModal('nvo','')"  data-toggle="modal" data-target="#EditarProducto"><i class="bi bi-plus-square-fill"></i> Ingresar nuevo producto</button>
+        </div>
+    @endif
 </form>
 
 
 <!-- --------------------------------------------------------------------------------------------------------- -->
 <!-- --------------------------------------------- MODAL PARA EDITAR o AGREGAR PRODUCTO -------------------------- -->
 <!-- --------------------------------------------------------------------------------------------------------- -->
-<div class="modal fade" id="PedidoDeOcasion" tabindex="-1"  wire:ignore.self >
+<div class="modal fade" id="EditarProducto" tabindex="-1"  wire:ignore.self >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: rgb(51, 51, 173);color:white;">
-                <div class="row container">
-                    <H1> pRODUCTO </H1>
+                <div class="row container" >
+                    <H1> {{$text1}} producto {{$prod_id}}</H1>
                 </div>
             </div>
-        
-
+            
             <div class="modal-body">
-                {{--
-                Cebollas: <input type='number' class='producto' name="" id="" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"    min="0" step="1"   >  <br>
-                Jitomates: <input type='number' class='producto' name="" id="" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"    min="0" step="1"  >  
-                --}}
-            </div>
 
+                <form method="POST"> 
+                    @csrf 
+                    $this->activo =$datos->activo;
+                    $this->gpo=$datos->gpo;
+                    $this->nombre=$datos->nombre;
+                    $this->variantes=$datos->variantes;
+                    $this->presentacion=$datos->presentacion;
+                    $this->entrega=$datos->entrega;
+                    $this->venta=$datos->venta;
+                    $this->costo=$datos->costo;
+                    $this->precioact=$datos->precioact;
+                    $this->precioreg=$datos->precioreg;
+                    $this->preciopub=$datos->preciopub;
+                    $this->mintipo=$datos->min;
+                    $this->proveedor=$datos->proveedor;
+                    $this->categoria=$datos->categoria;
+                    $this->responsable=$datos->responsable;
+                    $this->descripcion=$datos->descripcion;
+                    $this->img=$datos->img;
+                    $this->orden=$datos->orden;
+{{--                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Tipo de evento:  <red>*</red></label>
+                            <select class="form-control" wire:model.defer="tipo" value="{{old('tipo')}}" >  
+                                <option value="">Selccionar tipo</option>
+                                <option value="ped">Levantar Pedidos</option>
+                                <option value="com1">Primer Entrega</option>
+                                <option value="com2">Segunda Entrega</option>
+                                <option value="evento">Evento</option>
+                            </select>
+                            @error('tipo')<error>{{$message}}</error> @enderror 
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Responsable: </label>
+                            <input type="text" class="form-control @error('respon')error @enderror" wire:model.defer="respon"  value="{{old('respon')}}" >
+                            @error('respon') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Fecha Inicio: <red>*</red></label> 
+                            <input type="datetime-local" wire:model.defer="inicio" min={{date("Y-m-dT00:00")}} value="{{old('inicio')}}" class="form-control @error('inicio')error @enderror" >
+                            @error('inicio')<error> {{$message}}</error> @enderror
+                        </div>
+                        
+                        <div class="form-group col-md-6">
+                            <label>Fecha Fin:</label>
+                            <input type="datetime-local" class="form-control @error('fin')error @enderror" wire:model.defer="fin" value="{{old('fin')}}">
+                            @error('fin')<error>{{$message}} </error> @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label> <span style="cursor:pointer;background-color:rgb(249, 250, 251); border:1px solid rgb(161, 177, 188);padding:1px;" wire:click="AvanzaNombre">Etiqueta: </span>  <red>*</red> </label> 
+                            <input type="text" class="form-control @error('nombre')error @enderror"  wire:model="nombre" value="{{old('nombre')}}" >
+                            @error('nombre') <error>{{$message}} </error>@enderror 
+                        </div>
+                        
+                        <div class="form-group col-md-6">
+                            <label>Observaciones:</label>
+                            <input type="text" class="form-control @error('observa')error @enderror"  wire:model="observa" value="{{old('observa')}}" readonly>
+                            @error('observa') <error>{{$message}} </error>@enderror 
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Mes de entrega:</label>
+                            <select class="form-control" wire:model.defer="MesEntrega" value="{{old('MesEntrega')}}" >  
+                                <option value="1">(01) Enero</option>
+                                <option value="2">(02) Febrero</option>
+                                <option value="3">(03) Marzo</option>
+                                <option value="4">(04) Abril</option>
+                                <option value="5">(05) Mayo</option>
+                                <option value="6">(06) Junio</option>
+                                <option value="7">(07) Julio</option>
+                                <option value="8">(08) Agosto</option>
+                                <option value="9">(09) Septiembre</option>
+                                <option value="10">(10) Octubre</option>
+                                <option value="11">(11) Noviembre</option>
+                                <option value="12">(12) Diciembre</option>
+                            </select>
+                            @error('MesEntrega')<error>{{$message}}</error> @enderror 
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Año de entrega:</label>
+                            <input type="number" class="form-control @error('respon')error @enderror" wire:model.defer="anio"  value="{{old('anio')}}" >
+                            @error('anio')<error>{{$message}}</error> @enderror 
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        @if($this->text1 == 'Editar')
+                            <button type="button" class="btn btn-light" wire:click="Borrar( {{$this->idva}})" data-dismiss="modal"><i class="bi bi-trash"> Borrar </i></button>
+                        @endif
+                    </div>
+--}}
+                </form>         
+            </div>
 
             <div class="modal-footer"> 
                 <div class="row" style="padding: 1rem; ">
                     <div class="col-md-4">
-                        <button type="reset" class="btn btn-default"  data-dismiss="modal" style="margin:5px;"><i class="fa fa-close"></i> Cerrar</button></a>
+                        <button type="reset" class="btn btn-secondary"  data-dismiss="modal" style="margin:5px;"><i class="fa fa-close"></i> Cerrar</button></a>
                     </div>
                     <div class="col-md-4">
-                       
-                        <button type="button" id='CierraModal' class="btn btn-default" style="margin:5px;"><i class="fas fa-plus"></i> Agregar evento</button>
+                        @if($text1=='Nuevo')
+                            <button type="button" id='CierraModal' wire:click="GuardaElNuevo"  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Agregar producto</button>
+                        @elseif($text1=="Editar")
+                            <button type="button" id='CierraModal' wire:click.defer="GuardaEdita()" class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Editar evento </button>
+                        @endif
                     </div>
                 </div>
+            </form>
             </div>
         </div>
+
     </div>
 </div>
 
