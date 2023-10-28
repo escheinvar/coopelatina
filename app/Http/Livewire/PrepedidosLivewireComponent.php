@@ -68,13 +68,14 @@ class PrepedidosLivewireComponent extends Component
         ######### "prod": Producto definido como:   ped_entrega:ped_prod@ped_prodvar       x   ej: com1:Amaranto Obleas@Coco
         #########                                        Ojo:   ped_prod=gpo+" "+nombre    y   ped_prodvar = 1 sabor(variante)
         ######### Excluye pedidos y folios inactivos, productos ya entregados, folios en estado distinto a 3 y pedidos de tienda
-        $mes=session('ProxCom2date')['mes']; 
-        $anio=session('ProxCom2date')['anio']; 
+        $mes=session('ProxPedido')['mes']; 
+        $anio=session('ProxPedido')['anio']; 
 
+        
         $YaPedidos=DB::select(
             "SELECT SUM(ped_cant) AS total, ped_prodid FROM folios_prods 
             JOIN folios ON folios_prods.ped_folio=folios.fol_id
-            WHERE ped_act='1' AND  fol_act='1' AND fol_edo='3' AND fol_anio=$anio AND fol_mes=$mes
+            WHERE ped_act='1' AND  fol_act='1' AND fol_edo>='3' AND fol_anio=$anio AND fol_mes=$mes
             GROUP BY ped_prodid");
         #dd($YaPedidos);
         return view('livewire.prepedidos-livewire-component',compact('todo'),['YaPedido'=>$YaPedidos]);

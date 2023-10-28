@@ -34,14 +34,14 @@
         @else
             Cooperativista registrado:
         @endif
-        {{auth()->user()->nombre}} {{auth()->user()->ap_pat}}
+            {{auth()->user()->nombre}} {{auth()->user()->ap_pat}}
     </div>
     <br>
 
     <!-- -------------------------------------- MUESTRA BOTONES DE PAGO O DE ANUALIDAD -------------------------- -->
     <div class="sticky-top row" style="padding:2rem; background-color:white;">
         <div class="col-lg-10 col-md-10 col-sm-10" style="font-size:3rem; text-align:right;">
-            Total $ <span id="GranTotal">0</span>   <input type="hidden" name="total" id="totalEsconde">          
+            Total $ <span id="GranTotal" style="font-size:3rem;">0</span>   <input type="hidden" name="total" id="totalEsconde">          
      
             @if(session('vigencia')=='1')
                 @if(session('EnPedido')=='1')       
@@ -118,10 +118,12 @@
     <table class="table table-striped table-hover" style="width:90%">
         <thead>
         <tr><th>
-            <div class="col-lg-1 col-md-0 col-sm-0"></div>
+            
             <div class="col-lg-5 col-md-4 col-sm-12">Producto</div>
             <div class="col-lg-1 col-md-2 col-sm-12">Precio {{session("usr_estatus")}}</div>
-            <div class="col-lg-2 col-md-3 col-md-12">Pedido</div>
+            <div class="col-lg-2 col-md-3 col-md-12">Pedido
+                <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:60%; font-size:50%; margin:2px; border-radius:100%; padding:2px;">Mín</span>
+            </div>
             <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">Subtotal</div>
         </th></tr>
         </thead>
@@ -130,7 +132,7 @@
             @if(session('vigencia')=='0')
                 <tr>
                     <td style="display:none;" id="renglonAnualidad">
-                        <div class="col-lg-1 col-md-0 col-sm-0"> &nbsp; </div>
+                        <!--div class="col-lg-1 col-md-0 col-sm-0"> &nbsp; </div-->
 
                         <div class="col-lg-5 col-md-4 col-sm-12">
                             <span style="font-size:1.7rem; font-weight:bold;"> 
@@ -175,11 +177,9 @@
                     }
                 ?>
                 @foreach($sabores as $sabor)
+                    <?php $faltan='0';?>
                     <tr>
                         <td>
-                            <!-- ---------------------- Espacio en blanco ----------------------- -->
-                            <div class="col-lg-1 col-md-0 col-sm-0"></div>
-
                             <!-- ---------------------- Nombre   ----------------------- -->
                             <div class="col-lg-5 col-md-4 col-sm-12">
                                 <span onclick="VerNoVer('{{$key}}','{{$value->id}}{{$sabor}}');";>
@@ -209,24 +209,30 @@
                                     </div>
                                     <!-- ------- Segund celda de pedido com2 ---------- -->
                                     <div style="margin-left:0.5rem; display:flex;">
-                                        @if($value->entrega == 'comid')
+                                        @if($value->entrega == 'comid') 
                                             <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" readonly>
                                         @else
                                             <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"   min="0" step="1"   {{$com2act}} >  <!-- placeholder="{{$com2text}}"-->
                                         @endif
+                                        
                                         <!-- ------- Pedido mínimo ---------- -->
-                                        @if($value->mintipo > 0)     
-                                            <?php $faltan = $value->min ;?>
+                                        <?php
+                                            if($value->mintipo=='1'){
+                                                $SeHaPedido=0; $faltantes='0';
+                                                foreach($YaPedido as $ya){
+                                                    if($ya->ped_prodid == $value->id){
+                                                        $SeHaPedido=$ya->total;
+                                                    }
+                                                }
+                                                $faltantes = $value->min - $SeHaPedido;
+                                            }
+                                        ?>
+                                        @if($value->mintipo=='1' AND $faltantes >'0')
                                             <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:50%; font-size:50%; margin:2px; border-radius:100%;padding:2px;">
-                                                @foreach($YaPedido as $ya)
-                                                    @if($ya->ped_prodid == $value->id)
-                                                        <?php $faltan=$value->min - $ya->total; ?>
-                                                    @endif
-                                                @endforeach
-                                                 @if($faltan >0) {{$faltan}} @endif
+                                                {{$faltantes}}                                                
                                             </span>
                                         @endif
-                                    </div>     
+                                        </div>     
                                 </div>   
                             </div>
 
