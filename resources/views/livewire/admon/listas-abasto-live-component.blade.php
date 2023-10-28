@@ -127,7 +127,7 @@
                       </div>
                       <!-- ------------com1 tienda para com1 ---- -->
                       <div >
-                        @if(session('EnPagos')=='0')
+                        @if(session('EnPagos')=='')
                           <input type='number' value="{{$ValorTien1}}" onload="subtotal('1','{{$prod->id}}','{{$pvar}}')" onchange="subtotal('1','{{$prod->id}}','{{$pvar}}')" class='producto' id="com1:tien_{{$prod->id}}@-{{$pvar}}" name="com1:tien_{{$prod->id}}@-{{$pvar}}"  min="0" step="1"   {{$com1act}}>
                         @endif
                       </div>
@@ -149,7 +149,7 @@
                       </div>
                       <!-- ------------com2 tienda para com2 ---- -->
                       <div style="">
-                        @if(session('EnPagos')=='0')
+                        @if(session('EnPagos')=='')
                           <input type='number' class='producto' id="com2:tien_{{$prod->id}}@-{{$pvar}}" value="{{$ValorTien2}}"  name="com2:tien_{{$prod->id}}@-{{$pvar}}"   step="1"  {{$com2act}}>
                         @endif
                       </div>

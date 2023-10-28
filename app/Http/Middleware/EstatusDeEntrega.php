@@ -177,17 +177,25 @@ class EstatusDeEntrega
             ->orderBy('work_fechatrabajo','asc')
             ->get();
 
+        #################################################################
+        ################## Establece estado de EnPagos
         if($EnPedido=='1'){
-            $EnPagos=true;
+            $EnPagos='';
         }else{
             $EnPagos=EstadosModel::where('edo_name','EnPagos')->value('edo_edo');
         }
+
+        ##################################################################
+        ################## Establece si hay Pedidos de ocasión
+        $Ocasion=Estadosmodel::where('edo_name','Ocasion')->value('edo_edo');
+
         ##################################################################
         ################################  Guarda variables en sesión
         session([
             'EnPedido'=>$EnPedido,          ### 0=no en pedido ó 1=si en pedido
             'EnEntrega'=>$EnEntrega,        ### 0=no en entrega ó 1=si en entrega
-            'EnPagos'=>$EnPagos,
+            'EnPagos'=>$EnPagos,            ### ""= (vacío) no en período de pagos 1=sí en período (es un checkbox)
+            'Ocasion'=>$Ocasion,            ### ""= (vacío) no hay productos de ocasión, 1=si hay (es un checkbox)
 
             'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
             'ProxChoro'=>$SigEvento,        ### texto explicativo de situación del calendario

@@ -1,4 +1,15 @@
-<div>
+<div>   
+    {{--
+    <!-- ------------------------------------------- -->
+    Session(EnPedido)={{session('EnPedido')}}<br>
+    Session(EnEntrega)={{session('EnEntrega')}}<br>
+    Session(EnPago)={{session('EnPagos')}}<br>
+    Session(Ocasion)={{session('Ocasion')}}<br>
+    <!-- ------------------------------------------- -->    
+    --}}
+    
+
+
     <h1>Validar pagos a partir de {{session('arrayMeses')[$mes]}}</h1>
     <div>
         @if(session('EnPedido')=='1')
@@ -7,6 +18,7 @@
             Ya finalizó el período de pedidos, los cooperativistas ya no pueden subir pagos
         @endif
     </div>
+{{--
     <div>
         Hay {{$est['preps'] + $est['peds']}} registros: {{$est['peds']}} pedidos y {{$est['preps']}} prepedidos ({{$est['prepsSinPago']}} sin comprobante de pago)
         @if( $est['prepsSinPago'] > 0)
@@ -25,20 +37,20 @@
             </div>
         @endif
     </div>
-
+--}}
     <!-- ----------------------- Switch de Estado ------------------------ -->
     @if( in_array(auth()->user()->priv, $petitCmte) && session('EnPedido')=='0') 
         
         <div>
-            <label> Activar / Desactivar Abasto</label><br>
+            <label> Desactivar/Activar Pagos</label><br>
             <label class="switch">
-                <input type="checkbox" wire:model="EnPagos" wire:click="CambiaEstado" >
+                <input type="checkbox" wire:model="EnPagos" wire:click="CambiaEstado">
                 <div class="slider round"></div> 
             </label>  
-            @if(session('EnPagos')==false)
+            @if(session('EnPagos')=='0' OR session('EnPagos')=='')
                 <span style="color:gray;">Validación de pagos Finalizada.</span> <span style="color:darkgreen;"> Abasto Activo.</span>
             @else
-                <span style="color:darkgreen;">Pagos en validación.</span> <span style="color:gray;"> Abasto Desactivo</span>
+                <span style="color:darkgreen;">Se validan pagos.</span> <span style="color:gray;"> Abasto Desactivo</span>
             @endif
         </div>
     @endif
@@ -49,44 +61,71 @@
     $mandaAbajo=[];
     ?>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>
-                    <div class="col-md-1" style="display:inline-block;">
-                        Folio
-                    </div>
-                    <div style="display:inline-block;width:350px;">
-                        Nombre
-                    </div>
-                    <div style="display:inline-block;width:300px;">
-                P        Estado
-                    </div>
+<!-- ---------------------- selector de tipo de caja (banco, tesoreria o caja ) ---------------------- -->
+@if( in_array(auth()->user()->priv, $petitCmte) && (session('EnPagos')==true || session('EnPedido')=='1'))
+    <div class="form-group" style="display:inline-block;" > 
+        <label>Tipo de transacción:</label> 
+        <select  class="form-control" wire:model="destinoLanas">
+            <option value="">Indica el destino del dinero</option>
+            <option value="banco">a banco</option>
+            <option value="teso">a teso</option>
+            <option value="caja">a caja</option>
+        </select>
+    </div>  
+@endif
 
-                    <div style="display:inline-block;">
-                        Pago
-                    </div>
-                </th>
-            </tr>
-        </thead>
+<!-- ---------------------- selector de mes ---------------------- -->
+<div class="form-group"  style="display:inline-block;" > 
+    <label>Mes:</label> 
+    <select class="form-control" wire:model="VerMes">
+        <option value="%">Todos</option>
+        @foreach($MesesExistentes as $i)
+            <option value="{{$i->fol_mes}}">{{session('arrayMeses')[$i->fol_mes]}}</option>
+        @endforeach
+    </select>
+</div> 
 
-        <tbody>
-            @if( in_array(auth()->user()->priv, $petitCmte) && (session('EnPagos')==true || session('EnPedido')=='1'))
-                <div style="display:inline-block;" wire:model="destinoLanas"> 
-                    <label>Indica el destino de la transacción:</label> 
-                    <select  class="form-control">
-                        <option value="">Indica el destino del dinero</option>
-                        <option value="banco">a banco</option>
-                        <option value="teso">a teso</option>
-                        <option value="caja">a caja</option>
-                    </select>
-                </div>  
-            @endif
+<!-- ---------------------- selector de estado ---------------------- -->
+<div class="form-group"  style="display:inline-block;" > 
+    <label>Tipo:</label> 
+    <select class="form-control" wire:model="VerEstado">
+        <option value="%">Todos</option>
+        <option value="4">Pre pedidos a pagar</option>
+        <option value="3">Pedidos pagados</option>
+        <option value="0">Cancelados</option> 
+    </select>
+</div> 
+    
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <div class="col-md-1" style="display:inline-block;;width:100px;">
+                    Folio
+                </div>
+                <div style="display:inline-block;width:350px;">
+                    Nombre
+                </div>
+                <div style="display:inline-block;width:100px;">
+                    Mes
+                </div>
+                <div style="display:inline-block;width:200px;">
+                    Estado
+                </div>
+
+                <div style="display:inline-block;">
+                    Pago
+                </div>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
         @foreach($pedidos as $p)
             <tr>
                 <td>
                     <!-- ---------- ID ---------- -->
-                    <div style="display:inline-block;">
+                    <div style="display:inline-block;width:100px;">
                         {{sprintf('%04d', $p->fol_id)}}
                     </div>
 
@@ -94,12 +133,17 @@
                     <div style="display:inline-block; @if($p->fol_edo == '0')text-decoration:line-through; @endif; width:350px;"> 
                         {{$p->nombre}} {{$p->ap_pat}} {{$p->ap_mat}}
                     </div>
+
+                      <!-- ---------- MES---------- -->
+                      <div style="display:inline-block; width:100px;"> 
+                        {{session('arrayMes')[$p->fol_mes]}}
+                      </div>
                     
-                    <!-- ---------- MES Y ESTADO ---------- -->
-                    <div style="display:inline-block; width:300px;"> 
+                    <!-- ---------- ESTADO ---------- -->
+                    <div style="display:inline-block; width:200px;"> 
                         {{session('arrayMes')[$p->fol_mes]}}
                         @if($p->fol_edo =='5')
-                            Pre pedido <b style="color:red;">con anualidad</b>
+                            Pre pedido <br><b style="color:red;">con anualidad</b>
 
                         @elseif($p->fol_edo =='4' )
                             Pre pedido

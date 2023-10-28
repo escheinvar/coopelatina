@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Request;
 
 class PagoPedidosLiveComponent extends Component
 {
+    use WithFileUploads;
     public $pedidos, $prods, $SubeComprobPago, $SubeComprTipo, $destinoLanas;
     public $EnPagos;
     public $petitCmte=['root','teso'];
-    use WithFileUploads;
-    protected $proxies = '*';
+    public $VerMes, $MesesExistentes, $VerEstado;
+    
     
     public function SubirPago(Request $request){
         
@@ -126,7 +127,7 @@ class PagoPedidosLiveComponent extends Component
     }
 
     public function CambiaEstado(){
-        if(session('EnPagos') == false){$nvo=true;}else{$nvo=false;}
+        if(session('EnPagos') == ''){$nvo='1';}else{$nvo='';}
         EstadosModel::where('edo_name','EnPagos')->update(['edo_edo'=>$nvo]);
         session(['EnPagos'=>$nvo]);
         
@@ -142,24 +143,32 @@ class PagoPedidosLiveComponent extends Component
         
     }
 
-    public function mount(){
-        $this->EnPagos=session('EnPagos');
-    }
+
 
     public function render() {
-        
+        #dd(session());
+        $this->EnPagos=session('EnPagos');
         $mesHoy=Date("m");
         $anioHoy=Date("Y");
+        
+        $this->MesesExistentes=FoliosModel::where('fol_act','1')->distinct('fol_mes')->get();
+        if($this->VerEstado=='%' ) {   $a='>=';$b='0';
+        }elseif($this->VerEstado=='4'){$a='>=';$b='4';
+        }elseif($this->VerEstado=='3'){$a='=';$b='3';
+        }elseif($this->VerEstado=='0'){$a='=';$b='0';
+        }else{$a='>=';$b='0';}
+
         $this->pedidos=DB::table('folios')
             ->join('users','fol_usrid','=','id')
             ->where('fol_act','1')
-            ->where('fol_mes','>=',$mesHoy)
+            ->where('fol_mes','LIKE',$this->VerMes)
             ->where('fol_anio','>=',$anioHoy)
+            ->where('fol_edo',$a,$b)
             ->orderBy('fol_usr','asc')
             ->orderBy('fol_id','asc')
             ->get();
-        
-        $folios=DB::table('folios')
+
+        /*$folios=DB::table('folios')
             ->where('fol_act','1')
             ->where('fol_mes','>=',$mesHoy)
             ->where('fol_anio','>=',$anioHoy)
@@ -171,8 +180,20 @@ class PagoPedidosLiveComponent extends Component
             ->where('ped_act','1')
             ->whereIn('ped_folio',$folios)
             ->get();
-        
+        */
+        $this->prods=DB::table('folios_prods')
+            ->where('ped_act','1')
+            ->whereIn('ped_folio',DB::table('folios')
+                                    ->where('fol_act','1')
+                                    ->where('fol_mes','>=',$mesHoy)
+                                    ->where('fol_anio','>=',$anioHoy)
+                                    ->orderBy('fol_id','asc')
+                                    ->orderBy('fol_id','asc')
+                                    ->pluck('fol_id')->toArray()
+            )
+            ->get();
         ##### Obtiene estadísticas
+        /*
         $NumPrepedSinPago=FoliosModel::where('fol_act','1')
             ->where('fol_mes','>=',$mesHoy)
             ->where('fol_anio','>=',$anioHoy)
@@ -196,10 +217,10 @@ class PagoPedidosLiveComponent extends Component
             ->count();
         $Estadisticas=['preps'=>$NumPreped,'prepsSinPago'=>$NumPrepedSinPago, 'peds'=>$NumPed];
         #dd($Estadisticas);
-
+                */
         ##### Determina el etado
         
 
-        return view('livewire.admon.pago-pedidos-live-component',['mes'=>$mesHoy,'anio'=>$anioHoy,'est'=>$Estadisticas]);
+        return view('livewire.admon.pago-pedidos-live-component',['mes'=>$mesHoy,'anio'=>$anioHoy]);
     }
 }

@@ -16,13 +16,20 @@
 <style>
    
 </style>
-
+    {{--
+     <!-- ------------------------------------------- -->
+     Session(EnPedido)={{session('EnPedido')}}<br>
+     Session(EnEntrega)={{session('EnEntrega')}}<br>
+     Session(EnPago)={{session('EnPagos')}}<br>
+     Session(Ocasion)={{session('Ocasion')}}<br>
+     <!-- ------------------------------------------- -->
+     --}}
     <div class="row" style="margin:1rem;">
         <!-- ------------------------------------------------ ARRIBA ----------------------------------------------- -->
         <div class="col-md-12" style="text-align:right;">
             
             Hoy es {{ session('arraySemana')[0] }}  {{date('n')}} de {{session('arrayMeses')[date('n')]}} de {{date('Y')}}
-    </div>
+        </div>
     </div>
 
     <div>
