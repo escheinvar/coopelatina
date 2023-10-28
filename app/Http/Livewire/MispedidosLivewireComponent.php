@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Request;
 
 class MispedidosLivewireComponent extends Component
 {
-    #public $GranVariable="activos";  
     public $GranVariable="activos";
     public $folios, $prods;
 

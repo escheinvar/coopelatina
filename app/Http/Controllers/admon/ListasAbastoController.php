@@ -17,20 +17,19 @@ class ListasAbastoController extends Controller
         return view('admon.ListasAbasto');
     }
     public function store(Request $request){
-        $bla=[];$mes='10'; $anio='2023';
+        $mes=session('ProxCom2date')['mes'] ; $anio=session('ProxCom2date')['anio'];
         foreach($request->all() as $key=>$value){
             if(preg_match("/com[1-2]:tien_.*/",$key) AND $value > 0) {
                 $comanda=preg_replace("/:.*/","",$key); 
                 $prodId=preg_replace("/.*:tien_/","",$key); $prodId=preg_replace("/@.*/","",$prodId);
                 $sabor=preg_replace("/.*@-/","",$key);
-                $bla[$key]=$comanda."-".$prodId."-".$sabor;
+                #$bla[$key]=$comanda."-".$prodId."-".$sabor;
                 $FolioCoope=FoliosModel::where('fol_act','1')
                     ->where('fol_anio',$anio)    
                     ->where('fol_mes',$mes)
                     ->where('fol_usrid','0')
                     ->value('fol_id');
-                #dd($FolioCoope, $request->all(), $bla);
-                #$producto= DB::select("SELECT CONCAT(gpo,' ',nombre) AS nombreFin FROM productos WHERE id=$prodId");
+                
                 $producto=ProductosModel::where('id',$prodId)->first();
                 if($producto->gpo == $producto->nombre){$NombreFin=$producto->gpo;}else{$NombreFin=$producto->gpo." ".$producto->nombre;}
                 

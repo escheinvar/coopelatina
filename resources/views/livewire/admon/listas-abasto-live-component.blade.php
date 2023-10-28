@@ -11,6 +11,7 @@
     </div>
     <br><br>
     
+  <!-- -----------------------------Filtra por Encaegado--------------------------------------- -->
     <div class="form-group col-md-3">
       <label >Encargado:</label>
       <select class="form-control @error('SelEncar')error @enderror" wire:model="SelEncar" value="{{old('SelEncar')}}">
@@ -22,6 +23,7 @@
       @error('SelEncar')<error> {{$message}}</error> @enderror
     </div>
 
+  <!-- ----------------------------- Filgra por  Productor --------------------------------------- -->
     <div class="form-group col-md-3">
       <label >Productor:</label>
       <select class="form-control @error('SelProd')error @enderror" wire:model="SelProd" value="{{old('SelProd')}}">
@@ -52,19 +54,21 @@
           <tr>
             <th>
               <div class="col-lg-5 col-md-5 col-sm-2">
-                <span wire:click="orden('responsable')" style="cursor:pointer;">Encar.</span>  / 
+                <span wire:click="orden('responsable')" style="cursor:pointer;">Encargado</span>  / 
                 <span wire:click="orden('gpo')" style="cursor:pointer;">Producto</span> / 
                 <span wire:click="orden('proveedor')" style="cursor:pointer;">Productor</span>
               </div>
               <div class="col-lg-1 col-md-1 col-sm-1">
-                <span wire:click="orden('entrega')" style="cursor:pointer;">Entrega</span> / 
-                Min
+                <span wire:click="orden('entrega')" style="cursor:pointer;">Entrega</span>
+                <!--span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:50%; margin:2px; border-radius:100%;padding:2px;"-->
+                  / Min
+                <!--/span-->
               </div>
               <div class="col-lg-2 col-md-2 col-sm-2">
-                Peds + tien 1
+                Peds+Tien 1
               </div>
               <div class="col-lg-2 col-md-2 col-sm-2">
-                Peds + tien 2
+                Peds+Tien 2
               </div>
             </th>
           </tr>
@@ -105,10 +109,12 @@
 
                     <!-- ------------------------------ tipo com o tienda / minimo-------------------------- -->
                     <div class="col-lg-1 col-md-1 col-sm-12">
-                      {{$prod->entrega}} <!--/ {{$prod->venta}}-->
-                      <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:50%; margin:2px; border-radius:100%;padding:2px;">
-                        3 
-                    </span>
+                      {{$prod->entrega}}
+                      @if($prod->mintipo =='1')
+                        <!--span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:70%; margin:2px; border-radius:100%;padding:2px;"-->
+                         / {{$prod->min}}
+                        <!--/span-->
+                      @endif
                     </div>
                     <?php
                       #### Busca el valor que corresponde a suma de pedidos o de tienda
