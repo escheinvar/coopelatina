@@ -224,11 +224,19 @@
                                     </ul>
                                 </li-->
 
+                                <li class="nav-item disabled"> <!-- ------------ Menú: Los Productores ----- -->
+                                    <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class='fas fa-tractor'></i>  <span class="ms-1 d-none d-sm-inline">Los productores</span>
+                                    </a>
+                                </li>
+                                
                                 <li class="nav-item disabled"> <!-- ------------ Menú: Calendario de entregas ----- -->
                                     <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="bi bi-chat-dots-fill"></i>  <span class="ms-1 d-none d-sm-inline">Opinar</span>
                                     </a>
                                 </li>
+
+                                
                             </ul>
 
                             <hr>

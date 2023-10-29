@@ -17,7 +17,7 @@ button.agregar{padding:0.3rem; vertical-align:baseline; float: right;border-radi
 error {color:red; font-size: 1rem; }
 red{color:red;}
 .error {border:1px solid red;}
-ch{font-size: 0.8rem;}
+ch{font-size: 1.3rem;}
 .nolink{text-decoration:none;}
 
 .flex-container-justify {  display: -webkit-flex;  display: flex;  -webkit-flex-direction: row; flex-direction: row;}

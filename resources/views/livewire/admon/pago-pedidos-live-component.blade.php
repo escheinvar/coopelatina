@@ -8,8 +8,6 @@
     <!-- ------------------------------------------- -->    
     --}}
     
-
-
     <h1>Validar pagos a partir de {{session('arrayMeses')[$mes]}}</h1>
     <div>
         @if(session('EnPedido')=='1')
@@ -18,26 +16,6 @@
             Ya finalizó el período de pedidos, los cooperativistas ya no pueden subir pagos
         @endif
     </div>
-{{--
-    <div>
-        Hay {{$est['preps'] + $est['peds']}} registros: {{$est['peds']}} pedidos y {{$est['preps']}} prepedidos ({{$est['prepsSinPago']}} sin comprobante de pago)
-        @if( $est['prepsSinPago'] > 0)
-            <div style="color:red;">
-                Faltan subir {{$est['prepsSinPago']}} comprobantes de pago
-            </div>
-        @endif
-        @if($est['preps'] > 0)
-            <div style="color:red;">
-                Faltan validar {{$est['preps']}} prepedidos
-            </div>    
-        @endif
-        @if($est['prepsSinPago']=='0' && $est['preps']=='0')
-            <div style="color:orange;">
-                Todo en orden
-            </div>
-        @endif
-    </div>
---}}
     <!-- ----------------------- Switch de Estado ------------------------ -->
     @if( in_array(auth()->user()->priv, $petitCmte) && session('EnPedido')=='0') 
         

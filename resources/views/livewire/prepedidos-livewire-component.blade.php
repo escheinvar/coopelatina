@@ -1,6 +1,6 @@
 <div>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     @csrf
     <?php $ped=session('ProxPedido'); $com1=session('ProxCom1'); $com2=session('ProxCom2'); ?>
     <div class="row" style="text-align:left;" > 
@@ -228,7 +228,7 @@
                                             }
                                         ?>
                                         @if($value->mintipo=='1' AND $faltantes >'0')
-                                            <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:50%; font-size:50%; margin:2px; border-radius:100%;padding:2px;">
+                                            <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:70%; font-size:70%; margin:2px; border-radius:100%;padding:2px;">
                                                 {{$faltantes}}                                                
                                             </span>
                                         @endif
@@ -252,8 +252,7 @@
                                     @if($value->img == '' || is_null($value->img))
                                         <img src="{{ asset('/logo.png') }}" style='width:150px; margin:15px; float:left;'><br>
                                     @else                                        
-                                        <!--img src={{asset("/productos/$value->img")}} style="width:150px; margin:15px; float:left;"><br-->
-                                        <img src='http://coopelatina.org/sistema/img/productos/Aguacate_Barzon.jpeg' style='width:150px; margin:15px; float:left;'><br>
+                                        <img src={{asset("$value->img")}} style="width:150px; margin:15px; float:left;"><br>
                                     @endif
 
                                     <p style="font-size:1.5rem;"> {{$value->descripcion}}</p>
@@ -264,6 +263,8 @@
                                         <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Pub $ {{$value->preciopub}} </div> 
                                     @endif
 
+                                    <p style="font-size:1.5rem;">Responsable: {{$value->responsable}}</p>
+                                    
                                     @if($value->mintipo == '0')
                                         <p style="font-size:1.5rem;"> Este producto no requiere ningún mínimo de volumen para que el proveedor lo traiga.</p>
                                     @elseif($value->mintipo =='1')
@@ -282,7 +283,7 @@
                                     <div style="font-size:2rem;margin:1rem;">
                                         <button type="button" style="float:right;" class="btn btn-primary" wire:click="AbrirModal('edit',{{$value->id}})" data-toggle="modal" data-target="#EditarProducto">
                                             <i class="bi bi-pencil-square"></i> 
-                                            Editar producto
+                                            Editar producto 
                                         </button>
                                     </div>
                                 @endif
@@ -293,153 +294,297 @@
             @endforeach
         </tbody>
     </table>
-    <!-- ------------------------- BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ------------------- -->
+    <!-- ------------------------- LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ------------------- -->
     @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
+        <!-- ------------ Lista de inactivos -------------- -->
+        <h3>Productos ocultos  o sin entrega:</h3>   
+        @foreach($inacts as $i)
+            <li><span style="cursor:pointer"  wire:click="AbrirModal('edit',{{$i->id}})" data-toggle="modal" data-target="#EditarProducto"> {{$i->nombre}}  
+                @if($i->entrega=='no') 
+                    <span style="color:rgb(151, 151, 151);"> (Solo venta en tienda) </span> 
+                @endif
+                @if($i->activo =='0')
+                    <span style="background-color:rgb(221, 221, 221);"> (Oculto) </span> 
+                @endif
+
+            </li>
+        @endforeach
+
         <div style="font-size:2rem;margin:1rem;">
             <button type="button" class="btn btn-primary" wire:click="AbrirModal('nvo','')"  data-toggle="modal" data-target="#EditarProducto"><i class="bi bi-plus-square-fill"></i> Ingresar nuevo producto</button>
         </div>
     @endif
-</form>
 
 
-<!-- --------------------------------------------------------------------------------------------------------- -->
-<!-- --------------------------------------------- MODAL PARA EDITAR o AGREGAR PRODUCTO -------------------------- -->
-<!-- --------------------------------------------------------------------------------------------------------- -->
-<div class="modal fade" id="EditarProducto" tabindex="-1"  wire:ignore.self >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: rgb(51, 51, 173);color:white;">
-                <div class="row container" >
-                    <H1> {{$text1}} producto {{$prod_id}}</H1>
+
+
+
+
+
+
+
+    <!-- ######################################################################################################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <!-- ############################################# MODAL PARA EDITAR o AGREGAR PRODUCTO  ##################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <div class="modal fade " id="EditarProducto" tabindex="-1"  wire:ignore.self >
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(51, 51, 173);color:white;">
+                    <div class="row container" >
+                        <H1> {{$text1}} producto {{$prodid}}</H1>
+                        <h3>@if($gpo == 'NUEVO'){{$gpo2}} @else {{$gpo}} @endif {{$nombre}}</h3>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="modal-body">
-
-                <form method="POST"> 
-                    @csrf 
-                    $this->activo =$datos->activo;
-                    $this->gpo=$datos->gpo;
-                    $this->nombre=$datos->nombre;
-                    $this->variantes=$datos->variantes;
-                    $this->presentacion=$datos->presentacion;
-                    $this->entrega=$datos->entrega;
-                    $this->venta=$datos->venta;
-                    $this->costo=$datos->costo;
-                    $this->precioact=$datos->precioact;
-                    $this->precioreg=$datos->precioreg;
-                    $this->preciopub=$datos->preciopub;
-                    $this->mintipo=$datos->min;
-                    $this->proveedor=$datos->proveedor;
-                    $this->categoria=$datos->categoria;
-                    $this->responsable=$datos->responsable;
-                    $this->descripcion=$datos->descripcion;
-                    $this->img=$datos->img;
-                    $this->orden=$datos->orden;
-{{--                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label>Tipo de evento:  <red>*</red></label>
-                            <select class="form-control" wire:model.defer="tipo" value="{{old('tipo')}}" >  
-                                <option value="">Selccionar tipo</option>
-                                <option value="ped">Levantar Pedidos</option>
-                                <option value="com1">Primer Entrega</option>
-                                <option value="com2">Segunda Entrega</option>
-                                <option value="evento">Evento</option>
+                
+                <div class="modal-body">
+                    <div style="row">
+                        <!-- ------------------------------- Productor --------------------------- -->
+                        <div class="form-group col-md-11 col-sm-11">
+                            <label>Productor:  <red>*</red></label>
+                            <select class="form-control  @error('proveedor')error @enderror" " wire:model="proveedor" value="{{old('proveedor')}}" >  
+                                <option value="">Selccionar Productor</option>
+                                @foreach($productores as $i)
+                                    <option value="{{$i->proveedor}}">{{$i->proveedor}}</option>
+                                @endforeach
                             </select>
-                            @error('tipo')<error>{{$message}}</error> @enderror 
+                            @error('proveedor')<error>{{$message}}</error> @enderror 
+                        </div>
+                        <div class="col-md-1 col-sm-1">
+                            <label> &nbsp; </label>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" > +</button>
+                        </div>
+                    </div>
+
+                    <div style="row">
+                        <!-- ------------------------------- SWITCH ACTIVAR / DESACTIVAR PRODUCTO --------------------------- -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <?php if($activo=='0'){$activo='';} ?>
+
+                            <label> Ocultar/Mostrar Producto</label><br>
+                            <label class="switch">
+                                <input type="checkbox" wire:model="activo" >
+                                <div class="slider round"></div> 
+                            </label>
+                            @if($activo=='1') <span style="color:darkgreen;">Producto activo</span> @else <span style="color:gray;"> Producto oculto</span> @endif
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- gpo (Pronombre) --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label>Pronombre:  <red>*</red></label>
+                            <select class="form-control  @error('gpo')error @enderror" " wire:model="gpo" value="{{old('gpo')}}" >  
+                                <option value="">Selccionar Pronombre</option>
+                                @foreach($Grupos as $i)
+                                    <option value="{{$i->gpo}}">{{$i->gpo}}</option>
+                                @endforeach
+                                <option value="NUEVO">Otro</option>
+                            </select>
+                            @error('gpo')<error>{{$message}}</error> @enderror 
                         </div>
 
-                        <div class="form-group col-md-6">
-                            <label>Responsable: </label>
-                            <input type="text" class="form-control @error('respon')error @enderror" wire:model.defer="respon"  value="{{old('respon')}}" >
-                            @error('respon') <error>{{$message}} </error>@enderror
+                        @if($gpo=='NUEVO')
+                            <div class="form-group col-md-6 col-sm-12"> 
+                                <label>Nuevo Pronombre: <red>*</red> </label>
+                                <input type="text" class="form-control @error('gpo2')error @enderror" wire:model="gpo2"  value="{{old('gpo2')}}" >
+                                @error('gpo2') <error>{{$message}} </error>@enderror
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Nombre --------------------------- -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>Nombre: <red>*</red></label>
+                            <input type="text" class="form-control @error('nombre')error @enderror" wire:model="nombre"  value="{{old('nombre')}}" >
+                            @error('nombre') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- sabores --------------------------- -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>Sabores: </label>
+                            <input type="text" class="form-control @error('variantes')error @enderror" wire:model.defer="variantes"  value="{{old('variantes')}}" placeholder="chocolate,coco,guanábana">
+                            <ch>Indicar sabores separados por comas.</ch>
+                            @error('variantes') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Presentación --------------------------- -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>Presentación: <red>*</red></label>
+                            <input type="text" class="form-control @error('presentacion')error @enderror" wire:model.defer="presentacion"  value="{{old('presentacion')}}" placeholder="Fco 500 ml">
+                            <ch>Indicar sabores separados por comas.</ch>
+                            @error('presentacion') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Entrega --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label>Entrega:  <red>*</red></label>
+                            <select class="form-control  @error('entrega')error @enderror" " wire:model="entrega" value="{{old('entrega')}}" >  
+                                <option value="">Selccionar Entrega</option>
+                                <option value="com1">Solo en Com1</option>
+                                <option value="com2">Solo en Com2</option>
+                                <option value="com12">En 1 y 2 independientes</option>
+                                <option value="comid">En 1 y 2 idénticas</option>
+                                <option value="no">No en entrega</option>
+                            </select>
+                            @error('entrega')<error>{{$message}}</error> @enderror 
+                        </div>
+
+                        <!-- ------------------------------- Venta en tienda --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label>Venta en tienda:  <red>*</red></label>
+                            <select class="form-control @error('venta')error @enderror" " wire:model="venta" value="{{old('venta')}}" >  
+                                <option value="">Selccionar</option>
+                                <option value="no">No en venta</option>
+                                <option value="si">Si en venta</option>
+                            </select>
+                            @error('venta')<error>{{$message}}</error> @enderror 
+                        </div>
+                    </div>
+
+                    
+                    <div class="row">
+                        <!-- ------------------------------- Costo --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>$ Costo: <red>*</red></label>
+                            <input type="number" class="form-control @error('costo')error @enderror" wire:model="costo"  value="{{old('costo')}}" min='0'>
+                            @error('costo') <error>{{$message}} </error>@enderror
+                        </div>
+
+                        <!-- ------------------------------- Precio act --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>$ Precio Admin: <red>*</red> </label>
+                            <input type="number" class="form-control @error('precioact')error @enderror" wire:model="precioact"  value="{{old('precioact')}}" min={{$costo}}>
+                            @error('precioact') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Precio Regis --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>$ Precio Cooperat: <red>*</red> </label>
+                            <input type="number" class="form-control @error('precioreg')error @enderror" wire:model="precioreg"  value="{{old('precioreg')}}" min={{$costo}}>
+                            @error('precioreg') <error>{{$message}} </error>@enderror
+                        </div>
+
+                        <!-- ------------------------------- Precio Publico --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>$ Precio Público: <red>*</red></label>
+                            <input type="number" class="form-control @error('preciopub')error @enderror" wire:model="preciopub"  value="{{old('preciopub')}}" min={{$costo}}>
+                            @error('preciopub') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Tipo de Mínimo --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>Mínimo de entrega?:  <red>*</red></label>
+                            <select class="form-control @error('mintipo')error @enderror" wire:model="mintipo" value="{{old('mintipo')}}" >  
+                                <option value=''>Indicar</option>
+                                <option value='0'>No</option>
+                                <option value='1'>Sí, x producto</option>
+                                <!--option value="2">Dinero</option-->
+                            </select>
+                            @error('mintipo')<error>{{$message}}</error> @enderror 
+                        </div>
+
+                        <!-- ------------------------------- Valor Mínimo --------------------------- -->
+                        @if($mintipo == '1')
+                            <div class="form-group col-md-6 col-sm-6">
+                                <label>Valor mínimo: </label>
+                                <input type="number" class="form-control @error('min')error @enderror" wire:model="min"  value="{{old('min')}}" min='0'>
+                                @error('min') <error>{{$message}} </error>@enderror
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Descripción del producto --------------------------- -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>Descripcion: <red>*</red></label>
+                            <textarea class="form-control @error('descripcion')error @enderror" wire:model="descripcion"  value="{{old('descripcion')}}" rows='5'></textarea>
+                            @error('descripcion') <error>{{$message}} </error>@enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- ------------------------------- Responsable --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label>Responsable:  <red>*</red></label>
+                            <select class="form-control @error('responsable')error @enderror" " wire:model="responsable" value="{{old('responsable')}}" >  
+                                <option value="">Selccionar Responsable</option>
+                                @foreach ($responsables as $i)
+                                    <option value="{{$i->usr}}">{{$i->nombre}} {{$i->ap_pat}}</option> 
+                                @endforeach
+                            </select>
+                            @error('responsable')<error>{{$message}}</error> @enderror 
+                        </div>
+
+                        <!-- ------------------------------- Categoria --------------------------- -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label>Categoría:  <red>*</red></label>
+                            <select class="form-control @error('categoria')error @enderror" " wire:model="categoria" value="{{old('categoria')}}" >  
+                                <option value="">Selccionar Categoria</option>
+                                @foreach ($categorias as $i)
+                                    <option value="{{$i->categoria}}">{{$i->categoria}}</option> 
+                                @endforeach
+                            </select>
+                            @error('categoria')<error>{{$message}}</error> @enderror 
                         </div>
                     </div>
                     
+                    <!-- ------------------------------- Imágen --------------------------- -->
                     <div class="row">
-                        <div class="form-group col-md-6">
-                            <label>Fecha Inicio: <red>*</red></label> 
-                            <input type="datetime-local" wire:model.defer="inicio" min={{date("Y-m-dT00:00")}} value="{{old('inicio')}}" class="form-control @error('inicio')error @enderror" >
-                            @error('inicio')<error> {{$message}}</error> @enderror
-                        </div>
-                        
-                        <div class="form-group col-md-6">
-                            <label>Fecha Fin:</label>
-                            <input type="datetime-local" class="form-control @error('fin')error @enderror" wire:model.defer="fin" value="{{old('fin')}}">
-                            @error('fin')<error>{{$message}} </error> @enderror
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label> <span style="cursor:pointer;background-color:rgb(249, 250, 251); border:1px solid rgb(161, 177, 188);padding:1px;" wire:click="AvanzaNombre">Etiqueta: </span>  <red>*</red> </label> 
-                            <input type="text" class="form-control @error('nombre')error @enderror"  wire:model="nombre" value="{{old('nombre')}}" >
-                            @error('nombre') <error>{{$message}} </error>@enderror 
-                        </div>
-                        
-                        <div class="form-group col-md-6">
-                            <label>Observaciones:</label>
-                            <input type="text" class="form-control @error('observa')error @enderror"  wire:model="observa" value="{{old('observa')}}" readonly>
-                            @error('observa') <error>{{$message}} </error>@enderror 
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label>Mes de entrega:</label>
-                            <select class="form-control" wire:model.defer="MesEntrega" value="{{old('MesEntrega')}}" >  
-                                <option value="1">(01) Enero</option>
-                                <option value="2">(02) Febrero</option>
-                                <option value="3">(03) Marzo</option>
-                                <option value="4">(04) Abril</option>
-                                <option value="5">(05) Mayo</option>
-                                <option value="6">(06) Junio</option>
-                                <option value="7">(07) Julio</option>
-                                <option value="8">(08) Agosto</option>
-                                <option value="9">(09) Septiembre</option>
-                                <option value="10">(10) Octubre</option>
-                                <option value="11">(11) Noviembre</option>
-                                <option value="12">(12) Diciembre</option>
-                            </select>
-                            @error('MesEntrega')<error>{{$message}}</error> @enderror 
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label>Año de entrega:</label>
-                            <input type="number" class="form-control @error('respon')error @enderror" wire:model.defer="anio"  value="{{old('anio')}}" >
-                            @error('anio')<error>{{$message}}</error> @enderror 
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-12">
-                        @if($this->text1 == 'Editar')
-                            <button type="button" class="btn btn-light" wire:click="Borrar( {{$this->idva}})" data-dismiss="modal"><i class="bi bi-trash"> Borrar </i></button>
+                        @if($img == '' || is_null($img))
+                            <div class="col-md-6">
+                                <label  class="form-label">Cargar Imágen</label>
+                                <input class="form-control" type="file" wire:model="SubeImagen" accept="image/png, image/jpeg" >
+                                @error('SubeImagen') <error>{{$message}}</error> @enderror
+                                <div wire:loading wire:target="SubeImagen">Cargando archivo....</div>
+                            </div>
+        
+                            @if($SubeImagen)                                
+                                <div class="col-md-12">
+                                    Previsualización de {{ $SubeImagen->getMimeType() }} :<br>
+                                    <img src="{{$SubeImagen->temporaryUrl()}}" style="width:200px; border=1px solid black;">
+                                </div>                                
+                            @endif
+                        @else
+                            <div class="col-md-12">                                     
+                                <img src={{asset("$img")}} style="width:200px; margin:15px;"><br>
+                                <button class="btn btn-light"  style="width:200px; margin:15px;" wire:click="BorrrarImg({{$prodid}})"><i class="fa fa-close"></i> Borrar Imágen</button>
+                            </div>
                         @endif
-                    </div>
---}}
-                </form>         
-            </div>
+                    </div>  
+                </div>
 
-            <div class="modal-footer"> 
-                <div class="row" style="padding: 1rem; ">
-                    <div class="col-md-4">
-                        <button type="reset" class="btn btn-secondary"  data-dismiss="modal" style="margin:5px;"><i class="fa fa-close"></i> Cerrar</button></a>
-                    </div>
-                    <div class="col-md-4">
-                        @if($text1=='Nuevo')
-                            <button type="button" id='CierraModal' wire:click="GuardaElNuevo"  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Agregar producto</button>
-                        @elseif($text1=="Editar")
-                            <button type="button" id='CierraModal' wire:click.defer="GuardaEdita()" class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Editar evento </button>
-                        @endif
+                <!-- ---------------------------------------------------------------------- Pie de modal de prucuctos  -------------------------------------------------------- -->
+                <div class="modal-footer"> 
+                    <div class="row" style="padding: 1rem; ">
+                        <div class="col-md-4">
+                            <button type="reset" class="btn btn-secondary"  data-dismiss="modal" style="margin:5px;"><i class="fa fa-close"></i> Cerrar</button></a>
+                        </div>
+                        <div class="col-md-4">
+                            @if($text1=='Nuevo')
+                                <button type="button" id='CierraModal' wire:click="GuardaEdita('00')"  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Agregar producto</button>
+                            @elseif($text1=="Editar")
+                                <button type="button" id='CierraModal' wire:click="GuardaEdita({{$prodid}})" class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Editar evento {{$prodid}}</button>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </form>
             </div>
         </div>
-
     </div>
-</div>
+</form>
 
 
 <!-- --------------------------------------------------------------- JAVASCRIPT ------------------------------------------------------------ -->
