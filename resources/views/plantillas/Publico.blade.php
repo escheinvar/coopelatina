@@ -26,7 +26,7 @@
         <main>
             <nav>
                Cooperativa de consumo Integración Latinoamericana<br>
-               <a href="/">Quiénes Somos</a> | cómo participar | productos | contacto | <a href="/login">Ingresar al sistema</a>
+               <a href="/">Quiénes Somos</a> | cómo participar | productos | <a href="/productores">productores</a> | contacto | <a href="/login">Ingresar al sistema</a>
                <h3> @yield('seccion') </h3>
             </nav>
             

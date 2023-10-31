@@ -12,6 +12,7 @@ use App\Http\Controllers\admon\RecuperarPasswordController;
 use App\Http\Controllers\admon\RecuperarPasswordController2;
 use App\Http\Controllers\coop_calendarController;
 use App\Http\Controllers\coop_misPedidos;
+use App\Http\Controllers\coop_productoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,7 @@ use App\Http\Controllers\coop_misPedidos;
 Route::get('/', function(){    return view('publico.somos');  });
 Route::get('/nologin', function(){    return "Debes ser Cooperativista y <a href='/login'>autenticar</a> primero para poder entrar<br><a href='/'>A inicio</a> ";   });
 Route::get('/noadmin', function(){    return "Debes ser Cooperativista ADMINISTRADOR y <a href='/login'>autenticar</a> primero para poder entrar<br><a href='/prepedido'>A PREPEDIDO</a> ";    });
-
+Route::get('/productores',[coop_productoresController::class, 'index'])->name('productores');
 
 #######################################################################################
 ###################################################################   SISTEMA DE ACCESO

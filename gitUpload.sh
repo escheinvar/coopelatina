@@ -37,5 +37,8 @@ php artisan migrate
 echo "################################### Generar Seeds"
 php artisan db:seed
 
+echo "################################### Generar liga de archivos"
+php artisan storage:link 
+
 echo "################################### Ejecutar Servidor"
 php artisan serve --host=200.58.106.175

@@ -222,8 +222,21 @@
                                 @error('privs')<error> Se requiere indicar un privilegio</error> @enderror
                             </div>
                         </div>
+                        
                         <div class="row">
-                            @if(session('usr_privs') == 'root' )
+                            <div class="form-group col-md-12">
+                                <label>Fecha de Registro:</label>
+                                {{$dateregistro}}
+                                <label>Vencimiento de anualidad:</label>
+                                {{$membrefin}}
+                                <label>Número de trabajos en anualidad:</label>
+                                {{$trabajos}}
+                                
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @if(auth()->user()->priv == 'root' )
                                 @if($text1 == "Editar")
                                     <div class="form-group col-md-3">
                                         <label for="nombre">Activo:</label>

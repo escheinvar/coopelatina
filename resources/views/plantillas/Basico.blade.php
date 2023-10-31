@@ -224,8 +224,8 @@
                                     </ul>
                                 </li-->
 
-                                <li class="nav-item disabled"> <!-- ------------ Menú: Los Productores ----- -->
-                                    <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
+                                <li class="nav-item"> <!-- ------------ Menú: Los Productores ----- -->
+                                    <a href="/productores" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class='fas fa-tractor'></i>  <span class="ms-1 d-none d-sm-inline">Los productores</span>
                                     </a>
                                 </li>

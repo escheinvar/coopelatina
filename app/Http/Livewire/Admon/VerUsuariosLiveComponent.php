@@ -6,11 +6,13 @@ use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Http\Request;
+use App\Models\TrabajosModel;
 use Illuminate\Support\Facades\Hash;
+use DateTime;
 use Illuminate\Support\Facades\Crypt;
 
 class VerUsuariosLiveComponent extends Component {
-    public $nombre, $ap_1, $ap_2, $usr, $tel, $mail, $dir, $password, $password_confirmation, $estatus, $privs, $activo;
+    public $nombre, $ap_1, $ap_2, $usr, $tel, $mail, $dir, $password, $password_confirmation, $estatus, $privs, $activo,$dateregistro, $membrefin, $trabajos;
     public $rules, $buscar, $MyId, $usuarioEdita, $CambiaPass, $VerOcultos='1';
     public $orden='nombre', $text1='Agregar';
     public $sentido ='asc';
@@ -90,6 +92,21 @@ class VerUsuariosLiveComponent extends Component {
             $this->estatus = $usuarioEdita->estatus;
             $this->privs = $usuarioEdita->priv;
             $this->activo= $usuarioEdita->activo;
+            $this->dateregistro=$usuarioEdita->dateregistro;
+            
+            $this->membrefin=$usuarioEdita->membrefin;
+
+            $finMembre = $usuarioEdita->membrefin; 
+            $finMembre = date("Y-m-d", strtotime($finMembre));
+            $iniMembre = strtotime ('-1 year' , strtotime($finMembre));
+            $iniMembre = date("Y-m-d", $iniMembre);  
+    
+            $iniMembre=new DateTime($iniMembre);
+            $finMembre=new DateTime($finMembre); 
+            $this->trabajos=TrabajosModel::where('work_usrid', $usuarioEdita->id)
+                ->where('work_fechatrabajo','>=',$iniMembre)
+                ->where('work_fechatrabajo','<=',$finMembre)
+                ->count();
         }
 
     }

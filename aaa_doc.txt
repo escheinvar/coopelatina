@@ -21,3 +21,8 @@ c) in your config/app.php configuration file:
     ],
 d) Also, add the Alert facade to the aliases array in your app configuration file:
     'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+
+
+
+4.- Instalé Interevention para ver el tamaño de las imágenes:
+composer require intervention/image
