@@ -24,5 +24,3 @@ d) Also, add the Alert facade to the aliases array in your app configuration fil
 
 
 
-4.- Instalé Interevention para ver el tamaño de las imágenes:
-composer require intervention/image

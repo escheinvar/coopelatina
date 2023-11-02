@@ -560,7 +560,7 @@
                         @else
                             <div class="col-md-12">                                     
                                 <img src={{asset("$img")}} style="width:200px; margin:15px;"><br>
-                                <button class="btn btn-light"  style="width:200px; margin:15px;" wire:click="BorrrarImg({{$prodid}})"><i class="fa fa-close"></i> Borrar Imágen</button>
+                                <button type="button" class="btn btn-light"  style="width:200px; margin:15px;" wire:click="BorrrarImg({{$prodid}})"><i class="fa fa-close"></i> Borrar Imágen</button>
                             </div>
                         @endif
                     </div>  

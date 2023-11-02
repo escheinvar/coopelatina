@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('ap_pat');
-            $table->string('ap_mat');
+            $table->string('ap_mat')->nullable();
             $table->string('usr')->unique();
             $table->enum('activo',['0','1'])->default('1');
-            $table->enum('estatus',['pru','reg','act'])->default('pru');
+            $table->enum('estatus',['pru','reg','act','pre'])->default('pru');
             $table->enum('priv',['root','admon','teso','usr'])->default('usr');
             $table->string('tel');
             $table->string('mail');

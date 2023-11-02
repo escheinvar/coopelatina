@@ -13,6 +13,7 @@ use App\Http\Controllers\admon\RecuperarPasswordController2;
 use App\Http\Controllers\coop_calendarController;
 use App\Http\Controllers\coop_misPedidos;
 use App\Http\Controllers\coop_productoresController;
+use App\Http\Controllers\coop_trabajosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,9 +80,13 @@ Route::middleware(['soloCoops'])->group(function(){
 
     ################################ MisPedidos
     Route::get('/MisPedidos/{usr}',[coop_misPedidos::class,'index'])->name('MisPedidos');
-#Route::post('/MisPedidos/{usr}',[coop_misPedidos::class,'store']);
+    #Route::post('/MisPedidos/{usr}',[coop_misPedidos::class,'store']);
 
     ################################ Ver Calendario 
     Route::get('/calendario',[coop_calendarController::class,'index'])->middleware('EstatusDeEntrega')->name('calendario');
     #Route::post('/calendario',[coop_calendarController::class,'store']);
+
+     ################################ Ver Trabajos
+     Route::get('/trabajos',[coop_trabajosController::class,'index'])->name('trabajos');
+     #Route::post('/calendario',[coop_calendarController::class,'store']);
 });

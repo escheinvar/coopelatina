@@ -4,7 +4,7 @@
 --\c dgit_solicitudes;
 
 
-/*
+
 INSERT INTO users
 (id,  nombre,   ap_pat,    ap_mat,      usr,       activo, estatus,  priv,    tel,        mail,                 direccion,                 dateregistro,         membrefin,          password) VALUES
 ('2','Enrique','Scheinvar','Gottdiener','enrique', '1',    'act',    'root', '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2024-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
@@ -12,7 +12,7 @@ INSERT INTO users
 ('4','Camilo', 'Scheinvar','Gamez',     'camilo',  '1',    'act',    'admon','5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2024-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
 ('5','Luciana','Scheinvar','Gamez',     'luciana', '1',    'reg',    'usr',  '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2023-07-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i'),
 ('6','Chia',   'Scheinvar','Gottdiener','chia',    '1',    'pru',    'usr',  '5512345678','admin@correo.prueba','Calle X no Y interior Z','2020-06-10 00:00:00','2023-01-25 00:00:00','$2y$10$vfx7l3Wtsv2S2ZsIVi4fNegvWfoF.Z7ftfLBniHHYRB/CGCq9gq/i');
-*/
+
 
 INSERT INTO productos
 (id,activo,gpo,nombre,variantes,presentacion,entrega,venta,existencias,costo,precioact,precioreg,preciopub,proveedor,categoria,responsable,descripcion,img,orden,created_at,updated_at) VALUES

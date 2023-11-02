@@ -90,7 +90,13 @@
 
                             <div class="form-group col-md-6">
                                 <label>Responsable: </label>
-                                <input type="text" class="form-control @error('respon')error @enderror" wire:model.defer="respon"  value="{{old('respon')}}" >
+                                <!--input type="text" class="form-control @error('respon')error @enderror" wire:model.defer="respon"  value="{{old('respon')}}" -->
+                                <select class="form-control" wire:model.defer="respon" value="{{old('respon')}}">
+                                    <option value="">Indicar responsable</option>
+                                    @foreach($responsables as $i)
+                                        <option value="{{$i->usr}}">{{$i->nombre}} {{$i->ap_pat}}</option>
+                                    @endforeach
+                                </select>
                                 @error('respon') <error>{{$message}} </error>@enderror
                             </div>
                         </div>

@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use DateTime;
 use Carbon\Carbon;
+use App\Models\User;
 use Livewire\Component;
 use App\Models\Calendario;
-use DateTime;
 use Illuminate\Http\Request;
 
 class CalendarioLivewireComponent extends Component
 {
-    public $tipo='', $opciones="", $nombre="", $inicio, $fin, $respon, $idva;
+    public $tipo='', $opciones="", $nombre="", $inicio, $fin, $respon, $idva, $responsables;
     public $opt, $text1, $desactiva, $mesPedido, $VerTabla='', $MesEntrega, $anio;
     
     
@@ -74,6 +75,21 @@ class CalendarioLivewireComponent extends Component
             
             'opciones'=>$this->opciones,
         ]);
+        ###### guarda trabajo
+        if($this->tipo=='com1' OR $this->tipo=='com2'){
+            /*TrabajosModel::insert([   #########################3 ojo pensar como detectar en edición!!!!! (pa borrar el trabajo)
+                'work_act'=>'1',
+                'work_usrid'=>$this->usuarioBusca,
+                'work_usr'=>$nombre->nombre." ".$nombre->ap_pat." ".$nombre->ap_mat,
+                'work_responsableid'=>auth()->user()->id,
+                'work_mes'=>$mes,
+                'work_anio'=>$anio,
+                'work_fechatrabajo'=>$this->FechaTrabajo,
+                'work_descripcion'=>$this->DescripTrabajo,
+    
+            ]);*/
+        }
+
         $this->emit('alerta','Guardado','Exitosamente');
     }
 
@@ -129,6 +145,8 @@ class CalendarioLivewireComponent extends Component
                 })
             ->orderBy('start','asc')
             ->get(); 
+        $this->responsables=User::where('estatus','act')->where('activo','1')->get();
+
         $eventos =[];
         ### determina colores y si es todo el día o no
         foreach ($calendario as $cal){
@@ -168,6 +186,7 @@ class CalendarioLivewireComponent extends Component
                 'forceEventDuration'=>true,  
             ];
         }
+
         return view('livewire.calendario-livewire-component',compact('eventos'));
     }
 }

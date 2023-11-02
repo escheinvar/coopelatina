@@ -18,23 +18,23 @@
                         <div style="margin:2rem;">
                             <div>
                                 <span style="cursor:pointer" onclick="VerNoVer('prod',{{$i->prod_id}})">
-                                    <div style="">
+                                    <div style="display:flex;">
                                         <!-- ------------------- LOGO ------------------------- -->
-                                        <div style="float:left; margin:1rem;">
+                                        <div style=" margin:1rem;">
                                             @if($i->prod_logo =='')
                                                 <div style=" width:150px; height:150px;background-color:aliceblue;"> </div>
                                             @else                                            
                                                 <img src="{{ asset("$i->prod_logo") }}" style="width:150px; margin:15px;"><br>
                                             @endif
                                         </div>
-                                        <div style="margin:15px;">
+                                        <div style="">
                                             <!-- ------------------- nombre ------------------------- -->
                                             <div style="font-size: 200%; font-weight:bold;">{{$i->prod_nombrelargo}}  </div>
-                                            <div style="font-size: 100%; ">{{$i->prod_nombrecorto}}  </div>
                                             <!-- ------------------- tipo ------------------------- -->
-                                            <div style="color:gray;">{{$i->prod_tipo}}</div>
+                                            <div style="font-size: 100%; ">{{$i->prod_nombrecorto}}  <span style="color:gray;">{{$i->prod_tipo}}</span> </div>
+                                            
                                             <!-- ------------------- descripción ------------------------- -->
-                                            {{$i->prod_descripcion}}
+                                            <p>{{$i->prod_descripcion}}
                                         </div>
                                     </div>
                                 </span>

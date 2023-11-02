@@ -115,13 +115,6 @@ class ProductoresLivewireComponent extends Component
         $this->SubeFoto->storeAs($rutaStorage, $ArchName);
         $NvaFoto=$rutaPublica.$ArchName;
 
-        #### Busco tamaño:
-        #$imageData = $this->SubeFoto->temporaryUrl();
-        #$imageData = get($this->SubeFoto);  
-        $w = getimagesize("$this->SubeFoto->temporaryUrl()")[0]; // getting the image width
-        #$h = getimagesize($imageData)[1]; // getting the image height
-        dd($w);
-
         ##### Modifica base
         $Fotos=ProductoresModel::where('prod_id',$prodId)->value('prod_fotos');
         if(is_null($Fotos) OR $Fotos == ''){

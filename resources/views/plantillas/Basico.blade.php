@@ -107,21 +107,29 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Entrega
+                                    Pre-Entrega
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="/calendario">1) Definir calendario</a>
                                     <a class="dropdown-item" href="/pagoprepedidos">2) Pago prepedidos</a>
                                     <a class="dropdown-item" href="/listasabasto">3) Listas de abasto</a>
-                                    <a class="dropdown-item disabled" href="#">4) Recibir proveedores</a>
-                                    <a class="dropdown-item disabled" href="#">5) Alta de apoyos</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item disabled href="#">6) Iniciar Entrega</a>
-                                    <a class="dropdown-item disabled href="#">7) Entregar productos</a>
-                                    <a class="dropdown-item disabled href="#">8) Finalizar Entrega</a>
+                                    <a class="dropdown-item" href="/trabajos">4) Alta de apoyos</a>
+                                    
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item disabled" href="#">Pizarrón</a>                                   
                                     <a class="dropdown-item disabled" href="#">Something else here</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Entrega
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item disabled" href="#">5) Recibir proveedores</a>
+                                    <a class="dropdown-item disabled href="#">6) Iniciar Entrega</a>
+                                    <a class="dropdown-item disabled href="#">7) Entregar productos</a>
+                                    <a class="dropdown-item disabled href="#">8) Finalizar Entrega</a>
+                                    
                                 </div>
                             </li>
                             <li class="nav-item">
@@ -229,6 +237,12 @@
                                         <i class='fas fa-tractor'></i>  <span class="ms-1 d-none d-sm-inline">Los productores</span>
                                     </a>
                                 </li>
+
+                                <li class="nav-item"> <!-- ------------ Menú: Los Trabajos ----- -->
+                                    <a href="/trabajos" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class='fas fa-hard-hat'></i>   <span class="ms-1 d-none d-sm-inline">Los trabajos</span>
+                                    </a>
+                                </li>
                                 
                                 <li class="nav-item disabled"> <!-- ------------ Menú: Calendario de entregas ----- -->
                                     <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
@@ -250,7 +264,7 @@
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="font-size:20px;">
                                     <li><a class="dropdown-item" href="#">Editar mis datos</a></li>
                                     <li><a class="dropdown-item"  href="/MisPedidos/{{auth()->user()->usr}}">Mis Pedidos</a></li>
-                                    <li><a class="dropdown-item" href="#">Mis Trabajos</a></li>
+                                    <li><a class="dropdown-item" href="/trabajos">Mis Trabajos</a></li>
                                     <li><a class="dropdown-item" href="#">Mis Compras</a></li>
                                     <li><a class="dropdown-item" href="#">Mis Anualidades</a></li>
                                     <li><a class="dropdown-item" href="#">Profile</a></li>

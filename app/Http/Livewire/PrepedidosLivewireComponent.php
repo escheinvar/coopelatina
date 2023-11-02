@@ -52,6 +52,7 @@ class PrepedidosLivewireComponent extends Component
             $this->descripcion=$datos->descripcion;
             $this->img=$datos->img;
             $this->orden=$datos->orden;
+            $this->SubeImagen='';
 
         }elseif($tipo=='nvo'){
             $this->text1='Nuevo';

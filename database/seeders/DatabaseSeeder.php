@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\EstadosModel;
 use Illuminate\Cache\DatabaseStore;
 use Illuminate\Database\Seeder;
 
@@ -17,6 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             #UsersSeeder::class,
             CalendarioSeeder::class,
+            ProductosSeeder::class,
+            EstadosSeeder::class,
+            ProductorSeeder::class,
             ProductosSeeder::class,
             
         ]);
