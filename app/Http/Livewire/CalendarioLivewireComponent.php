@@ -8,6 +8,7 @@ use App\Models\User;
 use Livewire\Component;
 use App\Models\Calendario;
 use Illuminate\Http\Request;
+use App\Models\TrabajosModel;
 
 class CalendarioLivewireComponent extends Component
 {
@@ -77,17 +78,20 @@ class CalendarioLivewireComponent extends Component
         ]);
         ###### guarda trabajo
         if($this->tipo=='com1' OR $this->tipo=='com2'){
-            /*TrabajosModel::insert([   #########################3 ojo pensar como detectar en edición!!!!! (pa borrar el trabajo)
+            $DatosUsr=User::where('usr',$this->respon)->first();
+            #dd($this->respon,$DatosUsr);
+            
+            TrabajosModel::insert([   #########################3 ojo pensar como detectar en edición!!!!! (pa borrar el trabajo)
                 'work_act'=>'1',
-                'work_usrid'=>$this->usuarioBusca,
-                'work_usr'=>$nombre->nombre." ".$nombre->ap_pat." ".$nombre->ap_mat,
+                'work_usrid'=>$DatosUsr->id,
+                'work_usr'=>$DatosUsr->nombre." ".$DatosUsr->ap_pat." ".$DatosUsr->ap_mat,
                 'work_responsableid'=>auth()->user()->id,
-                'work_mes'=>$mes,
-                'work_anio'=>$anio,
-                'work_fechatrabajo'=>$this->FechaTrabajo,
-                'work_descripcion'=>$this->DescripTrabajo,
+                'work_mes'=>$this->MesEntrega,
+                'work_anio'=>$this->anio,
+                'work_fechatrabajo'=>$fechaInicio->format("Y-m-d"),
+                'work_descripcion'=>'entrega Responsable',
     
-            ]);*/
+            ]);
         }
 
         $this->emit('alerta','Guardado','Exitosamente');

@@ -50,7 +50,12 @@ class TrabajosLivewireComponent extends Component
             'work_descripcion'=>$this->DescripTrabajo,
 
         ]);
-         $this->emit('alerta','Trabajo Registrado',"Se registró correctamente el trabajo de ".$nombre->nombre);
+        $this->emit('alerta','Trabajo Registrado',"Se registró correctamente el trabajo de ".$nombre->nombre);
+    }
+
+    public function BorrarTrabajo($idwork){
+        TrabajosModel::where('work_id',$idwork)->update(['work_act'=>'0']);
+        $this->emit('alerta','Trabajo Eliminado',"Se eliminó correctamente el registro de trabajo");
     }
 
     public function mount(){

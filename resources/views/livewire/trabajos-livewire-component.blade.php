@@ -101,11 +101,17 @@
                     <div class="" style="display:inline-block;width:200px; height:100px; margin:1rem; padding:1rem; border:2px solid {{$col2}}; background-color:{{$col}};">
                         <div style="font-weight:bold;">{{substr($nombre,0,15)}}</div>
                         <div style="font-size:80%;">{{$anio}} {{session('arrayMes')[$mes]}}</div>   
-                        <div style="font-size:80%;color:gray;">{{substr($t->work_descripcion,0,15)}}</div>
+                        <div style="font-size:80%;color:gray;">
+                            {{substr($t->work_descripcion,0,15)}} 
+                            @if(in_array(auth()->user()->priv,  $clubToby))
+                                &nbsp; <span style="cursor:pointer;color:rgb(190, 190, 190);" wire:click="BorrarTrabajo({{$t->work_id}})"> <i class="bi bi-trash" style="font-size:80%;"></i> </span>
+                            @endif
+                        </div>
+                         
                     </div>
                 @endforeach
             @else
-                <div style="margin:1rem; padding:1rem;"> No hay trabajos registrados de {{$nombre}}</div>
+                <div style="margin:1rem; padding:1rem;"> No hay trabajos registrados para el Cooperativista</div>
             @endif
         </div>
     </div>
