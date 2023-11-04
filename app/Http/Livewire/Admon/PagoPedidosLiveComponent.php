@@ -132,9 +132,9 @@ class PagoPedidosLiveComponent extends Component
         session(['EnPagos'=>$nvo]);
         
         ###### Genera folio de tienda
-        FoliosModel::firstOrCreate(['fol_anio'=>session('ProxCom2date')['anio'], 'fol_mes'=>session('ProxCom2date')['mes'], 'fol_usrid'=>'0'],[
+        FoliosModel::firstOrCreate(['fol_anio'=>session('ProxCom2date')['anio'], 'fol_mes'=>session('ProxCom2date')['mes'], 'fol_usrid'=>'0', 'fol_act'=>'1'],[
             'fol_act'=>'1',
-            'fol_edo'=>'4',
+            'fol_edo'=>'3',
             'fol_anio'=>session('ProxCom2date')['anio'],
             'fol_mes'=>session('ProxCom2date')['mes'],
             'fol_usrid'=>'0',

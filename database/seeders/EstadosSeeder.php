@@ -21,8 +21,13 @@ class EstadosSeeder extends Seeder
             ],
             [
                 'edo_name'=>'Ocasion',
-                'edo_edo'=>'0',
+                'edo_edo'=>'',
                 'edo_explica'=>'Indica si se ofrecen productos de ocasión',
+            ],
+            [
+                'edo_name'=>'ListasDeAbasto',
+                'edo_edo'=>'',
+                'edo_explica'=>'Indica si es tiempo de hacer Listas de abasto',
             ],
         ];
 

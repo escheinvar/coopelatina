@@ -16,7 +16,6 @@ class ProductorSeeder extends Seeder
      */
     public function run(): void
     {
-        #$faker = Factory::create('es_MX');
         $regs=[
             [
             'prod_act'=>'1',

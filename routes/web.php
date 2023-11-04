@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\PagoPedidosController;
+use App\Http\Controllers\admon\RecibeProovsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
@@ -49,7 +50,6 @@ Route::post('/recupera_pass/{tocken}/{usr}', [RecuperarPasswordController2::clas
 
 #######################################################################################
 ################################################################## SOLO ADMINISTRADORES
-
 Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Usuarios
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios');
@@ -65,10 +65,15 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
 
 });
 
+#######################################################################################
+########################################## SOLO ADMINISTRADORES Y ENCARGADOS DE ENTREGA
+Route::middleware(['soloCoops','soloAdmins'])->group(function(){
+    ################################ Administración de Usuarios
+    Route::get('/abastecer', [RecibeProovsController::class, 'index'])->name('abastecer');
+});
 
 #######################################################################################
 ################################################################## SOLO COOPERATIVISTAS
-
 Route::middleware(['soloCoops'])->group(function(){
     ################################ Home
     Route::get('/inicio/{usr}',[coop_homeController::class,'index'])->middleware('EstatusDeEntrega')->name('home');

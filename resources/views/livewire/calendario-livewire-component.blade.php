@@ -1,13 +1,10 @@
 <div>
+    @include('plantillas.MarcadorDeEstado')<br>
+    
+     
     <!-- https://fullcalendar.io/ -->
     <?php $EntregaColor="rgb(0,128,0)"; $PedidoColor='rgb(53, 53, 136)';   $EventoColor='gray'; $TextoColor="white"; ?>
-    <!-- ---------------------------------- Leyenda -------------------------------------- -->
-    <!--div class="col-lg-1 col-md-2 col-sm-12 flex-container-row; border:1px solid black;">
-        <div style="display:inline-block; height:100px; padding:5px; border-radius:7px; margin:5px;"> &nbsp; </div>
-        <div style="display:inline-block; background-color:{{$EntregaColor}};  color:white;   padding:5px; border-radius:7px; margin:5px;">Entrega</div>
-        <div style="display:inline-block; background-color:{{$PedidoColor}}; color:white; padding:5px; border-radius:7px; margin:5px;"> Pedidos </div>
-        <div style="display:inline-block; background-color:{{$EventoColor}}; padding:5px; border-radius:7px;  margin:5px;"> Evento </div>
-    </div-->
+    
 
     <!-- ---------------------------------- Calendario -------------------------------------- -->
     @if(count($eventos) == 0)

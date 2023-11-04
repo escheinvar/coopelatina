@@ -6,11 +6,12 @@ use DateTime;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Calendario;
-use App\Models\TrabajosModel;
-use App\Models\ProductosModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\TrabajosModel;
 use Livewire\WithFileUploads;
+use App\Models\ProductosModel;
+use App\Models\ProductoresModel;
+use Illuminate\Support\Facades\DB;
 
 class PrepedidosLivewireComponent extends Component
 {
@@ -131,11 +132,11 @@ class PrepedidosLivewireComponent extends Component
         if($this->activo =='0'){$this->activo='';}
 
         $this->Grupos=ProductosModel::distinct('gpo')->get('gpo');
-        $this->productores=ProductosModel::distinct('proveedor')->get('proveedor');  ###########################33 Cambiar por catálogo!!!}
+        $this->productores=ProductoresModel::where('prod_act','1')->distinct('prod_nombrecorto')->get('prod_nombrecorto');  
         $this->categorias=ProductosModel::distinct('categoria')->get('categoria'); 
         $this->responsables=User::where('activo','1')->where('estatus','act')->get();
         
-        ##### Obtiene lista de productos
+        ##### Obtiene lista de productosproveedorproveedor
         $todo = ProductosModel::where('activo','1')
             ->where('entrega','not like','no')
             ->orderBy('gpo','asc')

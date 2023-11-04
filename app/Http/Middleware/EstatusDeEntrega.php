@@ -40,6 +40,7 @@ class EstatusDeEntrega
             ->where('event','ped')
             ->orderBy('start','asc')
             ->get();
+            #dd($EnPedido);
         if($EnPedido->isEmpty()){
             $EnPedido='0';
         }else{
@@ -117,7 +118,6 @@ class EstatusDeEntrega
         $ProxCom1=Calendario::where('act','1')
             ->where('end','>=',now())
             ->where('event','com1')
-            #->where('mes',$ProxPedido->mes)
             ->orderBy('start','asc')
             ->first();
 
@@ -127,10 +127,10 @@ class EstatusDeEntrega
         $ProxCom2=Calendario::where('act','1')
             ->where('end','>=',now())
             ->where('event','com2')
-            #->where('mes',$ProxPedido->mes)
             ->orderBy('start','asc')
             ->first();
 
+        
         ##################################################################
         ####### Obtiene datos de fecha de próxima primer y segunda entrega
         $fecha1=new DateTime($ProxCom1->start); 
@@ -148,19 +148,30 @@ class EstatusDeEntrega
         $ProxCom2date=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2, 'anio'=>$anio2]; #ej: ['jue', '31', 'dic', '2023'] -> [4,31,12,2023]
 
         ##################################################################
+        ################# Indica si la próxima entrega es Com1 o Com2
+        if( $ProxCom1->start   >=   $ProxCom2->start ){
+            $ProximaCom=['com2',$ProxCom2date];
+        }else{
+            $ProximaCom=['com1',$ProxCom1date];
+        }
+
+        ##################################################################
         ################# Obtiene datos de próximo inicio y fin de pedidos
         $fecha1=new DateTime($ProxPedido->start); 
         $dia1 =$fecha1->format("d");     
         $mes1 =$fecha1->format("m");      
-        $diames1 =$fecha1->format("w");   
-        $ProxPedStart=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1]; #ej: ['jue', '31', 'dic'] -> [4,31,12]
+        $diames1 =$fecha1->format("w");  
+        $anio1 = $fecha1->format("Y"); 
+        $ProxPedStart=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1, 'anio'=>$anio1]; #ej: ['jue', '31', 'dic', '2024] -> [4,31,12,2024]
 
         $fecha2=new DateTime($ProxPedido->end); 
         $dia2 =$fecha2->format("d");
         $mes2 =$fecha2->format("m");
         $diames2 =$fecha2->format("w");
-        $ProxPedEnd=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2]; #ej: ['jue', '31', 'dic'] -> [4,31,12]
+        $anio2 = $fecha2->format("Y"); 
+        $ProxPedEnd=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2, 'anio'=>$anio2]; #ej: ['jue', '31', 'dic', '2024] -> [4,31,12,2024]
 
+       
         ##################################################################
         ######################### Calcula número de trabajos del usuario
         $finMembre = auth()->user()->membrefin; 
@@ -190,12 +201,17 @@ class EstatusDeEntrega
         $Ocasion=Estadosmodel::where('edo_name','Ocasion')->value('edo_edo');
 
         ##################################################################
+        ################## Establece si es tiempo de ListasDeAbasto
+        $ListasAbasto=Estadosmodel::where('edo_name','ListasDeAbasto')->value('edo_edo');
+
+        ##################################################################
         ################################  Guarda variables en sesión
         session([
             'EnPedido'=>$EnPedido,          ### 0=no en pedido ó 1=si en pedido
             'EnEntrega'=>$EnEntrega,        ### 0=no en entrega ó 1=si en entrega
             'EnPagos'=>$EnPagos,            ### ""= (vacío) no en período de pagos 1=sí en período (es un checkbox)
             'Ocasion'=>$Ocasion,            ### ""= (vacío) no hay productos de ocasión, 1=si hay (es un checkbox)
+            'ListasAbasto'=>$ListasAbasto,  ### ""= (vacío) no es tiempo de listas de abasto, 1=si es tiempo (es un checkbox)
 
             'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
             'ProxChoro'=>$SigEvento,        ### texto explicativo de situación del calendario
@@ -203,10 +219,11 @@ class EstatusDeEntrega
             'ProxCom1'=>$ProxCom1,          ### renglón de calendario del próximo comanda1
             'ProxCom2'=>$ProxCom2,          ### renglón de calendario del próximo comanda2
             
-            'ProxCom1date'=>$ProxCom1date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes] de próxima entrega 1
-            'ProxCom2date'=>$ProxCom2date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes] de próxima entrega 2
-            'ProxPedstart'=>$ProxPedStart,  ### array con [ DiaDeLaSemana DiaDelMes  Mes] de inicio de pedidos
-            'ProxPedend'=>$ProxPedEnd,      ### array con [ DiaDeLaSemana DiaDelMes  Mes] de fin de pedidos
+            'ProxCom1date'=>$ProxCom1date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega 1
+            'ProxCom2date'=>$ProxCom2date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega 2
+            'ProxPedstart'=>$ProxPedStart,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de inicio de pedidos
+            'ProxPedend'=>$ProxPedEnd,      ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de fin de pedidos
+            'ProximaCom'=>$ProximaCom,      ### Indica 2 valores: próxima comanda (com1 ó com2) e incluye ProxCom#date (array con  [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega)
             
             'vigencia'=>$vigencia,          ### 0=no está vigente la anualidad ó 1=sí está vigente la anualidad
             'FinMembre'=>$Difmembre->days,  ### Número de días que faltan para el vencimiento de anualidad

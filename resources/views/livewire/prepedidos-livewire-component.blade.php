@@ -346,7 +346,7 @@
                             <select class="form-control  @error('proveedor')error @enderror" " wire:model="proveedor" value="{{old('proveedor')}}" >  
                                 <option value="">Selccionar Productor</option>
                                 @foreach($productores as $i)
-                                    <option value="{{$i->proveedor}}">{{$i->proveedor}}</option>
+                                    <option value="{{$i->prod_nombrecorto}}">{{$i->prod_nombrecorto}}</option>
                                 @endforeach
                             </select>
                             @error('proveedor')<error>{{$message}}</error> @enderror 

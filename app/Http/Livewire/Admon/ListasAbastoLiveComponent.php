@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admon;
 
+use App\Models\EstadosModel;
 use Livewire\Component;
 use App\Models\FoliosModel;
 use App\Models\ProductosModel;
@@ -9,10 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class ListasAbastoLiveComponent extends Component
 {
-    public $SelEncar='%', $SelProd="%";
+    public $SelEncar='%', $SelProd="%", $switch;
     public $orden='responsable', $sentido='asc';
     #public $ValorPed1;
+    public $petitCmte=['root','teso'];
     
+   
+
     public function orden($campo){  
         $this->orden = $campo;
         if($this->sentido == 'asc'){
@@ -21,9 +25,26 @@ class ListasAbastoLiveComponent extends Component
             $this->sentido = 'asc';
         }        
     }
+    
+    public function SwitchListasAbasto(){
+        if(session('ListasAbasto') =='1'){
+            $this->switch='';
+            session(['ListasAbasto'=>'']);
+            EstadosModel::where('edo_name','ListasDeAbasto')->update(['edo_edo'=>'']);
+        }else{
+            $this->switch='1';
+            session(['ListasAbasto'=>'1']);
+            EstadosModel::where('edo_name','ListasDeAbasto')->update(['edo_edo'=>'1']);
+        }
+    }
+
+    public function mount(){
+        $this->switch=session('ListasAbasto');
+    }
 
     public function render() {
-        $prods=ProductosModel::where('activo','1')  
+        #dd(session());
+        $prods=ProductosModel::where('activo','1')
             ->selectRaw("*,CONCAT(gpo,' ',nombre) AS prodvar")
             ->where('responsable','like',$this->SelEncar)
             ->where('proveedor','like',$this->SelProd)
@@ -40,6 +61,7 @@ class ListasAbastoLiveComponent extends Component
         ######### Excluye pedidos y folios inactivos, productos ya entregados, folios en estado distinto a 3 y pedidos de tienda
         $mes=session('ProxCom2date')['mes']; 
         $anio=session('ProxCom2date')['anio']; 
+
         $pedidos=DB::select(
             "SELECT SUM(ped_cant) AS total, CONCAT(ped_entrega,':',ped_prodid,'@',ped_prodvar) AS prod FROM folios_prods 
             JOIN folios ON folios_prods.ped_folio=folios.fol_id

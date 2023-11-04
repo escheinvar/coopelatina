@@ -113,9 +113,8 @@
                                     <a class="dropdown-item" href="/calendario">1) Definir calendario</a>
                                     <a class="dropdown-item" href="/pagoprepedidos">2) Pago prepedidos</a>
                                     <a class="dropdown-item" href="/listasabasto">3) Listas de abasto</a>
-                                    <a class="dropdown-item" href="/trabajos">4) Alta de apoyos</a>
-                                    
                                     <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/trabajos">4) Alta de apoyos</a>
                                     <a class="dropdown-item disabled" href="#">Pizarrón</a>                                   
                                     <a class="dropdown-item disabled" href="#">Something else here</a>
                                 </div>
@@ -125,7 +124,7 @@
                                     Entrega
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item disabled" href="#">5) Recibir proveedores</a>
+                                    <a class="dropdown-item" href="/abastecer">5) Recibir proveedores</a>
                                     <a class="dropdown-item disabled href="#">6) Iniciar Entrega</a>
                                     <a class="dropdown-item disabled href="#">7) Entregar productos</a>
                                     <a class="dropdown-item disabled href="#">8) Finalizar Entrega</a>

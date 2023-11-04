@@ -16,6 +16,8 @@ class ListasAbastoController extends Controller
     public function index(){
         return view('admon.ListasAbasto');
     }
+
+
     public function store(Request $request){
         $mes=session('ProxCom2date')['mes'] ; $anio=session('ProxCom2date')['anio'];
         foreach($request->all() as $key=>$value){
@@ -29,7 +31,7 @@ class ListasAbastoController extends Controller
                     ->where('fol_mes',$mes)
                     ->where('fol_usrid','0')
                     ->value('fol_id');
-                
+                #dd($anio,$mes,$FolioCoope);
                 $producto=ProductosModel::where('id',$prodId)->first();
                 if($producto->gpo == $producto->nombre){$NombreFin=$producto->gpo;}else{$NombreFin=$producto->gpo." ".$producto->nombre;}
                 
