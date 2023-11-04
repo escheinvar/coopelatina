@@ -213,7 +213,7 @@ class EstatusDeEntrega
             'Ocasion'=>$Ocasion,            ### ""= (vacío) no hay productos de ocasión, 1=si hay (es un checkbox)
             'ListasAbasto'=>$ListasAbasto,  ### ""= (vacío) no es tiempo de listas de abasto, 1=si es tiempo (es un checkbox)
 
-            'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
+            #'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
             'ProxChoro'=>$SigEvento,        ### texto explicativo de situación del calendario
             'ProxPedido'=>$ProxPedido,      ### renglón de calendario del próximo pedido
             'ProxCom1'=>$ProxCom1,          ### renglón de calendario del próximo comanda1
@@ -221,7 +221,7 @@ class EstatusDeEntrega
             
             'ProxCom1date'=>$ProxCom1date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega 1
             'ProxCom2date'=>$ProxCom2date,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega 2
-            'ProxPedstart'=>$ProxPedStart,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de inicio de pedidos
+            #'ProxPedstart'=>$ProxPedStart,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de inicio de pedidos
             'ProxPedend'=>$ProxPedEnd,      ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de fin de pedidos
             'ProximaCom'=>$ProximaCom,      ### Indica 2 valores: próxima comanda (com1 ó com2) e incluye ProxCom#date (array con  [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega)
             
