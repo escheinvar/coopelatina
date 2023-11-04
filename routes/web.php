@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\PagoPedidosController;
-use App\Http\Controllers\admon\RecibeProovsController;
+use App\Http\Controllers\admon\AbastoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
@@ -69,7 +69,7 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
 ########################################## SOLO ADMINISTRADORES Y ENCARGADOS DE ENTREGA
 Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Usuarios
-    Route::get('/abastecer', [RecibeProovsController::class, 'index'])->name('abastecer');
+    Route::get('/abastecer', [AbastoController::class, 'index'])->name('abastecer');
 });
 
 #######################################################################################

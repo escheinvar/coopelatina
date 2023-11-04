@@ -5,10 +5,10 @@ namespace App\Http\Controllers\admon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class RecibeProovsController extends Controller
+class AbastoController extends Controller
 {
     public function index(){
         
-        return view('admon.RecibeProovs');
+        return view('admon.Abasto');
     }
 }

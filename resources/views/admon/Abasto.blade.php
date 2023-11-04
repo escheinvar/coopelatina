@@ -5,6 +5,6 @@
 @section('content')
     <form method="post">
         @csrf
-        @livewire('admon.recibe-proveedores-live-component')
+        @livewire('admon.abasto-live-component')
     </form>
 @endsection

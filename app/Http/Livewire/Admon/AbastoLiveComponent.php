@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Admon;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
-class RecibeProveedoresLiveComponent extends Component
+class AbastoLiveComponent extends Component
 {
     public $proxima, $proximaDate;
     public $petitCmte=['root','teso'];
@@ -58,6 +58,6 @@ class RecibeProveedoresLiveComponent extends Component
             ->get();
         #dd('productos=',$prods,'productosTienda=', $prodsTien,'proveedores=', $proovs);
         
-        return view('livewire.admon.recibe-proveedores-live-component',['productos'=>$prods,'productosTienda'=>$prodsTien, 'proveedores'=>$proovs]);
+        return view('livewire.admon.abasto-live-component',['productos'=>$prods,'productosTienda'=>$prodsTien, 'proveedores'=>$proovs]);
     }
 }
