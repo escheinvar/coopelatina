@@ -21,6 +21,12 @@ function VerNoVerPass(idPasswd,idIcono) {
         icono.className = 'far fa-eye-slash'
     }
 }
+//Inhabilitar tecla de espacio
+//function NoEspacio(e, campo){
+//		key = e.keyCode ? e.keyCode : e.which;
+//		if (key == 32) {return false;}
+//}		
+//onkeypress="javascript: return ValidarNumero(event,this)" 
 
 Livewire.on('alerta',function(titulo, texto){
     //Muestra ventanita de alerta con SweetAlert en Livewire

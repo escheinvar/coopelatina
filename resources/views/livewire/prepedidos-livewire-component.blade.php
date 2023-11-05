@@ -185,7 +185,7 @@
                                 <span onclick="VerNoVer('{{$key}}','{{$value->id}}{{$sabor}}');";>
                                     <i class='fa fa-info-circle' style='font-size:18px;color:#BDBDBD' ></i>
                                     <span style="font-size:1.7rem; font-weight:bold;">{{$value->gpo}} {{$value->nombre}} 
-                                        <span style="color:gray">{{$sabor}}</span>
+                                        <span style="color:gray;font-size:1.6rem">{{preg_replace("/_/"," ",$sabor)}}</span>
                                     </span>                                
                                 </span>
                             </div>
@@ -341,7 +341,7 @@
                 <div class="modal-body">
                     <div style="row">
                         <!-- ------------------------------- Productor --------------------------- -->
-                        <div class="form-group col-md-11 col-sm-11">
+                        <div class="form-group col-md-12 col-sm-12">
                             <label>Productor:  <red>*</red></label>
                             <select class="form-control  @error('proveedor')error @enderror" " wire:model="proveedor" value="{{old('proveedor')}}" >  
                                 <option value="">Selccionar Productor</option>
@@ -350,11 +350,13 @@
                                 @endforeach
                             </select>
                             @error('proveedor')<error>{{$message}}</error> @enderror 
+                            <ch>Para agregar productores ir al <a href="/productores">catálogo</a><ch>
                         </div>
-                        <div class="col-md-1 col-sm-1">
+                        
+                        <!--div class="col-md-1 col-sm-1">
                             <label> &nbsp; </label>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" > +</button>
-                        </div>
+                            <a href="/productores" ><button type="button" class="btn btn-primary" data-dismiss="modal" > +</button></a>
+                        </div-->
                     </div>
 
                     <div style="row">

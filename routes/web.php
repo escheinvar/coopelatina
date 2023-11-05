@@ -70,6 +70,7 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
 Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Usuarios
     Route::get('/abastecer', [AbastoController::class, 'index'])->name('abastecer');
+    Route::post('/abastecer', [AbastoController::class, 'store']);
 });
 
 #######################################################################################

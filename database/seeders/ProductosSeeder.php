@@ -24,7 +24,7 @@ class ProductosSeeder extends Seeder
             'Picado Bandera','Jurel','Barritas de pescado','Camarón cristal','Camarón pacotilla','Salmón en lonja','Salmón','Cerveza','Frijol','Sal','Arroz','Aguacate','Tortilla azul',
             'Tortilla amarilla','Pinol','Cloro','Lavamanos','Lavatrastes','Lavaropa','Suavisante','lata 1','camisa','camiseta','pantalon','jabón','shampoo','limipa cara','crema','ajo',
             'Croquetas','Alpiste','Correas'];
-        $sabores=['','SaborA,SaborB', '', 'SaborA,SaborB,SaborC', '', 'SaborA,SaborB,SaborC,SaborD'];
+        $sabores=['','Sabor_A,Sabor_B', '', 'Tipo_A,Tipo_B,Tipo_C', 'SaborA,SaborB,SaborC,SaborD'];
         
         $events =[
             [

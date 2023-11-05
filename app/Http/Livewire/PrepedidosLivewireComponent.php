@@ -103,11 +103,12 @@ class PrepedidosLivewireComponent extends Component
         }
 
         ##### Actualiza base de datos
+        $variantes=str_replace("/ /","_",$this->variantes);
         ProductosModel::updateOrCreate(['id'=>$prodid],[
             'activo'=>$this->activo,
             'gpo'=>$this->gpo,
             'nombre'=>$this->nombre,
-            'variantes'=>$this->variantes,
+            'variantes'=>$variantes,
             'presentacion'=>$this->presentacion,
             'entrega'=>$this->entrega,
             'venta'=>$this->venta,
