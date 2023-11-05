@@ -7,7 +7,9 @@
     @endif
     @include('plantillas.MarcadorDeEstado')
 
-    
+
+
+
     @if(session('ListasAbasto') == '' AND session('EnPagos') == '' AND session('EnPedido') =='0')
         <!-- -------------------- Cabecera de tabla -------------------- -->
         <div class="row" style="font-size:120%; font-weight:bold;color:gray;">
@@ -81,8 +83,21 @@
             @endforeach
 
             @if( in_array(auth()->user()->priv, $petitCmte) )
+            <?php
+                $concatenado="";
+                foreach($proveedores as $i){
+                    $idProv=preg_replace("/ /","",$i->proveedor); 
+                    $concatenado=$concatenado."calculaProv('".$idProv."');";
+                }
+            ?> 
+                
                 <div class="row" style="margin:2rem; padding:2rem; font-size:130%; font-weight:bold;color:gray;">
-                    Total a pagar a los proveedores: $ <span id="GranTotal"></span> 
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary" onclick="{{$concatenado}}calculaGranTotal();VerNoVer('Gran','Totalisimo')">Calcular Total</button>
+                    </div>
+                    <div id="sale_GranTotalisimo" class="col-md-6" style="display:none;">
+                        Total a pagar a los proveedores: $ <span id="GranTotal"></span> 
+                    </div>
                 </div>
             @endif
         </form>

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ProductoresModel;
 use App\Models\ProductosModel;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,24 +29,24 @@ class ProductosSeeder extends Seeder
         $events =[
             [
                 'activo'=>'1',
-                'gpo'=>'Aleatorio',
+                'gpo'=>'Seeder',
                 'nombre'=>$productos[array_rand($productos,1)],
                 'variantes'=>$sabores[array_rand($sabores,1)],
                 'presentacion'=>'Paquetes de 1kg',
-                'entrega'=>'com12',
-                'venta'=>'si',
-                'existencias'=>'1',
+                'entrega'=> ['com1','com2','com12','comid','no'][array_rand(['com1','com2','com12','comid','no'],1)],
+                'venta'=>['si','no'][array_rand(['si','no'],1)],
+                'existencias'=>'0',
                 'costo'=>'80.0',
                 'precioact'=>'80.0',
                 'precioreg'=>'85.0',
                 'preciopub'=>'95.0',
-                'mintipo'=>'1',
-                'min'=>'10',
+                'mintipo'=>['0','1'][array_rand(['0','1'],1)],
+                'min'=>[1,2,3,4,5,6,7,8,9,10][array_rand([1,2,3,4,5,6,7,8,9,10],1)],
                 'proveedor'=>ProductoresModel::inRandomOrder()->first()->prod_nombrecorto,
                 'categoria' =>'cafeteria',
-                'responsable'=>'admin',
+                'responsable'=>User::inRandomOrder()->where('estatus','act')->first()->usr,
                 'descripcion'=>'Rico café de altura',
-                'img'=>'null',
+                'img'=>'',  #fake()->image()
                 'orden'=>'1'
             ],
         ];

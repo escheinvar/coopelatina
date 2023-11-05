@@ -4,33 +4,10 @@
   @include('plantillas.MarcadorDeEstado')
 
   <div class="row">
-    <!--div class="col-lg-12 col-md-12 col-sm-12">
-      @if(session('EnPedido')=='1')
-        Aún no es tiempo de listas de abasto.
-      @else
-        @if(session('EnPagos')=='1')
-          <span style="color:orange;">Tesorería aún sigue registrando pagos, todavía no podemos realizar la lista de abasto.</span>
-        @else
-          <span style="color:darkgreen;">Ya finalizó el registro de pagos.</span> 
-        @endif
-      @endif
-    </div-->
-    
-    {{--<div style="font-size:150%;">
-      Listas de abasto está desactivada,
-      @if(session('EnPagos')=='1' ) 
-        todavia estamos recibiendo pagos. <br>
-        Cuando el tesorero finalice el período de pagos,
-      @endif
-      <br>la(el) tesorer@ tiene que activarlas<br>
-    </div>--}}
-
-
-
     <!-- ----------------------- Switch de Estado ------------------------ -->
     @if( in_array(auth()->user()->priv, $petitCmte) AND session('EnPagos') == '' AND session('EnPedido') =='0')
       <div>
-        <label> Desactivar/Activar Listas de Abasto</label><br>
+        <label> Listas de Abasto</label><br>
         <label class="switch">
           <input type="checkbox" wire:model="switch" wire:click="SwitchListasAbasto()">
           <div class="slider round"></div> 
@@ -48,7 +25,7 @@
 
   @if(session('ListasAbasto')=='1'  AND session('EnPagos') == '' AND session('EnPedido')=='0')
     <div class="row">
-      <!-- -----------------------------Filtra por Encaegado--------------------------------------- -->
+      <!-- -----------------------------Filtra por Encargado--------------------------------------- -->
       <div class="form-group col-md-3">
         <label >Encargado:</label>
         <select class="form-control @error('SelEncar')error @enderror" wire:model="SelEncar" value="{{old('SelEncar')}}">
@@ -60,7 +37,7 @@
         @error('SelEncar')<error> {{$message}}</error> @enderror
       </div>
 
-      <!-- ----------------------------- Filgra por  Productor --------------------------------------- -->
+      <!-- ----------------------------- Filtra por  Productor --------------------------------------- -->
       <div class="form-group col-md-3">
         <label >Productor:</label>
         <select class="form-control @error('SelProd')error @enderror" wire:model="SelProd" value="{{old('SelProd')}}">
@@ -74,139 +51,165 @@
     </div>
     
 
-
-
-
     <!-- ----------------------------- INICIA TABLA --------------------------------------- -->
-    
-
     <div class="row">
-      <div class="sticky-top" style="background-color: white; padding: 3rem; text-align:right; opacity:1;">
-        <button type="submit" class="btn btn-success" style="width:300px;"> Guardar </button>
-      </div>
       <div class="col-12">
-        Nota: Solo se muestra para captura, los productos con venta en tienda.
         <table class="table table-striped table-hover">
           <thead>
-            <tr>
+            <!-- ----------------------------- CABECERA DE TABLA ---------------------------------------- -->
+            <tr class="sticky-top">
               <th>
-                <div class="col-lg-5 col-md-5 col-sm-2">
-                  <span wire:click="orden('responsable')" style="cursor:pointer;">Encargado</span>  / 
-                  <span wire:click="orden('gpo')" style="cursor:pointer;">Producto</span> / 
-                  <span wire:click="orden('proveedor')" style="cursor:pointer;">Productor</span>
+                <div class="col-lg-4 col-md-4 col-sm-2">
+                  <span wire:click="orden('responsable')" style="cursor:pointer;">Encargado</span> /
+                  <span wire:click="orden('gpo')" style="cursor:pointer;">Producto</span>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-1">
+                  Productor
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
-                  <span wire:click="orden('entrega')" style="cursor:pointer;">Entrega</span>
-                  <!--span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:50%; margin:2px; border-radius:100%;padding:2px;"-->
-                    / Min
-                  <!--/span-->
+                  <span wire:click="orden('entrega')" style="cursor:pointer;">Entrega</span> <ch>Min</ch>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                  Peds+Tien 1
+                  Peds1[Tien1]
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                  Peds+Tien 2
+                  Peds2[Tien2]
+                </div>
+                <div>
+                  <button type="submit" class="btn btn-danger"> Guardar </button>
                 </div>
               </th>
             </tr>
           </thead>
-
+         
           <tbody>
-            @foreach ($prods as $prod)
+            @foreach ($productos as $prod)
               <?php
                 #### Genera vector de sabores   
                 $sabores=explode(',', $prod->variantes);
-                $num=count($sabores);
-                ### Quita palabras repetidas de nombre (cuando ya está en gpo)
-                $prod->nombre = preg_replace("/$prod->gpo/i","",$prod->nombre);
-                ### Determina comportamiento según entrega:
                 
-                ##### Oculta según la entrega programada
-                if($prod->entrega == 'com1'){         $com1act="";          $com2act="disabled";
-                }else if($prod->entrega == 'com2'){   $com1act="disabled";  $com2act=""; 
-                }else if($prod->entrega =='com12'){   $com1act="";          $com2act=""; 
-                }else if($prod->entrega == 'comid'){  $com1act="";          $com2act="disabled";
-                }else if($prod->entrega == 'no' && $prod->venta=='si'){$com1act="";$com2act=""; }
-                ###### además, oculta si no tle compete al usuario (si no es responsable)
-                $petitCmte=['root','teso'];
-                if(auth()->user()->usr != $prod->responsable and !in_array(auth()->user()->priv, $petitCmte)){$com1act=$com2act="readonly";}
-                
-                if(session('EnPagos')=='1'){$com1act=$com2act="disabled";}
+                ##### Oculta los campos para que solo se edite quien está autorizado
+                if(auth()->user()->usr != $prod->responsable and !in_array(auth()->user()->priv, $petitCmte)){$com1act=$com2act="readonly";}                
               ?>
-              @foreach($sabores as $pvar)
+              @foreach($sabores as $sabor)
+                <?php 
+                  $ValorPed1='0';$ValorTien1='0';$AbaListas1='0';
+                  $ValorPed2='0';$ValorTien2='0';$AbaListas2='0';
+                  ##### Para cada producto-sabor de BD-productos, busca, para cada com si hay pedidos y lo guarda en $ValorPed
+                  foreach($pedidos as $i){ 
+                    if( preg_match("/com1:$prod->id@$sabor/",  $i->ped_producto) ){ 
+                      $ValorPed1=$i->total; 
+                      if($i->aba_listas=='1'){$AbaListas1++;} 
+                    }else if( preg_match("/com2:$prod->id@$sabor/",  $i->ped_producto) ){ 
+                      $ValorPed2=$i->total; 
+                      if($i->aba_listas=='1'){$AbaListas2++;} 
+                    } 
+                  }
+                  ##### Para cada producto-sabor de BD-productos, busca, para cada com si hay pedidos
+                  foreach($tienda as $i){
+                    if( preg_match("/com1:$prod->id@$sabor/",  $i->ped_producto) ){ 
+                      $ValorTien1=$i->total; 
+                      if($i->aba_listas=='1'){$AbaListas1++;} 
+                    }else if( preg_match("/com2:$prod->id@$sabor/",  $i->ped_producto) ){
+                        $ValorTien2=$i->total; 
+                        if($i->aba_listas=='1'){$AbaListas2++;} 
+                      } 
+                  }
+                  $ValorTot1=$ValorPed1+$ValorTien1; 
+                  $ValorTot2=$ValorPed2+$ValorTien2;
+                ?>
                 <tr>
                   <td>
-                    <div class="row">    
-                      <!-- ------------------------------ responsable, nombre del producto y Proveedor-------------------------- -->
-                      <div class="col-lg-5 col-md-5 col-sm-12">
-                        {{substr($prod->responsable, 0, 4)}} &nbsp; <b>{{$prod->gpo}} {{$prod->nombre}}</b> <i>{{$pvar}}</i> <small> {{$prod->presentacion}}</small> ({{$prod->id}})
-                        <br>{{$prod->proveedor}} <br>
-                      
+                    <div class="row"> 
+                      <!--############################## MUESTRA RESPONSABLE, PRODUCTO Y PROVEEDO ###############################-->
+                      <div class="col-lg-4 col-md-4 col-sm-12">
+                        {{substr($prod->responsable, 0, 4)}} &nbsp; <b>{{$prod->gpo}} {{$prod->nombre}}</b> <i>{{$sabor}}</i> <small> {{$prod->presentacion}}</small> ({{$prod->id}})
                       </div>
 
-                      <!-- ------------------------------ tipo com o tienda / minimo-------------------------- -->
+                      <!--############################## MUESTRA PRODUCTOR ###############################-->
+                      <div class="col-lg-2 col-md-2 col-sm-12">
+                        {{$prod->proveedor}}
+                      </div>
+                      
+                      <!--############################## MUESTRA TIPO DE ENTREGA ###############################-->
                       <div class="col-lg-1 col-md-1 col-sm-12">
                         {{$prod->entrega}}
                         @if($prod->mintipo =='1')
-                          <!--span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:white; height:50%;font-size:70%; margin:2px; border-radius:100%;padding:2px;"-->
-                          / {{$prod->min}}
-                          <!--/span-->
+                          <ch>{{$prod->min}}</ch>
                         @endif
                       </div>
-                      <?php
-                        #### Busca el valor que corresponde a suma de pedidos o de tienda
-                        $ValorPed1="";$ValorTien1="";
-                        foreach($pedidos as $i){ if( preg_match("/com1:$prod->id@$pvar/",  $i->prod) ){ $ValorPed1=$i->total; } }
-                        foreach($tienda as $i){ if( preg_match("/com1:$prod->id@$pvar/",  $i->prod) ){ $ValorTien1=$i->total; } }
-                        $ValorPed2="";$ValorTien2="";
-                        foreach($pedidos as $i){ if( preg_match("/com2:$prod->id@$pvar/",  $i->prod) ){ $ValorPed2=$i->total; } }
-                        foreach($tienda as $i){ if( preg_match("/com2:$prod->id@$pvar/",  $i->prod) ){ $ValorTien2=$i->total; } }
-                      ?>
-                      <!-- ------------------------------com1 Primer entrega -------------------------- -->
+
+                      <!--############################## Campo de primer entrega ###############################-->
                       <div class="col-lg-2 col-md-2 col-sm-3" style="display:flex;">
-                        <!-- ------------com1 Pedidos de usuarios para com1 ---- -->
-                        <div style="width:10%; text-align:right; padding:0.5rem;" id="com1:ped_{{$prod->id}}@-{{$pvar}}" >
-                          {{$ValorPed1}}
-                        </div>
-                        <!-- ------------com1 tienda para com1 ---- -->
-                        <div >
-                          
-                            <input type='number' value="{{$ValorTien1}}" onload="subtotal('1','{{$prod->id}}','{{$pvar}}')" onchange="subtotal('1','{{$prod->id}}','{{$pvar}}')" class='producto' id="com1:tien_{{$prod->id}}@-{{$pvar}}" name="com1:tien_{{$prod->id}}@-{{$pvar}}"  min="0" step="1"   {{$com1act}}>
-                          
-                        </div>
-                        <!-- ------------com1 Total com1  ---- -->
-                        <div style="width:20%; text-align:left; padding:0.5rem;color:gray;" id="com1:tot_{{$prod->id}}@-{{$pvar}}" >
-                          <?php 
-                            $pre1=intval($ValorPed1)+intval($ValorTien1);
-                            if($pre1==0){$sale="";}else{$sale="=".$pre1;}; 
-                          ?>
-                          {{$sale}}
-                        </div>
+                        @if(in_array( $prod->entrega, ['com1','comid','com12','no']))
+                          <!-- ------ Pedidos de comanda ------ -->
+                          <div style="width:15%; text-align:right; padding:0.5rem;">
+                              <span id="com1:ped_{{$prod->id}}@-{{$sabor}}" style="font-weight:bold;"> {{$ValorPed1}} </span>
+                          </div>
+
+                          <!-- ------ Pedidos para tienda ------ -->
+                          <div>                              
+                            @if($AbaListas1 =='0' OR is_null($AbaListas1))
+                              <input type='number' value="{{$ValorTien1}}" onchange="subtotal('1','{{$prod->id}}','{{$sabor}}')" class='producto' id="com1:tien_{{$prod->id}}@-{{$sabor}}" name="com1:tien_{{$prod->id}}@-{{$sabor}}"  min="0" step="1">
+                            @else
+                              <div style='width:70px;text-align:center;font-weight:bold;padding:4px;'> {{$ValorTien1}}</div>
+                              <input type="hidden" value="{{$ValorTien1}}"  id="com1:tien_{{$prod->id}}@-{{$sabor}}">
+                            @endif
+                          </div>
+
+                          <!-- ------ Total de pedidos ------ -->
+                          <div id="com1:tot_{{$prod->id}}@-{{$sabor}}" style="width:20%; text-align:left; padding:0.5rem;color:gray;">
+                            ={{intval($ValorTot1)}}
+                          </div>
+
+                          <!-- ------ Boton de confirmar ------ -->
+                          <div>
+                            @if($AbaListas1=='0' AND ($ValorTot1 > '0') )
+                              <button type="button" id="confirma1_{{$prod->id}}@-{{$sabor}}" class="btn btn-primary" wire:click="confirmaAbasto('com1','{{$prod->id}}','{{$sabor}}','{{intval($ValorPed1)}}','{{intval($ValorTien1)}}')"> Confirma 1</button>
+                              <button type="submit" id="guarda1_{{$prod->id}}@-{{$sabor}}" class="btn btn-danger" style="display:none;"> Guardar </button>
+                            @endif
+                          </div>
+                        @endif
                       </div>
 
-                      <!-- ------------------------------ Segunda entrega -------------------------- -->
-                      <div class="col-lg-2 col-md-2 col-sm-3" style="display:flex; ">
-                        <!-- ------------com2 Pedidos de usuarios para com2 ---- -->
-                        <div style="width:10%; text-align:right; padding:0.5rem;" id="com2:ped_{{$prod->id}}@-{{$pvar}}" >
-                          {{$ValorPed2}}
-                        </div>
-                        <!-- ------------com2 tienda para com2 ---- -->
-                        <div style="">
+                      <!--############################## Campo de SEGUNDA entrega ###############################-->
+                      <div class="col-lg-2 col-md-2 col-sm-3" style="display:flex;">
+                        @if(in_array( $prod->entrega, ['com2','comid','com12','no']))
+                          <!-- ------ Pedidos de comanda ------ -->
+                          <div style="width:15%; text-align:right; padding:0.5rem;">
+                              <span id="com2:ped_{{$prod->id}}@-{{$sabor}}" style="font-weight:bold;"> {{$ValorPed2}} </span>
+                          </div>
+
+                          <!-- ------ Pedidos para tienda ------ -->
+                          <div>                              
+                            @if($AbaListas2 =='0' OR is_null($AbaListas2))
+                              <input type='number' value="{{$ValorTien2}}" onchange="subtotal('2','{{$prod->id}}','{{$sabor}}')" class='producto' id="com2:tien_{{$prod->id}}@-{{$sabor}}" name="com2:tien_{{$prod->id}}@-{{$sabor}}"  min="0" step="1">
+                            @else
+                              <div style='width:70px;text-align:center;font-weight:bold;padding:4px;'> {{$ValorTien2}}</div>
+                              <input type="hidden" value="{{$ValorTien2}}"  id="com2:tien_{{$prod->id}}@-{{$sabor}}">
+                            @endif
+                          </div>
+
+                          <!-- ------ Total de pedidos ------ -->
+                          <div id="com2:tot_{{$prod->id}}@-{{$sabor}}" style="width:20%; text-align:left; padding:0.5rem;color:gray;">
+                            ={{intval($ValorTot2)}}
+                          </div>
                           
-                            <input type='number' class='producto' id="com2:tien_{{$prod->id}}@-{{$pvar}}" value="{{$ValorTien2}}"  name="com2:tien_{{$prod->id}}@-{{$pvar}}"   step="1"  {{$com2act}}>
+                          <!-- ------ Boton de confirmar ------ -->
+                          <div>
+                            @if($AbaListas2=='0' AND $ValorTot2 > '0' )
+                              <button type="button" id="confirma2_{{$prod->id}}@-{{$sabor}}" class="btn btn-primary" wire:click="confirmaAbasto('com2','{{$prod->id}}','{{$sabor}}','{{intval($ValorPed2)}}','{{intval($ValorTien2)}}')">Confirma 2</button>
+                              <button type="submit" id="guarda2_{{$prod->id}}@-{{$sabor}}" class="btn btn-danger" style="display:none;"> Guardar </button>
+                            @endif
+
+                            @if($ValorTot2 == '0')
+                              <button type="submit" id="secondguarda2_{{$prod->id}}@-{{$sabor}}" class="btn btn-danger" style="display:none;"> Guardar </button>
+                            @endif
+                          </div>
                           
-                        </div>
-                        <!-- ------------com2 Total com2  ---- -->
-                        <div id="com2tot_{{$prod->id}}@-{{$pvar}}"  style="width:20%; text-align:left; padding:0.5rem;color:gray;">
-                          <?php 
-                            $pre2=intval($ValorPed2)+intval($ValorTien2);
-                            if($pre2==0){$sale="";}else{$sale="=".$pre2;}; 
-                          ?>
-                          {{$sale}}
-                        </div>  
+                        @endif
                       </div>
                     </div>
-                    
                   </td>
                 </tr>
               @endforeach
@@ -229,10 +232,14 @@
         if(comPed == null  || comPed == undefined  || comPed == "")  {comPed="0";}
         if(compTie == null  || compTie == undefined  || compTie == "")  {compTie="0";}
         //-------------------------------- Cacluca el subtotal y lo manda al <span id=subtotal>
-        //var subtotal =  (parseFloat(comPed) + parseFloat(compTie);
+        //var subtotal =  parseFloat(comPed) + parseFloat(compTie);
         var subtotal =  Number(comPed) + Number(compTie);
         document.getElementById('com'+com+':tot_'+id+'@-'+pvar).innerHTML = '='+subtotal
 
+        document.getElementById('confirma'+com+'_'+id+'@-'+pvar).style.display = "none"
+        document.getElementById('guarda'+com+'_'+id+'@-'+pvar).style.display = "block"
+        document.getElementById('secondguarda'+com+'_'+id+'@-'+pvar).style.display = "block";
+        //console.log('a',subtotal, typeof(subtotal))
       }
     </script>
   @endpush

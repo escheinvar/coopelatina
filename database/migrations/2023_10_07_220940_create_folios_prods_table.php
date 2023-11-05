@@ -17,14 +17,16 @@ return new class extends Migration
             $table->integer('ped_folio');
             $table->enum('ped_entregado',['0','1'])->default('0');
 
-            $table->enum('ped_entrega',['com1','com2']);  #com1 o com2 
-            $table->integer('ped_prodid');   #123
-            $table->string('ped_prod');     #Malbabiscos
-            $table->string('ped_prodvar')->nullable(); #de Menta
-            $table->string('ped_prodpresenta')->nullable();
-            $table->integer('ped_cant');     #10
-            $table->decimal('ped_costo',6,1);
-            $table->integer('ped_usrid');      #Enrique ID
+            $table->string('ped_producto');                 #### com1:id@sabor 
+            $table->enum('ped_entrega',['com1','com2']);    #### com1 o com2 
+            $table->integer('ped_prodid');                  #### 123
+            $table->string('ped_prod');                     #### Malbabiscos
+            $table->string('ped_prodvar')->nullable();      #### de Menta
+
+            $table->string('ped_prodpresenta')->nullable(); #### Paquetes de 10
+            $table->integer('ped_cant');                    #### 10
+            $table->decimal('ped_costo',6,1);               #### 60.0
+            $table->integer('ped_usrid');                   # IDusuario (Num)
             $table->integer('ped_cantentregada')->default('0');
             $table->date('ped_entregadate')->nullable();
             $table->enum('ped_transfiere',['0','1'])->default('0');

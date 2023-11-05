@@ -12,12 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('abastos', function (Blueprint $table) {
-            $table->id('ab_id');
-            $table->enum('ab_act',['0','1'])->default('1');
-            #$table->string('prod_nombrecorto');
-            #$table->string('prod_nombrelargo');
-            #$table->string('prod_contacto')->nullable();
+            $table->id('aba_id');
+            #$table->enum('aba_act',['0','1'])->default('1');
+            $table->integer('aba_anio');
+            $table->integer('aba_mes');
 
+            $table->enum('aba_com',['com1','com2']);            ### Comanda de entrega
+            $table->integer('aba_prodid');                      ### Número de id del producto
+            $table->string('aba_prodsabor');                    ### sabor del producto
+            $table->string('aba_producto')->nullable();         ### concatenado identificador:  com1:idnum@sabor
+            
+            $table->enum('aba_listas',['0','1'])->default('0');     ### Indica si ya se realizó el pedido de lista de abasto
+            $table->integer('aba_listas_cantpeds')->default('0');   ### Cantidad solicitada para pedidos
+            $table->integer('aba_listas_canttien')->default('0');   ### Cantidad solicitada para tienda
+
+            
+            $table->enum('aba_abasto',['0','1'])->default('0'); ### Indica si ya se realizó el abasto por el proveedor
+            $table->integer('aba_abasto_cant')->nullable();      ### Cantidad recibida
+            $table->date('aba_abasto_date')->nullable();         ### Fecha en que se realizó el abasto
+            
+
+            $table->enum('aba_faltante',['0','1'])->default('0');  ### if aba_faltante =0 entrega correcta =1 faltan pedidos
             $table->timestamps();
         });
     }

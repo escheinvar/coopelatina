@@ -18,6 +18,7 @@ class FoliosProdsModel extends Model
     protected $fillable = [
         'ped_act',
         'ped_folio',
+        'ped_producto',
         'ped_entregado',
         'ped_entrega',
         'ped_prodid',
