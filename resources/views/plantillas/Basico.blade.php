@@ -155,6 +155,12 @@
                             </div>  
                         </li>
 
+                        <li class="nav-item" style="display:inline-block;">
+                            <div class="iconito">
+                                <a class="nav-link" href="/calendario"> <i class="fas fa-calendar-alt"></i></a>
+                            </div>  
+                        </li>
+
                         
                         <li class="nav-item" style="display:inline-block;">
                             <form method="POST" action="/fin" class="form-inline my-2 my-lg-0" style="display:inline;">
@@ -198,18 +204,18 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item disabled" > <!-- ------------ Menú: Prod-ocasión ----- -->
-                                    <a href="#" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="bi bi-gift"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
-                                    </a>
-                                </li>
 
                                 <li class="nav-item"> <!-- ------------ Menú: Prepedido ----- -->
                                     <a href="/prepedido" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="bi bi-cart4"></i> <!--i class="bi bi-cart-fill"></i-->  <span class="ms-1 d-none d-sm-inline">Levantar mi pre-pedido</span>
                                     </a>
                                 </li>
-
+                                
+                                <li class="nav-item disabled" > <!-- ------------ Menú: Prod-ocasión ----- -->
+                                    <a href="#" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class="bi bi-gift"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
+                                    </a>
+                                </li>
 
                                 <li class="nav-item"> <!-- ------------ Menú: Pedidos Activos ----- -->
                                     <a href="/MisPedidos/{{auth()->user()->usr}}" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">

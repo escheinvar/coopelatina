@@ -29,10 +29,12 @@ return new class extends Migration
             
             $table->enum('aba_abasto',['0','1'])->default('0'); ### Indica si ya se realizó el abasto por el proveedor
             $table->integer('aba_abasto_cant')->nullable();      ### Cantidad recibida
-            $table->date('aba_abasto_date')->nullable();         ### Fecha en que se realizó el abasto
-            
-
             $table->enum('aba_faltante',['0','1'])->default('0');  ### if aba_faltante =0 entrega correcta =1 faltan pedidos
+
+            $table->enum('aba_pagado',['0','1'])->default('0'); ### Indica si ya se realizó el pago al proveedor por este producto
+            $table->decimal('aba_pagamonto','10','2')->nullable(); ### Indica el monto pagado
+            
+            $table->date('aba_abasto_date')->nullable();         ### Fecha en que se realizó el abasto            
             $table->timestamps();
         });
     }

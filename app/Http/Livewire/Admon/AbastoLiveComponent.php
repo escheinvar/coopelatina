@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AbastoLiveComponent extends Component
 {
-    public $proxima, $proximaDate;
+    public $proxima, $proximaDate, $FuenteDelPago='caja';
     public $petitCmte=['root','teso'];
 
     public function Recibir($producto,){
@@ -29,20 +29,21 @@ class AbastoLiveComponent extends Component
         $anio=$this->proximaDate['anio'];
         $mes=$this->proximaDate['mes'];
         $prods=DB::select(
-            "SELECT proveedor,ped_producto, costo, gpo, nombre, presentacion, aba_listas, aba_abasto,  SUM(ped_cant) AS total FROM folios_prods 
+            "SELECT proveedor,ped_producto, costo, gpo, nombre, presentacion, aba_listas, aba_abasto, aba_abasto_cant, aba_faltante,  SUM(ped_cant) AS total FROM folios_prods 
             JOIN folios ON folios_prods.ped_folio=folios.fol_id
             JOIN productos ON folios_prods.ped_prodid=productos.id
             join abastos on folios_prods.ped_producto = abastos.aba_producto 
             WHERE ped_act='1' AND ped_entrega= 'com1' AND  fol_act='1' AND fol_edo='3' AND fol_anio=$anio AND fol_mes= $mes 
-            GROUP BY ped_producto, gpo,nombre, proveedor, presentacion, aba_listas, aba_abasto, costo");
-            
+            GROUP BY ped_producto, gpo, nombre, proveedor, presentacion, aba_listas, aba_abasto, aba_abasto_cant, aba_faltante, costo");
+
         $prodsTien=DB::select(
-            "SELECT proveedor, costo,  gpo, nombre, SUM(ped_cant) AS total, ped_producto FROM folios_prods 
+            "SELECT proveedor,ped_producto, costo, gpo, nombre, presentacion, aba_listas, aba_abasto, aba_abasto_cant, aba_faltante,  SUM(ped_cant) AS total FROM folios_prods 
             JOIN folios ON folios_prods.ped_folio=folios.fol_id
             JOIN productos ON folios_prods.ped_prodid=productos.id
+            join abastos on folios_prods.ped_producto = abastos.aba_producto 
             WHERE ped_act='1' AND ped_entrega= '$com' AND  fol_act='1' AND fol_edo='3' AND fol_anio='$anio' AND fol_mes= '$mes' AND fol_usrid = '0'
-            GROUP BY ped_producto,gpo,nombre, proveedor, costo");  //Cambia prod por  ped_producto 
-            
+            GROUP BY ped_producto, gpo,nombre,  proveedor, presentacion, aba_listas, aba_abasto, aba_abasto_cant, aba_faltante, costo");  //En realidad solo se usa ped_produto y
+          
         ##### Misma lista que anterior pero saca proovedores
         $proovs=DB::table('folios_prods')
             ->join('folios','folios_prods.ped_folio','=','folios.fol_id')

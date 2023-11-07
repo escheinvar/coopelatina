@@ -30,5 +30,7 @@ class AbastosModel extends Model
         'aba_abasto_cant',
         'aba_abasto_date',
         'aba_faltante',
+        'aba_pagado',
+        'aba_pagamonto',
      ];
 }

@@ -12,24 +12,38 @@
 
     @if(session('ListasAbasto') == '' AND session('EnPagos') == '' AND session('EnPedido') =='0')
         <!-- -------------------- Cabecera de tabla -------------------- -->
-        <div class="row" style="font-size:120%; font-weight:bold;color:gray;">
-            <div class="col-md-4"> Producto a entregar </div>
-            <div class="col-md-2"> Solicitud<br>pedidos+tienda</div>
-            <div class="col-md-1"> Unidades recibidas </div>
-            <div class="col-md-2"> Total a pagar</div>
+        <div class="row sticky-top" style="font-size:110%; font-weight:bold;background-color:white;">
+            <div class="col-md-5 col-sm-12 my-md-1 my-sm-12"> Producto a recibir </div>
+            <div class="col-md-2 col-sm-12 my-md-12 my-sm-12"> Solicitud<br>pedidos+tienda</div>
+            <div class="col-md-1 col-sm-12 my-md-1 my-sm-12"> Unidades recibidas </div>
+            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12"> Total a pagar<br> <span style="color:gray;">Plan</span> | Real</div>
+            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12"> 
+                <button type="submit" class="btn btn-success">Recibir y pagar</button> 
+                @if(in_array(auth()->user()->priv, $petitCmte) )
+                <select name="FuenteDelPago" >
+                    <option value="caja" selected>Caja</option>
+                    <option value="teso">Teso</option>
+                    <option value="banco">Banco</option>
+                </select>
+                @endif                
+            </div>
         </div>
         <!-- -------------------- Incia tabla de -------------------- -->
         <form method="post">
             @csrf
+            <?php $GranTotalPedido='0'; $GranTotalReal='0';?>
             @foreach($proveedores as $prov)
                 <?php $idProv=preg_replace("/ /","",$prov->proveedor); ?>
                 <div id="CintaProv_{{$idProv}}">
-                    <!-- ------------------------------ Cabecera con nombre de proveedor ----------------------------------- -->
-                    <div id="CabezaProv_{{$idProv}}" style="background-color:rgb(186, 214, 240); margin:1rem; font-size:120%; font-weight:bold;cursor:pointer; padding:1rem;" onclick="calculaProv('{{$idProv}}');calculaGranTotal();VerNoVer('prov','{{$idProv}}')"> 
-                        Proveedor: {{$prov->proveedor}} ({{$idProv}})
+                    <!-- #########################################################################################################################################-->
+                    <!-- ###############################################  CABEZA VISIBLE #########################################################################-->
+                    <div id="CabezaProv_{{$idProv}}" style="background-color:rgb(186, 214, 240); margin:1rem; font-size:120%; font-weight:bold;cursor:pointer; padding:1rem;" onclick="VerNoVer('prov','{{$idProv}}')"> 
+                        {{$prov->proveedor}} ({{$idProv}})
                     </div>
-                    <!-- ------------------------------- CUERPO oculto---------------------------------- -->
+                    <!-- #########################################################################################################################################-->
+                    <!-- ###############################################  CUERPO OCULTO  #########################################################################-->
                     <div id="sale_prov{{$idProv}}" style="display:block;">
+                        <?php $subtotDelProov='0'; $subtotRealDelProov='0';?>
                         @foreach($productos as $i)
                             @if($prov->proveedor==$i->proveedor)
                                 <?php 
@@ -44,36 +58,47 @@
                                     }
                                 ?>
                                 @if($i->aba_listas=='1')
-                                    <div class="row"  style="margin:2rem;"> 
+                                    <div class="row my-sm-5"  style="margin:2rem;"> 
                                         <div style="">
-                                            <!-- --------------------------- NOMBRE PRODUCTO --------------------- -->
-                                            <div class="col-md-5 col-sm-12 my-md-1 my-sm-5"> 
+                                            
+                                            <!--################################ NOMBRE PRODUCTO #######################################-->
+                                            <div class="col-md-5 col-sm-12 my-md-1 my-sm-3"> 
                                                 <b>{{$i->gpo}} {{$i->nombre}}</b>  {{$sabor}} {{$i->presentacion}}  (${{$i->costo}})
                                                 <br>{{$i->ped_producto}}
                                             </div>
-                                            <!-- --------------------------- CANTIDADES --------------------- -->
-                                            <div class="col-md-2 col-sm-12 my-md-1 my-sm-5">
-                                                <span style="font-size:120%"><ch>Pedidos</ch>{{$i->total - $tienda}}</span> + 
-                                                <span style="font-size:120%"><ch>Tienda</ch>{{$tienda}}</span> = 
+                                            <!--############################# CANTIDADES SOLICITADAS ####################################-->
+                                            <div class="col-md-2 col-sm-12 p-md-1 p-sm-7" >
+                                                <span style="font-size:120%"><ch>Peds</ch>{{$i->total - $tienda}}</span> + 
+                                                <span style="font-size:120%"><ch>Tien</ch>{{$tienda}}</span> = 
                                                 <span style="font-size:120%;font-weight:bold;"><ch>Total</ch> {{$i->total}} </span>
                                             </div>
-                                            <!-- --------------------------- CANTIDAD ENTREGADA --------------------- -->
-                                            <div class="col-md-1 col-sm-12 my-md-1 my-sm-5">
+                                            <!--############################# CANTIDADES ENTREGADAS ####################################-->
+                                            <div class="col-md-1 col-sm-12 my-md-1 my-sm-12" style="text-align: center;">
                                                 @if($i->aba_abasto=='0')
-                                                    <input class='producto' id="{{$i->ped_producto}}" name="{{$i->ped_producto}}" type="number" style="width:70px;"  onchange="CalculaSubtotal({{$i->costo}},'{{$i->ped_producto}}',{{$i->total - $tienda}});calculaProv('{{$idProv}}');calculaGranTotal()" min='0'> 
-                                                @else
-                                                    <span> {{$i->total}}</span>
+                                                    <input class='producto' id="{{$i->ped_producto}}" 
+                                                        name="{{$i->ped_producto}}" type="number" style="width:70px;"  min="0"
+                                                        value="{{ old($i->ped_producto) }}"
+                                                        onchange="CalculaSubtotal({{$i->costo}},'{{$i->ped_producto}}',{{$i->total - $tienda}});calculaProv('{{$idProv}}');" 
+                                                        min='0'> 
+                                                @else                                                    
+                                                    <span style="@if($i->aba_faltante=='1')color:red; @endif">  {{$i->aba_abasto_cant}} </span>
                                                 @endif
                                             </div>
-                                            <!-- --------------------------- SUB TOTALPAGO --------------------- -->
-                                            <div class="col-md-1 col-sm-12 my-md-1 my-sm-5">
-                                                $ <span class="totalProductor_{{$idProv}}" id="totProd_{{$i->ped_producto}}">{{$i->costo * $i->total}}</span>
-                                            </div>
-                                            <!-- --------------------------- Acciones --------------------- -->
-                                            <div class="col-md-3 col-sm-12 my-md-1 my-sm-5">
+                                            <!--############################# SUBTOTAL DE CADA PRODUCTO ################################-->
+                                            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12" style="display:flex;">
+                                                <?php $subtotDelProov= $subtotDelProov + ($i->costo * $i->total); ?>
+                                                <div style="width:40%;color:gray;font-size:80%;">$ {{$i->costo * $i->total}}</div>
                                                 @if($i->aba_abasto =='0')
-                                                    <button type="submit" name="ganon" value='{{$i->ped_producto}}' id="recibe_{{$i->ped_producto}}" style="display:block;" class="btn btn-success" wire:click="Recibir('{{$i->ped_producto}}')">Recibir y pagar</button>
-                                                    
+                                                    $ <div style="width:60%;" class="totalProductor_{{$idProv}}" id="totProd_{{$i->ped_producto}}"></div>
+                                                @else
+                                                    <?php $subtotRealDelProov = $subtotRealDelProov + ($i->aba_abasto_cant * $i->costo); ?>
+                                                    $ {{$i->aba_abasto_cant * $i->costo}}
+                                                @endif
+                                            </div>
+                                            <!--############################# COLUMNA DE AVISOS ################################-->
+                                            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12">
+                                                @if($i->aba_abasto > '0')
+                                                    @if($i->aba_faltante=='1')<error>Faltó para la entrega</error> @endif
                                                 @endif
                                                 <div><error><span id="totAviso_{{$i->ped_producto}}"></span></error></div>
                                             </div>
@@ -82,32 +107,35 @@
                                 @endif
                             @endif
                         @endforeach
-                        <div class="row" style="margin:2rem;">
-                            <div class="col-md-12 col-sm-12" style="font-size:120%;font-weight:bold;">
-                                Pago total al proveedor: $ <span class="TOTALProductor" id="totalProductor_{{$idProv}}"></span>
+                        <!-- -------------------------- pie de tabla ------------------------- -->
+                        <div class="row" style="text-size:110%; font-weight:bold; background-color:aliceblue;">
+                            <div class="col-md-5 col-sm-12 my-md-1 my-sm-12"> 
+                                &nbsp;
+                            </div>
+                            <div class="col-md-2 col-sm-12 my-md-12 my-sm-12">
+                                Total =
+                            </div>
+                            <div class="col-md-1 col-sm-12 my-md-1 my-sm-12" style="text-align: center;">
+                                $<span class="TOTALProductor" id="totalProductor_{{$idProv}}"></span>
+                            </div>
+                            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12" style="display:flex;">
+                                <?php $GranTotalPedido=$GranTotalPedido+$subtotDelProov; $GranTotalReal=$GranTotalReal+$subtotRealDelProov?>
+                                <div style="width:40%;">$ {{$subtotDelProov}}</div>
+                                <div style="width:60%;" >$ {{$subtotRealDelProov}}</div>
+                            </div>
+                            <div class="col-md-2 col-sm-12 my-md-1 my-sm-12">
+                                <!--button type="button" class="btn btn-success btn-sm">Pagar al proveedor</button-->
                             </div>
                         </div>
                     </div>
                 </div>
             @endforeach
             <!--- ------------------------- Boton y cálculo de gran total -------------------------- -->
-            @if( in_array(auth()->user()->priv, $petitCmte) )
-                <?php
-                    $concatenado="";
-                    foreach($proveedores as $i){
-                        $idProv=preg_replace("/ /","",$i->proveedor); 
-                        $concatenado=$concatenado."calculaProv('".$idProv."');";
-                    }
-                ?>                 
-                <div class="row" style="margin:2rem; padding:2rem; font-size:130%; font-weight:bold;color:gray;">
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-primary" onclick="{{$concatenado}}calculaGranTotal();VerNoVer('Gran','Totalisimo')">Calcular Total</button>
-                    </div>
-                    <div id="sale_GranTotalisimo" class="col-md-6" style="display:none;">
-                        Total a pagar a los proveedores: $ <span id="GranTotal"></span> 
-                    </div>
-                </div>
-            @endif
+            <hr class="border border-2 opacity-75" style="width:90%">
+            <div class="row" style="text-size:120%; font-weight:bold;">
+                Gran total calculado: $     {{$GranTotalPedido}}<br>
+                Gran total pagado: $ {{$GranTotalReal}}
+            </div>
         </form>
     @else
         Aún no es tiempo de recibir proveedores!!
@@ -118,19 +146,13 @@
             //--------------------------------  Calcula subtotal  por cada producto
             function CalculaSubtotal(precio,producto,CantEnPedido){
                 cantidad= document.getElementById(producto).value;
-                total = parseFloat(cantidad) * parseFloat(precio);
-                
+                total = parseFloat(cantidad) * parseFloat(precio);                
                 document.getElementById('totProd_'+producto).innerHTML = parseFloat(total);
-                if(cantidad < CantEnPedido){
-                    falta = CantEnPedido - cantidad
-                    Aviso = 'Faltará entregar a '+falta+' Cooperativistas';
-                }else{
-                    Aviso = '';
-                }
-                document.getElementById('totAviso_'+producto).innerHTML = Aviso
-                
-                //document.getElementById('recibe_'+producto).style.display = 'none'
-                //document.getElementById('guarda_'+producto).style.display = 'block'
+
+                if(cantidad < CantEnPedido){ Aviso = 'Faltará entregar a '+(CantEnPedido - cantidad)+' Cooperativistas';
+                }else{                      Aviso = '';      }
+                document.getElementById('totAviso_'+producto).innerHTML = Aviso                
+                //document.getElementById('recibe_'+producto).style.display = "block"
                 //console.log('a',total,CantEnPedido,cantidad, typeof(total),typeof(cantidad))
             }
 
@@ -143,12 +165,11 @@
                     if(isNaN(x) || x=="") {x=0;}
                     tot += parseFloat(x);
                 }
-                //console.log('a',tot,cadaUno)
                 document.getElementById('totalProductor_'+proveedor).innerHTML = tot;
-                //document.getElementById('CabezaProv_'+proveedor).style.backgroundColor = 'aliceblue';
+                console.log('a',tot,typeof(total))
            }
             //--------------------------------  Calcula gran total de todos los proveedores
-            function calculaGranTotal(){
+            function calculaGranTotalBAC(){
                 cadaUno=document.getElementsByClassName('TOTALProductor');
                 var x=0; var tot=0;  var contador=0;
                 for (i=0, max=cadaUno.length; i<max; i++) {

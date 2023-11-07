@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Admon;
 use App\Models\AbastosModel;
 use App\Models\EstadosModel;
 use Livewire\Component;
-use App\Models\FoliosModel;
 use App\Models\ProductosModel;
 use Illuminate\Support\Facades\DB;
 
@@ -44,7 +43,6 @@ class ListasAbastoLiveComponent extends Component
     }
 
     public function confirmaAbasto($com, $prodId,$sabor, $ValorPed, $ValorTien){
-        
         AbastosModel::create([
             'aba_anio'=>session('ProxCom2date')['anio'],
             'aba_mes'=>session('ProxCom2date')['mes'],

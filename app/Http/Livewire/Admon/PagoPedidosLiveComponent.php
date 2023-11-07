@@ -184,13 +184,13 @@ class PagoPedidosLiveComponent extends Component
         $this->prods=DB::table('folios_prods')
             ->where('ped_act','1')
             ->whereIn('ped_folio',DB::table('folios')
-                                    ->where('fol_act','1')
-                                    ->where('fol_mes','>=',$mesHoy)
-                                    ->where('fol_anio','>=',$anioHoy)
-                                    ->orderBy('fol_id','asc')
-                                    ->orderBy('fol_id','asc')
-                                    ->pluck('fol_id')->toArray()
-            )
+                ->where('fol_act','1')
+                ->where('fol_mes','>=',$mesHoy)
+                ->where('fol_anio','>=',$anioHoy)
+                ->orderBy('fol_id','asc')
+                ->orderBy('fol_id','asc')
+                ->pluck('fol_id')->toArray()
+                )
             ->get();
         ##### Obtiene estadísticas
         /*

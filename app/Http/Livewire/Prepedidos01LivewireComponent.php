@@ -54,7 +54,6 @@ class Prepedidos01LivewireComponent extends Component
     ############################################################################################## Guarda datos
     public function CrearPrePedido(){
         #dd(session());
-
         $this->oculta="none";
 
         if($this->anualidad > 0){$edo='5';}else{$edo='4';}
@@ -86,24 +85,27 @@ class Prepedidos01LivewireComponent extends Component
                 'ped_transfiere'=>'0',
             ]);
         }
-        ##### GuardaProductos        
-        
+        #dd($this->prepedido);
+
+        ##### GuardaProductos
         foreach($this->prepedido as $key=>$value){
             $entrega=preg_replace("/_.*/","",$key);
-            $prodId=preg_replace("/.*_/","",$key); $prodId=preg_replace("/@-.*/","",$prodId);
+            $prodId=preg_replace("/^...._/","",$key); 
+            $prodId=preg_replace("/@-.*/","",$prodId);
             $sabor=preg_replace("/.*@-/","",$key);
-
+            
             ### Obtiene nombre
             $name1=ProductosModel::where('id',$prodId)->value('gpo');
             $name2=ProductosModel::where('id',$prodId)->value('nombre');
             $presenta=ProductosModel::where('id',$prodId)->value('presentacion');
+            #if($prodId=='47') {dd($key,$entrega,$prodId, $sabor, $name1,$name2,$presenta);}
 
             ### Obtiene Precio
             if(auth()->user()->estatus  == 'act'){        $precio=ProductosModel::where('id',$prodId)->value('precioact');
             }else if(auth()->user()->estatus  == 'reg') {  $precio=ProductosModel::where('id',$prodId)->value('precioreg');
             }else if(auth()->user()->estatus  == 'pru') {  $precio=ProductosModel::where('id',$prodId)->value('precioreg');
             }else{                $precio=ProductosModel::where('id',$prodId)->value('preciopub'); }
-
+            
             FoliosProdsModel::create([
                 'ped_act'=>'1',
                 'ped_folio'=>$folio->fol_id,
