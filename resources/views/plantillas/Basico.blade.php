@@ -137,7 +137,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown"  style="z-index:9999">
                                     <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif disabled" href="#">6) Iniciar Entrega</a>
-                                    <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif" href="#">7) Entregar productos</a>
+                                    <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif" href="/entrega">7) Entregar productos</a>
                                     <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif disabled" href="#">8) Finalizar Entrega</a>
                                     
                                 </div>
@@ -157,10 +157,10 @@
                     <ul class="navbar-nav mr-auto" style="display:inline-block;">
 
                         @if(session('UsrEnTrabajo')=='1')
-                         <!-- ################## TRABAJOS ######################### -->
+                         <!-- ################## ENTREGAS ######################### -->
                          <li class="nav-item"  style="display:inline-block;">
                             <div class="iconito">
-                                <a class="nav-link" href="#"><i class='fas fa-people-carry'></i></a>
+                                <a class="nav-link" href="/entrega"><i class='fas fa-people-carry'></i></a>
                             </div>
                          </li>
                         @endif

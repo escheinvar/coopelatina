@@ -3,6 +3,7 @@
 use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\PagoPedidosController;
 use App\Http\Controllers\admon\AbastoController;
+use App\Http\Controllers\admon\EntregaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
@@ -30,8 +31,9 @@ use App\Http\Controllers\coop_trabajosController;
 #######################################################################################
 ########################################################################## ZONA PÚBLICA
 Route::get('/', function(){    return view('publico.somos');  });
-Route::get('/nologin', function(){    return "Debes ser Cooperativista y <a href='/login'>autenticar</a> primero para poder entrar<br><a href='/'>A inicio</a> ";   });
-Route::get('/noadmin', function(){    return "Debes ser Cooperativista ADMINISTRADOR y <a href='/login'>autenticar</a> primero para poder entrar<br><a href='/prepedido'>A PREPEDIDO</a> ";    });
+Route::get('/nologin', function(){    return "<br><br><div style='text-align:center;font-size:150%;'>Debes ser Cooperativista<br>y <a href='/login'>autenticar</a> primero para poder <a href='/'>entrar</a> <br>  &#9773;  </div>";   });
+Route::get('/noadmin', function(){    return "<br><br><div style='text-align:center;font-size:150%;'>Debes ser Cooperativista ADMINISTRADOR<br> y <a href='/login'>autenticar</a> primero para poder entrar<br> &#9773 <br> (<a href='/prepedido'>Ir a pre-pedidos</a>) </div>  ";    });
+Route::get('/notrabajohoy', function(){    return "<br><div style='text-align:center;font-size:150%;'><br>Hola!!<br> Hoy no te toca trabajar!! <br> &#128512;<br> Solo el equipo de trabajo de hoy puede acceder a esta sección.<br> &#9773; <br><a href='/trabajos'>Ver calendario</a> </div>";    });
 Route::get('/productores',[coop_productoresController::class, 'index'])->name('productores');
 
 #######################################################################################
@@ -86,13 +88,13 @@ Route::middleware(['soloCoops'])->group(function(){
 
     ################################ MisPedidos
     Route::get('/MisPedidos/{usr}',[coop_misPedidos::class,'index'])->name('MisPedidos');
-    #Route::post('/MisPedidos/{usr}',[coop_misPedidos::class,'store']);
-
+    
     ################################ Ver Calendario 
     Route::get('/calendario',[coop_calendarController::class,'index'])->middleware('EstatusDeEntrega')->name('calendario');
-    #Route::post('/calendario',[coop_calendarController::class,'store']);
-
-     ################################ Ver Trabajos
-     Route::get('/trabajos',[coop_trabajosController::class,'index'])->name('trabajos');
-     #Route::post('/calendario',[coop_calendarController::class,'store']);
+    
+    ################################ Ver Trabajos
+    Route::get('/trabajos',[coop_trabajosController::class,'index'])->name('trabajos');
+    
+    ################################ Entrega de Productos
+    Route::get('/entrega',[EntregaController::class,'index'])->middleware('EnTrabajo')->name('entregas');
 });
