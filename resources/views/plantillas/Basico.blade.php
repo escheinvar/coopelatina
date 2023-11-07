@@ -87,7 +87,20 @@
                         
                         @if( in_array(auth()->user()['priv']  ,  ['root','admon','teso']) )
                             <!---------------------------------------------- INICIA MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown" style="z-index:99">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Catálogos
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/usuarios">Usuarios</a>
+                                    <a class="dropdown-item" href="/productores">Productores</a>
+                                    <a class="dropdown-item" href="/prepedido">Productos</a>
+                                    <!--div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a-->
+                                </div>
+                            </li>
+
+                            <!--li class="nav-item dropdown" style="z-index:99">
                                 <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Caja
                                 </a>
@@ -101,39 +114,39 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Something else here</a>
                                 </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/usuarios">Usuarios</a> <!--span>&#9773;  &#9776;</span-->
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </li-->
+
+                            <li class="nav-item dropdown" >
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="z-index:9999">
                                     Pre-Entrega
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index:9999">
                                     <a class="dropdown-item" href="/calendario">1) Definir calendario</a>
                                     <a class="dropdown-item" href="/pagoprepedidos">2) Pago prepedidos</a>
                                     <a class="dropdown-item" href="/listasabasto">3) Listas de abasto</a>
+                                    <a class="dropdown-item" href="/abastecer">4) Recibir proveedores</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/trabajos">4) Alta de apoyos</a>
+                                    <a class="dropdown-item" href="/trabajos">Alta de apoyos</a>
+                                    <a class="dropdown-item disabled" href="#">Productos Ocasión</a> 
                                     <a class="dropdown-item disabled" href="#">Pizarrón</a>                                   
-                                    <a class="dropdown-item disabled" href="#">Something else here</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Entrega
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/abastecer">5) Recibir proveedores</a>
-                                    <a class="dropdown-item disabled href="#">6) Iniciar Entrega</a>
-                                    <a class="dropdown-item disabled href="#">7) Entregar productos</a>
-                                    <a class="dropdown-item disabled href="#">8) Finalizar Entrega</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown"  style="z-index:9999">
+                                    <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif disabled" href="#">6) Iniciar Entrega</a>
+                                    <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif" href="#">7) Entregar productos</a>
+                                    <a class="dropdown-item @if(session('EnEntrega')=='0') disabled @endif disabled" href="#">8) Finalizar Entrega</a>
                                     
                                 </div>
                             </li>
+                            
                             <li class="nav-item">
-                                <a class="nav-link disabled"  href="#">Entregar Productos</a> <!--span>&#9773;  &#9776;</span-->
+                                <a class="nav-link disabled"  href="#">Caja</a> <!--span>&#9773;  &#9776;</span-->
                             </li>
+
                             <!---------------------------------------------- FIN MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
                         @endif
                     </ul>
@@ -143,25 +156,36 @@
                 <div style="float: right;">
                     <ul class="navbar-nav mr-auto" style="display:inline-block;">
 
+                        @if(session('UsrEnTrabajo')=='1')
+                         <!-- ################## TRABAJOS ######################### -->
+                         <li class="nav-item"  style="display:inline-block;">
+                            <div class="iconito">
+                                <a class="nav-link" href="#"><i class='fas fa-people-carry'></i></a>
+                            </div>
+                         </li>
+                        @endif
+
+                        <!-- ################## HOME ######################### -->
                         <li class="nav-item"  style="display:inline-block;">
                             <div class="iconito">
-                                <a class="nav-link" href="/inicio/{{auth()->user()->usr}}"> <i class="fas fa-home"></i></a>
+                                <a class="nav-link" href="/inicio/{{auth()->user()->usr}}">     <i class="fas fa-home"></i></a>
                             </div>  
                         </li>
                         
+                        <!-- ################## PREPEDIDOS ######################### -->
                         <li class="nav-item" style="display:inline-block;">
                             <div class="iconito">
                                 <a class="nav-link" href="/prepedido"> <i class="bi bi-cart4"></i></a>
                             </div>  
                         </li>
 
+                        <!-- ################## CALENDARIO ######################### -->
                         <li class="nav-item" style="display:inline-block;">
                             <div class="iconito">
                                 <a class="nav-link" href="/calendario"> <i class="fas fa-calendar-alt"></i></a>
                             </div>  
                         </li>
-
-                        
+                        <!-- ################## SALIR ######################### -->                        
                         <li class="nav-item" style="display:inline-block;">
                             <form method="POST" action="/fin" class="form-inline my-2 my-lg-0" style="display:inline;">
                                 @csrf 
@@ -200,14 +224,14 @@
 
                                 <li class="nav-item"> <!-- ------------ Menú: Calendario de entregas ----- -->
                                     <a href="/calendario" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="fas fa-calendar-alt"></i>  <span class="ms-1 d-none d-sm-inline">Calendario de entregas</span>
+                                        <i class="fas fa-calendar-alt"></i>  <span class="ms-1 d-none d-sm-inline">Calendario</span>
                                     </a>
                                 </li>
 
 
                                 <li class="nav-item"> <!-- ------------ Menú: Prepedido ----- -->
                                     <a href="/prepedido" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
-                                        <i class="bi bi-cart4"></i> <!--i class="bi bi-cart-fill"></i-->  <span class="ms-1 d-none d-sm-inline">Levantar mi pre-pedido</span>
+                                        <i class="bi bi-cart4"></i> <!--i class="bi bi-cart-fill"></i-->  <span class="ms-1 d-none d-sm-inline">Pre-pedidos</span>
                                     </a>
                                 </li>
                                 

@@ -205,6 +205,13 @@ class EstatusDeEntrega
         $ListasAbasto=Estadosmodel::where('edo_name','ListasDeAbasto')->value('edo_edo');
 
         ##################################################################
+        ######## Genera lista de personas que van a entregar el día de hoy
+        
+        $Entregadores=TrabajosModel::where('work_act','1')->where('work_fechatrabajo','=', date("Y-m-d"))->pluck('work_usrid')->toArray();
+        if( in_array( auth()->user()->id, $Entregadores)){$enTrabajo='1';}else{$enTrabajo='0';}
+        #dd(auth()->user()->id, $enTrabajo,$Entregadores);        
+        
+        ##################################################################
         ################################  Guarda variables en sesión
         session([
             'EnPedido'=>$EnPedido,          ### 0=no en pedido ó 1=si en pedido
@@ -224,6 +231,8 @@ class EstatusDeEntrega
             #'ProxPedstart'=>$ProxPedStart,  ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de inicio de pedidos
             'ProxPedend'=>$ProxPedEnd,      ### array con [ DiaDeLaSemana DiaDelMes  Mes Anio] de fin de pedidos
             'ProximaCom'=>$ProximaCom,      ### Indica 2 valores: próxima comanda (com1 ó com2) e incluye ProxCom#date (array con  [ DiaDeLaSemana DiaDelMes  Mes Anio] de próxima entrega)
+            #'Entregan'=>$entreganHoy,       ### Arreglo con id de usuarios que van a entregar el día de hoy
+            'UsrEnTrabajo'=>$enTrabajo,      ### 1=sí está en la lista de trabajos para hoy, 0=no está en la lista de trabajos para hoy
             
             'vigencia'=>$vigencia,          ### 0=no está vigente la anualidad ó 1=sí está vigente la anualidad
             'FinMembre'=>$Difmembre->days,  ### Número de días que faltan para el vencimiento de anualidad

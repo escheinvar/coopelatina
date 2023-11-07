@@ -225,8 +225,9 @@
                                                     }
                                                 }
                                                 $faltantes = $value->min - $SeHaPedido;
-                                            }
+                                            }else{$faltantes='0';}
                                         ?>
+                                        
                                         @if($value->mintipo=='1' AND $faltantes >'0')
                                             <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:70%; font-size:70%; margin:2px; border-radius:100%;padding:2px;">
                                                 {{$faltantes}}                                                

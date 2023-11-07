@@ -1,15 +1,11 @@
 <style>
-    /*
-    .momentoON{ font-size: 80%; text-align: center; background-color:rgb(166, 248, 166); box-shadow: 2px 2px 2px 1px rgb(219, 220, 221); background-color:rgb(241, 240, 255); background-color:rgb(146, 250, 146); font-weight: bold;}
-    .momentoOFF{font-size: 80%; text-align: center; box-shadow: 0px 0px 0px 0px aliceblue; background-color:aliceblue; }*/
-    a.momentoON {color:rgb(0, 170, 0);}
-    a.momentoOFF {color:rgb(100, 99, 99);}
-    a:link   {font-size: 90%;  text-decoration: none;}
+    /*a:link   {font-size: 90%;  text-decoration: none;}
     a:visited{font-size: 90%;  text-decoration: none;}
     a:hover  {font-size: 95%;  text-decoration: none;}
-    a:active {font-size: 90%;  text-decoration: none;}
-    a.PagActiva {font-size: 100%;font-weight: bold;}
-    prueba{color:gold}
+    a:active {font-size: 90%;  text-decoration: none;}*/
+    a.PagActiva {font-size: 110%;font-weight: bold;}
+    a.momentoON {color:rgb(100, 99, 99); text-decoration: overline;text-decoration-thickness:2px;text-decoration-color:rgb(0, 170, 0);}
+    a.momentoOFF {color:rgb(100, 99, 99);}
 </style>
 
 <?php $backcolOn="gold"; $backcolOff="aliceblue"; ?> 

@@ -14,7 +14,7 @@
     @if( in_array(auth()->user()->priv, $petitCmte) && session('EnPedido')=='0') 
         
         <div>
-            <label> Desactivar/Activar Pagos</label><br>
+            <label> Pagos</label><br>
             <label class="switch">
                 <input type="checkbox" wire:model="EnPagos" wire:click="CambiaEstado">
                 <div class="slider round"></div> 

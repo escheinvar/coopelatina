@@ -19,8 +19,8 @@
             <div class="col-md-2 col-sm-12 my-md-1 my-sm-12"> Total a pagar<br> <span style="color:gray;">Plan</span> | Real</div>
             <div class="col-md-2 col-sm-12 my-md-1 my-sm-12"> 
                 <button type="submit" class="btn btn-success">Recibir y pagar</button> 
-                @if(in_array(auth()->user()->priv, $petitCmte) )
-                <select name="FuenteDelPago" >
+                @if(in_array(auth()->user()->priv, $petitCmte))
+                <select name="FuenteDelPago">
                     <option value="caja" selected>Caja</option>
                     <option value="teso">Teso</option>
                     <option value="banco">Banco</option>
@@ -42,7 +42,7 @@
                     </div>
                     <!-- #########################################################################################################################################-->
                     <!-- ###############################################  CUERPO OCULTO  #########################################################################-->
-                    <div id="sale_prov{{$idProv}}" style="display:block;">
+                    <div id="sale_prov{{$idProv}}" style="display:none;">
                         <?php $subtotDelProov='0'; $subtotRealDelProov='0';?>
                         @foreach($productos as $i)
                             @if($prov->proveedor==$i->proveedor)
