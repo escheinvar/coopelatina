@@ -97,4 +97,5 @@ Route::middleware(['soloCoops'])->group(function(){
     
     ################################ Entrega de Productos
     Route::get('/entrega',[EntregaController::class,'index'])->middleware('EnTrabajo')->name('entregas');
+    Route::post('/entrega',[EntregaController::class,'store']);
 });

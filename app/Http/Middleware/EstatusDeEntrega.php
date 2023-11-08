@@ -83,7 +83,7 @@ class EstatusDeEntrega
                 $Ini=new DateTime($InicioProx);     $Dif=$Ini->diff($hoy);
                 $diaSem=$arraySemana[date("w",strtotime($InicioProx))];
                 $diaMes=date("d",strtotime($InicioProx));
-                $Mes=$arrayMeses[date("m",strtotime($InicioProx))];
+                $Mes=$arrayMeses[date("n",strtotime($InicioProx))];
                 $SigEvento="Ya se cerró la toma de pedidos. La entrega será el ".$diaSem." ".$diaMes." de ".$Mes." (en ".$Dif->days." días)";
                 
             }else if($ProxEventos[0]->event == 'ped'){
@@ -135,14 +135,14 @@ class EstatusDeEntrega
         ####### Obtiene datos de fecha de próxima primer y segunda entrega
         $fecha1=new DateTime($ProxCom1->start); 
         $dia1 =$fecha1->format("d");     
-        $mes1 =$fecha1->format("m");      
+        $mes1 =$fecha1->format("n");      
         $diames1 =$fecha1->format("w");   
         $anio1 =$fecha1->format("Y");
         $ProxCom1date=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1, 'anio'=>$anio1]; #ej: ['jue', '31', 'dic', '2023'] -> [4,31,12,2023]
 
         $fecha2=new DateTime($ProxCom2->start); 
         $dia2 =$fecha2->format("d");
-        $mes2 =$fecha2->format("m");
+        $mes2 =$fecha2->format("n");
         $diames2 =$fecha2->format("w");
         $anio2 =$fecha2->format("Y");
         $ProxCom2date=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2, 'anio'=>$anio2]; #ej: ['jue', '31', 'dic', '2023'] -> [4,31,12,2023]
@@ -159,14 +159,14 @@ class EstatusDeEntrega
         ################# Obtiene datos de próximo inicio y fin de pedidos
         $fecha1=new DateTime($ProxPedido->start); 
         $dia1 =$fecha1->format("d");     
-        $mes1 =$fecha1->format("m");      
+        $mes1 =$fecha1->format("n");      
         $diames1 =$fecha1->format("w");  
         $anio1 = $fecha1->format("Y"); 
         $ProxPedStart=['diasem'=>$diames1, 'dia'=>$dia1, 'mes'=>$mes1, 'anio'=>$anio1]; #ej: ['jue', '31', 'dic', '2024] -> [4,31,12,2024]
 
         $fecha2=new DateTime($ProxPedido->end); 
         $dia2 =$fecha2->format("d");
-        $mes2 =$fecha2->format("m");
+        $mes2 =$fecha2->format("n");
         $diames2 =$fecha2->format("w");
         $anio2 = $fecha2->format("Y"); 
         $ProxPedEnd=['diasem'=>$diames2, 'dia'=>$dia2, 'mes'=>$mes2, 'anio'=>$anio2]; #ej: ['jue', '31', 'dic', '2024] -> [4,31,12,2024]
@@ -219,6 +219,7 @@ class EstatusDeEntrega
             'EnPagos'=>$EnPagos,            ### ""= (vacío) no en período de pagos 1=sí en período (es un checkbox)
             'Ocasion'=>$Ocasion,            ### ""= (vacío) no hay productos de ocasión, 1=si hay (es un checkbox)
             'ListasAbasto'=>$ListasAbasto,  ### ""= (vacío) no es tiempo de listas de abasto, 1=si es tiempo (es un checkbox)
+            'EnAbasto'=>'1',                ### 1= en abasto y 0=se acabó el abasto (solo afecta el día de abasto en AbastoLiveComponent)
 
             #'ProxEventos'=>$ProxEventos,    ### array de de 5 próximos eventos de calendario
             'ProxChoro'=>$SigEvento,        ### texto explicativo de situación del calendario

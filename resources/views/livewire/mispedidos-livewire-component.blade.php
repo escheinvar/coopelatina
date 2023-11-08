@@ -89,9 +89,9 @@
                         
                         <!-- ------------------ Celda de estado de pago --------------------- -->
                         @if( $folio->fol_edo >='4')
-                            <i class="bi bi-cash"></i> No pago
+                            <span style="color:red;"><i class="bi bi-cash"></i> No pago</span>
                         @else
-                        <i class="bi bi-hand-thumbs-up-fill"></i> Pagado
+                            <i class="bi bi-hand-thumbs-up-fill"></i> Pagado
                         @endif
                         
                         <!-- ------------------ Celda de borrar pedido --------------------- -->

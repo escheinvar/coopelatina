@@ -13,7 +13,7 @@
     @if(session('ListasAbasto') == '' AND session('EnPagos') == '' AND session('EnPedido') =='0')
         <!-- -------------------- Cabecera de tabla -------------------- -->
         <div class="row sticky-top" style="font-size:110%; font-weight:bold;background-color:white;">
-            <div class="col-md-5 col-sm-12 my-md-1 my-sm-12"> Producto a recibir </div>
+            <div class="col-md-5 col-sm-12 my-md-1 my-sm-12"> {{$FaltanDeAbastecer}} Productos a recibir </div>
             <div class="col-md-2 col-sm-12 my-md-12 my-sm-12"> Solicitud<br>pedidos+tienda</div>
             <div class="col-md-1 col-sm-12 my-md-1 my-sm-12"> Unidades recibidas </div>
             <div class="col-md-2 col-sm-12 my-md-1 my-sm-12"> Total a pagar<br> <span style="color:gray;">Plan</span> | Real</div>
