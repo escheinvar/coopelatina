@@ -20,9 +20,13 @@
     
         <!--- ----------------------- w3 fontawesome escheinvar----------------------- -->
         <script src='https://kit.fontawesome.com/c94ac3fa5d.js' crossorigin='anonymous'></script>
-
+        
         <!-- ------------------------- SWEET ALERT 2 -------------------------------- -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- ------------------------- SELECT2 https://select2.org/ -------------------------------- -->
+        <link href=" https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <!-- ------------------------- Mi css, Mi Js  -------------------------------- -->
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/EstiloBasico.css') }}" />
@@ -95,26 +99,12 @@
                                     <a class="dropdown-item" href="/usuarios">Usuarios</a>
                                     <a class="dropdown-item" href="/productores">Productores</a>
                                     <a class="dropdown-item" href="/prepedido">Productos</a>
+                                    <a class="dropdown-item disabled" href="#">Envases</a>
                                     <!--div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Something else here</a-->
                                 </div>
                             </li>
 
-                            <!--li class="nav-item dropdown" style="z-index:99">
-                                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Caja
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Caja</a>
-                                    <a class="dropdown-item" href="#">Pagar prepedidos</a>
-                                    <a class="dropdown-item" href="#">Trabajos</a>
-                                    <a class="dropdown-item" href="#">Corte de caja</a>
-                                    <a class="dropdown-item" href="#">Caja activa</a>
-                                    <a class="dropdown-item" href="#">Cajas históricas</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </li-->
 
                             <li class="nav-item dropdown" >
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="z-index:9999">
@@ -143,8 +133,21 @@
                                 </div>
                             </li>
                             
-                            <li class="nav-item">
-                                <a class="nav-link disabled"  href="#">Caja</a> <!--span>&#9773;  &#9776;</span-->
+                            <!--li class="nav-item">
+                                <a class="nav-link disabled"  href="">Caja</a>
+                            </li-->
+
+                            <li class="nav-item dropdown" style="z-index:9999">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Caja
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                    <a class="dropdown-item" href="/cajaVentas">Ventas/envases/devoluciones</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/caja">Ingresos/Egresos/Movimientos</a>
+                                    <a class="dropdown-item" href="/caja">Corte/Ver cajas</a>
+                                    
+                                </div>
                             </li>
 
                             <!---------------------------------------------- FIN MENÚ-HAMBURBUESA SUPERIOR DE ADMINISTRACIÓN --------------------------- -->
@@ -276,6 +279,12 @@
                                 <li class="nav-item disabled"> <!-- ------------ Menú: Calendario de entregas ----- -->
                                     <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="bi bi-chat-dots-fill"></i>  <span class="ms-1 d-none d-sm-inline">Opinar</span>
+                                    </a>
+                                </li>
+                                
+                                <li class="nav-item disabled"> <!-- ------------ Menú: Calendario de entregas ----- -->
+                                    <a href="#" class="nav-link align-middle px-0 disabled" style="color:rgb(70, 70, 70); font-size:20px;">
+                                        <i class='fas fa-pepper-hot'></i>  <span class="ms-1 d-none d-sm-inline">Recetas</span>
                                     </a>
                                 </li>
 

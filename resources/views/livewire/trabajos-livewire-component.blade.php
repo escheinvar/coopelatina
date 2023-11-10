@@ -11,22 +11,17 @@
 
 
        <div class="row">
-        <div class="form-group col-3">
+        <div class="form-group col-3" wire:ignore>
             <label>Cooperativista:  <red>*</red></label>
-            <input type="text" class="form-control @error('usuarioBusca')error @enderror" wire:model="busca" style="width:90%" placeholder="Buscar...">
-            {{--@if($busca != '')--}}
-                <select size="5" class="form-control" style="width:90%;" wire:model="usuarioBusca">     
-                    <option value="0">Todos</option>  
-                    @if(!empty($listaUsrs))
-                        @foreach($listaUsrs as $i)
-                            <option value="{{$i->id}}">{{$i->nombre}} {{$i->ap_pat}} {{$i->ap_mat}}</option>
-                        @endforeach
-                    @endif
-                </select>
-            {{--@endif--}}
-            @error('seleccionado')<error>{{$message}}</error>@enderror
+            <select class="select2 form-control" style="width:90%;" wire:model="usuarioBusca">
+                <option value="0">Todos</option>  
+                @if(!empty($listaUsrs))
+                    @foreach($listaUsrs as $i)
+                        <option value="{{$i->id}}">{{$i->nombre}} {{$i->ap_pat}} {{$i->ap_mat}}</option>
+                    @endforeach
+                @endif
+            </select>
         </div>
-        
 
         <div class="col-md-1">
             <label  class="form-label">Año:</label>
@@ -152,7 +147,12 @@
 
     @push('scripts')
         <script type="text/javascript">  
-           
-        </script>
+            document.addEventListener('livewire:load',function(){
+                $('.select2').select2()
+                $('.select2').on('change',function(){
+                    @this.set('usuarioBusca',this.value);
+                })
+            })
+    </script>
     @endpush
 </div>

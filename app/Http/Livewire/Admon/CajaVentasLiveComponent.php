@@ -2,23 +2,20 @@
 
 namespace App\Http\Livewire\Admon;
 
-use App\Models\FoliosModel;
-use App\Models\FoliosProdsModel;
+use App\Models\User;
 use Livewire\Component;
+use App\Models\FoliosModel;
+use App\Models\EnvasesModel;
+use App\Models\ProductosModel;
+use App\Models\FoliosProdsModel;
 use Illuminate\Support\Facades\DB;
 
-class EntregasLivewireComponent extends Component
+class CajaVentasLiveComponent extends Component
 {
-    
-    public $BuscaNombre, $estado, $finalizado;
+    public $busca, $idusr='21', $usr, $usuarios, $envases, $pedidos;
+  
 
-    public function mount(){
-        $this->BuscaNombre="";
-        $this->estado='3';
-        $this->finalizado='0';  #fol_edo=3 ->pagado; fol_edo=2->entregado parcial fol_edo=1->Entregado total; fol_edo=0->Cancelado;
-    }
-
-    public function transfiere($prodId){ /* --ojo: esta función existe también en CajaVentasLivewireComponent */
+    public function transfiere($prodId){  /* --ojo: esta función existe también en EntregasLivewireComponent */
         ##### Obtiene datos del pedido a transferir
         $data=FoliosProdsModel::where('ped_id',$prodId)->first();        
         #dd($data);
@@ -30,7 +27,7 @@ class EntregasLivewireComponent extends Component
         ]);
 
         ##### Genera nuevo folio
-        $comanda=session('ProximaCom')[0];
+        #$comanda=session('ProximaCom')[0];
         $mes=session('ProximaCom')[1]['mes'];
         $anio=session('ProximaCom')[1]['anio'];
         if($mes=='12'){
@@ -80,36 +77,42 @@ class EntregasLivewireComponent extends Component
         #dd($data->ped_folio,$DatosDelFolio,$DatosDelFolio->count(), $DatosDelFolio->sum('ped_entregado'));        
     }
 
-    public function render(){      
-        if($this->BuscaNombre==''){$Campo='%';}else{$Campo=$this->BuscaNombre;}
-        ##### Carga datos de pedidos
-        $pedidos=DB::table('folios_prods')
-            ->join('folios','folios_prods.ped_folio','=','folios.fol_id')
-            ->leftJoin('abastos', 'folios_prods.ped_producto','=','abastos.aba_producto')
-            ->join('users', 'folios.fol_usrid','=','users.id')
-            ->where(function ($q) {
-                    if($this->BuscaNombre==''){$Campo='%';}else{$Campo=$this->BuscaNombre;}
-                  return $q
-                  ->where('nombre', 'ilike', '%'.$Campo.'%')
-                  ->orWhere('ap_pat', 'ilike', '%'.$Campo.'%')
-                  ->orWhere('ap_mat', 'ilike', '%'.$Campo.'%');
-                })
-            ->where('fol_act','1')
-            ->where('fol_edo','=',$this->estado)
-            ->where('fol_anio', session('ProximaCom')[1]['anio'])
-            ->where('fol_mes', session('ProximaCom')[1]['mes'])
-            ->where('fol_usrid','>','0')
-            ->where('ped_act','1')
-            ->where('ped_entrega',session('ProximaCom')[0])
-            ->orderBy('nombre','asc')
-            ->orderBy('ped_prodid','asc')
-            ->orderBy('ped_id','asc')
-            ->get();
+    public function render(){
+        ##### Obtiene listado de usuarios para select
+        $this->usuarios=DB::select("SELECT * from users 
+            WHERE activo='1' AND CONCAT(nombre,' ',ap_pat,' ',ap_mat) ILIKE '%".$this->busca."%'");
 
-        #### De la lsita de pedidos, obiente folios únicos
-        $folios=$pedidos->unique('fol_id');
-            
-        #dd($pedidos->all());
-        return view('livewire.admon.entregas-livewire-component',compact('folios'),['pedidos'=>$pedidos]);
+        ##### Obtiene datos del usuario seleccionado (si es que fue seleccionado)
+        if($this->idusr > '0'){
+            $this->usr=User::where('id',$this->idusr)->first();
+        }
+        ##### Obtiene tabla de productos para venta
+        $productos=ProductosModel::where('activo','1')
+            ->where('venta','si')
+            ->orWhere('entrega','no')
+            ->get();
+        
+        ##### Obtiene tabla de envases
+        $this->envases=EnvasesModel::where('fco_act','1')->get();
+
+        ##### Obtiene tabla de pedidos pendientes del usuario
+        if($this->idusr > '0'){
+            $com=session('ProximaCom')[0];
+            $anio=session('ProximaCom')[1]['anio'];
+            $mes=session('ProximaCom')[1]['mes'];
+            $idUsr=$this->usr->id;
+
+            $this->pedidos=DB::select(
+                "SELECT *  FROM folios_prods 
+                JOIN folios ON folios_prods.ped_folio=folios.fol_id
+                JOIN productos ON folios_prods.ped_prodid=productos.id
+                join abastos on folios_prods.ped_producto = abastos.aba_producto 
+                WHERE ped_act='1' AND ped_entregado='0' AND ( ped_cant > ped_cantentregada)
+                AND  fol_act='1' AND fol_edo='3' AND fol_anio='$anio' AND fol_mes= '$mes' AND fol_usrid = '$idUsr'
+                AND (aba_abasto ='0'    or aba_faltante ='1') ");
+            #dd($anio,$mes,$com,$idUsr,$this->pedidos);
+        }
+
+        return view('livewire.admon.caja-ventas-live-component',compact('productos'));
     }
 }

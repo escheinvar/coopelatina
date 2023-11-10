@@ -21,6 +21,12 @@ function VerNoVerPass(idPasswd,idIcono) {
         icono.className = 'far fa-eye-slash'
     }
 }
+
+//script para activas SELECT2
+$(document).ready(function() {
+    $('.select2').select2();
+});
+
 //Inhabilitar tecla de espacio
 //function NoEspacio(e, campo){
 //		key = e.keyCode ? e.keyCode : e.which;

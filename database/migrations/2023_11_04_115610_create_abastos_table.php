@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('aba_prodsabor');                    ### sabor del producto
             $table->string('aba_producto')->nullable();         ### concatenado identificador:  com1:idnum@sabor
             
-            $table->enum('aba_listas',['0','1'])->default('0');     ### Indica si ya se realizó el pedido de lista de abasto
+            $table->enum('aba_listas',['0','1'])->default('0');     ### Indica si ya se realizó el pedido de lista de abasto (pedido para tienda)
             $table->integer('aba_listas_cantpeds')->default('0');   ### Cantidad solicitada para pedidos
             $table->integer('aba_listas_canttien')->default('0');   ### Cantidad solicitada para tienda
 

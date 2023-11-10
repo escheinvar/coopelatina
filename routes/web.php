@@ -1,21 +1,23 @@
 <?php
 
-use App\Http\Controllers\admon\ListasAbastoController;
-use App\Http\Controllers\admon\PagoPedidosController;
-use App\Http\Controllers\admon\AbastoController;
-use App\Http\Controllers\admon\EntregaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\coop_misPedidos;
+use App\Http\Controllers\coop_homeController;
+use App\Http\Controllers\admon\CajaController;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\LogoutController;
+use App\Http\Controllers\admon\AbastoController;
+use App\Http\Controllers\admon\EntregaController;
+use App\Http\Controllers\coop_calendarController;
+use App\Http\Controllers\coop_trabajosController;
 use App\Http\Controllers\admon\UsuariosController;
 use App\Http\Controllers\coop_prepedidosController;
-use App\Http\Controllers\coop_homeController;
+use App\Http\Controllers\admon\CajaVentasController;
+use App\Http\Controllers\coop_productoresController;
+use App\Http\Controllers\admon\PagoPedidosController;
+use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\RecuperarPasswordController;
 use App\Http\Controllers\admon\RecuperarPasswordController2;
-use App\Http\Controllers\coop_calendarController;
-use App\Http\Controllers\coop_misPedidos;
-use App\Http\Controllers\coop_productoresController;
-use App\Http\Controllers\coop_trabajosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +66,14 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Listas de abasto
     Route::get('/listasabasto', [ListasAbastoController::class, 'index'])->name('listasabasto');
     Route::post('/listasabasto', [ListasAbastoController::class, 'store']);
+
+    ################################ Administración de Listas de abasto
+    Route::get('/caja', [CajaController::class, 'index'])->name('caja');
+    #Route::post('/caja', [CajaController::class, 'store']);
+
+    ################################ Administración de Listas de abasto
+    Route::get('/cajaVentas', [CajaVentasController::class, 'index'])->name('ventas');
+    Route::post('/cajaVentas', [CajaVentasController::class, 'store']);
 
 });
 

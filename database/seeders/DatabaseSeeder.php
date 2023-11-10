@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ProductorSeeder::class,
             ProductosSeeder::class,
             FoliosSeeder::class,
+            EnvasesSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

@@ -11,7 +11,6 @@ use App\Http\Controllers\Controller;
 class EntregaController extends Controller
 {
     public function index(){
-        session(['contador'=>'0']);
         return view('admon.Entrega');
     }
 
