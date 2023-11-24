@@ -18,13 +18,13 @@ class EnvasesSeeder extends Seeder
                 'fco_act'=>'1',
                 'fco_nombre'=>'Miel Chico',
                 'fco_describe'=>'200ml de vídrio con tapa metal',
-                'fco_costo'=>'10',
+                'fco_costo'=>'-10',
             ],
             [
                 'fco_act'=>'1',
                 'fco_nombre'=>'Miel Grande',
                 'fco_describe'=>'500ml de vídrio con tapa metal',
-                'fco_costo'=>'20',
+                'fco_costo'=>'-20',
             ],
         ];
 
