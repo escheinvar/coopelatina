@@ -40,7 +40,7 @@
         @livewireStyles
     </head>
 
-
+    <body>
 
         <header>  
             <div class="cintillo">

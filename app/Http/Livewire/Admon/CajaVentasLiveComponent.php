@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class CajaVentasLiveComponent extends Component
 {
-    public $busca, $idusr='21', $usr, $usuarios, $envases, $pedidos;
-  
-
+    public $busca, $idusr='0', $usr, $usuarios, $envases, $pedidos;
+   
     public function transfiere($prodId){  /* --ojo: esta función existe también en EntregasLivewireComponent */
         ##### Obtiene datos del pedido a transferir
         $data=FoliosProdsModel::where('ped_id',$prodId)->first();        

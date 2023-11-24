@@ -153,6 +153,6 @@
                     @this.set('usuarioBusca',this.value);
                 })
             })
-    </script>
+        </script>
     @endpush
 </div>

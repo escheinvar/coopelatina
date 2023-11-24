@@ -8,6 +8,7 @@ use App\Models\Calendario;
 use App\Models\EstadosModel;
 use Illuminate\Http\Request;
 use App\Models\TrabajosModel;
+use Database\Seeders\CalendarioSeeder;
 use Symfony\Component\HttpFoundation\Response;
 
 class EstatusDeEntrega
@@ -32,6 +33,37 @@ class EstatusDeEntrega
         ->orderBy('start','asc')
         ->take(5)
         ->get();
+
+        ##################################################################
+        ####### en caso de no haber calendario, genera dato futuro
+        if($ProxEventos->contains('event','ped') === false ){
+            Calendario::create([
+                'anio'=>date("Y", strtotime("+10 year")),'mes'=>date("n"),   
+                'event' =>'ped',                         'titulo' => 'PedidoFuturo', 'act'=>'1',
+                'start'=>date("Y-m-d H:i:s.u", strtotime("+10 year")),
+                'end' =>date("Y-m-d H:i:s.u", strtotime("+10 year 3 day")),
+                'responsable'=>'sistema',                'opciones'=>'sistema',
+            ]);
+        }
+        if($ProxEventos->contains('event','com1') === false ){
+            Calendario::create([
+                'anio'=>date("Y", strtotime("+10 year")),'mes'=>date("n"),   
+                'event' =>'com1',                         'titulo' => 'Com1Futuro', 'act'=>'1',
+                'start'=>date("Y-m-d H:i:s.u", strtotime("+10 year 5 day")),
+                'end' =>date("Y-m-d H:i:s.u", strtotime("+10 year 6 day")),
+                'responsable'=>'sistema',                'opciones'=>'sistema',
+            ]);
+        }
+        if($ProxEventos->contains('event','com2') === false ){
+            Calendario::create([
+                'anio'=>date("Y", strtotime("+10 year")),'mes'=>date("n"),   
+                'event' =>'com2',                        'titulo' => 'Com2Futuro', 'act'=>'1',
+                'start'=>date("Y-m-d H:i:s.u", strtotime("+10 year 8 day")),
+                'end' =>date("Y-m-d H:i:s.u", strtotime("+10 year 9 day")),
+                'responsable'=>'sistema',                'opciones'=>'sistema',
+            ]);
+        }
+        #dd($ProxEventos);
         ##################################################################
         #################### Detecta si el día de hoy se toman pedidos
         $EnPedido=Calendario::where('act','1')
@@ -62,36 +94,42 @@ class EstatusDeEntrega
             $EnEntrega='1';
         }
 
-        #dd($EnPedido,$EnEntrega, $ProxEventos[0]);
+        #dd($EnPedido,$EnEntrega,);
         ##################################################################
         ############ Lee el calendario y genera texto del evento que viene
-        $hoy=new DateTime(today());
-        $arraySemana=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-        $arrayMeses=['Mes','enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        if(count($ProxEventos) > '0'){
+            $hoy=new DateTime(today());
+            $arraySemana=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+            $arrayMeses=['Mes','enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
-        if($EnPedido=='1'){
-            $FinProx=$ProxEventos[0]->end;
-            $FinProx=new DateTime($FinProx);     $Dif=$FinProx->diff($hoy);
-            $SigEvento="Estamos tomando pedidos (quedan ".$Dif->days." dias).";
-        }else if($EnEntrega=='1'){
-            $FinProx=$ProxEventos[0]->end;
-            $FinProx=new DateTime($FinProx);     $Dif=$FinProx->diff($hoy);
-            $SigEvento="Estamos en entrega de productos (quedan ".$Dif->days." dias).";
-        }else{
-            if($ProxEventos[0]->event == 'com1' OR $ProxEventos[0]->event == 'com2'){
-                $InicioProx=$ProxEventos[0]->start;
-                $Ini=new DateTime($InicioProx);     $Dif=$Ini->diff($hoy);
-                $diaSem=$arraySemana[date("w",strtotime($InicioProx))];
-                $diaMes=date("d",strtotime($InicioProx));
-                $Mes=$arrayMeses[date("n",strtotime($InicioProx))];
-                $SigEvento="Ya se cerró la toma de pedidos. La entrega será el ".$diaSem." ".$diaMes." de ".$Mes." (en ".$Dif->days." días)";
-                
-            }else if($ProxEventos[0]->event == 'ped'){
-                $InicioProx=$ProxEventos[0]->start; 
-                $Ini=new DateTime($InicioProx);     $Dif=$Ini->diff($hoy);
-                $SigEvento="Hoy no hay toma de pedidos. La toma de pedios iniciará en ".$Dif->days." días. (".$InicioProx.")";
+            if($EnPedido=='1'){
+                $FinProx=$ProxEventos[0]->end;
+                $FinProx=new DateTime($FinProx);     $Dif=$FinProx->diff($hoy);
+                $SigEvento="Estamos tomando pedidos (quedan ".$Dif->days." dias).";
+            }else if($EnEntrega=='1'){
+                $FinProx=$ProxEventos[0]->end;
+                $FinProx=new DateTime($FinProx);     $Dif=$FinProx->diff($hoy);
+                $SigEvento="Estamos en entrega de productos (quedan ".$Dif->days." dias).";
+            }else{
+                if($ProxEventos[0]->event == 'com1' OR $ProxEventos[0]->event == 'com2'){
+                    $InicioProx=$ProxEventos[0]->start;
+                    $Ini=new DateTime($InicioProx);     $Dif=$Ini->diff($hoy);
+                    $diaSem=$arraySemana[date("w",strtotime($InicioProx))];
+                    $diaMes=date("d",strtotime($InicioProx));
+                    $Mes=$arrayMeses[date("n",strtotime($InicioProx))];
+                    $SigEvento="Ya se cerró la toma de pedidos. La entrega será el ".$diaSem." ".$diaMes." de ".$Mes." (en ".$Dif->days." días)";
+                    
+                }else if($ProxEventos[0]->event == 'ped'){
+                    $InicioProx=$ProxEventos[0]->start; 
+                    $Ini=new DateTime($InicioProx);     $Dif=$Ini->diff($hoy);
+                    $SigEvento="Hoy no hay toma de pedidos. La toma de pedios iniciará en ".$Dif->days." días. (".$InicioProx.")";
+                }
             }
+        }else{
+            // ENVIAR A CALENDARIO?
+            #return redirect('/calendario');
         }
+        
         ##################################################################
         ################## Determina vigencia del usuario y calcula tiempo
         $membrefin=auth()->user()->membrefin;
@@ -129,8 +167,8 @@ class EstatusDeEntrega
             ->where('event','com2')
             ->orderBy('start','asc')
             ->first();
+        #dd($ProxPedido, $ProxCom1, $ProxCom2);
 
-        
         ##################################################################
         ####### Obtiene datos de fecha de próxima primer y segunda entrega
         $fecha1=new DateTime($ProxCom1->start); 

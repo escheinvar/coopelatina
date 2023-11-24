@@ -100,7 +100,7 @@ Route::middleware(['soloCoops'])->group(function(){
     Route::get('/MisPedidos/{usr}',[coop_misPedidos::class,'index'])->name('MisPedidos');
     
     ################################ Ver Calendario 
-    Route::get('/calendario',[coop_calendarController::class,'index'])->middleware('EstatusDeEntrega')->name('calendario');
+    Route::get('/calendario',[coop_calendarController::class,'index'])->middleware('EstatusDeEntrega')->name('calendario');    
     
     ################################ Ver Trabajos
     Route::get('/trabajos',[coop_trabajosController::class,'index'])->name('trabajos');
