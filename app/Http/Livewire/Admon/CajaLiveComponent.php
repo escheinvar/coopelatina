@@ -23,7 +23,6 @@ class CajaLiveComponent extends Component
         $this->hist_mindate=date("Y-m-d");
     }
 
-    
 
     public function cajaRegistra(){
         if($this->origen == $this->destino){
@@ -33,7 +32,7 @@ class CajaLiveComponent extends Component
             ]);
 
             if($this->operacion=='egreso'){$this->monto=$this->monto*-1;}
-            CajaModel::insert([
+            CajaModel::create([
                 'caja_'.$this->destino => $this->monto,
                 'caja_responsable'=> auth()->user()->id,
                 'caja_usrid'=>'0',
@@ -46,7 +45,7 @@ class CajaLiveComponent extends Component
             $this->validate([
                 'monto'=>'required',
             ]);
-            CajaModel::insert([
+            CajaModel::create([
                 'caja_'.$this->origen => $this->monto * -1,
                 'caja_'.$this->destino => $this->monto,
                 'caja_responsable'=> auth()->user()->id,
@@ -61,24 +60,20 @@ class CajaLiveComponent extends Component
     }
 
 
-
     public function render(){ 
-        $pag=10;
-        if($this->hist_caja=='caja'){
+        $pag=7;
+        #if($this->hist_caja=='caja'){
             $caja=CajaModel::where('caja_act','1')
                 ->where('caja_tipo','LIKE', $this->hist_tipo)
                 ->where('updated_at','LIKE',$this->hist_mindate.'%')
                 ->where('caja_'.$this->hist_caja,'!=','0')
-                ->orderBy('updated_at')
-                ->paginate($pag);
-                
-            
-            
-        }
-        #dd($caja->all(), $this->hist_caja);
+                ->orderBy('updated_at','desc')
+                ->paginate($pag);   
+        #}
+        #dd($caja->all(), $this->hist_tipo, $this->hist_mindate, $this->hist_caja);
         $tiposCaja=CajaModel::distinct()->get('caja_tipo');
 
         #dd($caja->unique('caja_tipo'));
-        return view('livewire.admon.caja-live-component',compact('caja'),['tiposCaja'=>$tiposCaja]);
+        return view('livewire.admon.caja-live-component',compact('caja'),['tiposCaja'=>$tiposCaja,]);
     }
 }

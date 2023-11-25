@@ -26,7 +26,6 @@ class CajaModel extends Model
         'caja_tipo',
         'caja_descripcion',
         'caja_observaciones',
-
     ];
     
 }
