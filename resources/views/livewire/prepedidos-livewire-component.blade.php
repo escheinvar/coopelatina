@@ -19,7 +19,7 @@
             <?php 
                 $fecha=new DateTime($ped->start); 
                 $dia =$fecha->format("d");
-                $mes =$fecha->format("m");
+                $mes =$fecha->format("n");
                 $mes2 =$fecha->format("w");   #$diaSem=$arraySemana[date("w",strtotime($InicioProx))];
             ?>
             <h1>Lo sentimos, el próximo período de pre-pedidos <br>para {{session('arrayMeses')[$ped->mes]}}
@@ -41,10 +41,11 @@
     <!-- -------------------------------------- MUESTRA BOTONES DE PAGO O DE ANUALIDAD -------------------------- -->
     <div class="sticky-top row" style="padding:2rem; background-color:white;">
         <div class="col-lg-10 col-md-10 col-sm-10" style="font-size:3rem; text-align:right;">
-            Total $ <span id="GranTotal" style="font-size:3rem;">0</span>   <input type="hidden" name="total" id="totalEsconde">          
+           
      
             @if(session('vigencia')=='1')
                 @if(session('EnPedido')=='1')       
+                    Total $ <span id="GranTotal" style="font-size:3rem;">0</span>   <input type="hidden" name="total" id="totalEsconde">          
                     <button class="btn btn-primary" type="submit" ><i class="bi bi-cart-fill"></i> Hacer Prepedido</button> 
                 @else
                     -- No es tiempo de tomar pedidos--
@@ -112,208 +113,274 @@
         </div>
     </div>
 
-   
+    <!-- ################################### PRODUCTOS DE OCASIÓN ################################### -->
+    <!-- ################################### PRODUCTOS DE OCASIÓN ################################### -->
+    <!-- ################################### PRODUCTOS DE OCASIÓN ################################### -->
+    @if(session('ocasion')=='1')
+    <div style="">
+        <button type="button" data-toggle="modal" data-target="#PedidoOcasion" class="btn btn-success btn-lg" style="margin:1rem;">
+            <i class="bi bi-gift"></i> Ver productos de ocasión
+        </button><br>
+    </div>
+    @endif
 
-    <!-- -------------------------------- Inicia tabla de productos ------------------------------- -->
-    <table class="table table-striped table-hover" style="width:90%">
-        <thead>
-        <tr><th>
-            
-            <div class="col-lg-5 col-md-4 col-sm-12">Producto</div>
-            <div class="col-lg-1 col-md-2 col-sm-12">Precio {{session("usr_estatus")}}</div>
-            <div class="col-lg-2 col-md-3 col-md-12">Pedido
-                <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:60%; font-size:50%; margin:2px; border-radius:100%; padding:2px;">Mín</span>
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">Subtotal</div>
-        </th></tr>
-        </thead>
-        <tbody>
-            <!-- ---------------- inicia línea de anualidad ------------------x---- -->
-            @if(session('vigencia')=='0')
-                <tr>
-                    <td style="display:none;" id="renglonAnualidad">
-                        <!--div class="col-lg-1 col-md-0 col-sm-0"> &nbsp; </div-->
-
-                        <div class="col-lg-5 col-md-4 col-sm-12">
-                            <span style="font-size:1.7rem; font-weight:bold;"> 
-                                Pago de anualidad de {{auth()->user()->usr}}</i><span style="color:gray"> valido por un año a partir de el día de pago </span>                    
-                            </span>                                 
-                        </div>
-                        <div class="col-lg-1 col-md-2 col-sm-12">$ {{$PagaAnual}}</div>
-
-                        <div class="col-lg-2 col-md-3 col-md-12">
-                            <input type="hidden" name="Anualidad" value="{{$PagaAnual}}">
-                            <input type="hidden" id="com1_Anualidad" value="1">
-                            <input type="hidden" id="com2_Anualidad" value="0">
-                        </div>
-                        <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">
-                            
-                            <div style="font-size:2rem; color:var(--cuadroTotal); ">
-                                $ <b><span class="CalculadoraSubtotal" id="subtot_Anualidad" >0</span></b>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            @endif
-
-            @foreach($todo as $key=>$value)
-                <?php
-                    #### Genera vector de sabores   
-                    $sabores=explode(',', $value->variantes);
-                    $num=count($sabores);
-                    ### Quita palabras repetidas de nombre (cuando ya está en gpo)
-                    $value->nombre = preg_replace("/$value->gpo/i","",$value->nombre);
-                    ### Determina precio
-                    if( auth()->user()->estatus == 'act'){$precio = $value->precioact;}else{ $precio = $value->precioreg; }
-                    ### Determina comportamiento según entrega:
-                    if($value->entrega == 'com1'){
-                        $com1act=""; $com1text="Com 1"; $com2act="disabled"; $com2text="";
-                    }else if($value->entrega == 'com2'){
-                        $com1act="disabled"; $com1text=""; $com2act=""; $com2text="Com 2";
-                    }else if($value->entrega =='com12'){
-                        $com1act=""; $com1text="Com 1"; $com2act=""; $com2text="Com 2";
-                    }else if($value->entrega == 'comid'){
-                        $com1act=""; $com1text="Com ID x 2"; $com2act="disabled"; $com2text="Com ID x 2";
-                    }
-                ?>
-                @foreach($sabores as $sabor)
-                    <?php $faltan='0';?>
+    <!-- ################################### Inicia tabla de productos ################################### -->
+    <!-- ################################### Inicia tabla de productos ################################### -->
+    <!-- ################################### Inicia tabla de productos ################################### -->
+    @if(session('EnPedido')=='1')
+        <table class="table table-striped table-hover" style="width:90%">
+            <thead>
+            <tr><th>
+                
+                <div class="col-lg-5 col-md-4 col-sm-12">Producto</div>
+                <div class="col-lg-1 col-md-2 col-sm-12">Precio {{session("usr_estatus")}}</div>
+                <div class="col-lg-2 col-md-3 col-md-12">Pedido
+                    <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:60%; font-size:50%; margin:2px; border-radius:100%; padding:2px;">Mín</span>
+                </div>
+                <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">Subtotal</div>
+            </th></tr>
+            </thead>
+            <tbody>
+                <!-- ---------------- inicia línea de anualidad ------------------x---- -->
+                @if(session('vigencia')=='0')
                     <tr>
-                        <td>
-                            <!-- ---------------------- Nombre   ----------------------- -->
+                        <td style="display:none;" id="renglonAnualidad">
+                            <!--div class="col-lg-1 col-md-0 col-sm-0"> &nbsp; </div-->
+
                             <div class="col-lg-5 col-md-4 col-sm-12">
-                                <span onclick="VerNoVer('{{$key}}','{{$value->id}}{{$sabor}}');";>
-                                    <i class='fa fa-info-circle' style='font-size:18px;color:#BDBDBD' ></i>
-                                    <span style="font-size:1.7rem; font-weight:bold;">{{$value->gpo}} {{$value->nombre}} 
-                                        <span style="color:gray;font-size:1.6rem">{{preg_replace("/_/"," ",$sabor)}}</span>
-                                    </span>                                
-                                </span>
+                                <span style="font-size:1.7rem; font-weight:bold;"> 
+                                    Pago de anualidad de {{auth()->user()->usr}}</i><span style="color:gray"> valido por un año a partir de el día de pago </span>                    
+                                </span>                                 
                             </div>
-                            
-                            <!-- ---------------------- Precio   ----------------------- -->
-                            <div class="col-lg-1 col-md-2 col-sm-12">
-                                <span style="font-size:1.7rem; color:var(--cuadroTotal);">
-                                    $ {{$precio}}
-                                    @if($value->entrega=='comid')
-                                    <span style="color:gray;"> x2</span>
-                                    @endif
-                                </span>
-                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-12">$ {{$PagaAnual}}</div>
 
-                            <!-- ---------------------- Celdas de pedidos ------------------ -->
                             <div class="col-lg-2 col-md-3 col-md-12">
-                                <div style="display:flex;">  
-                                    <!-- ------- Primer celda de pedido com1 ---------- -->
-                                    <div style="display:flex;"> 
-                                        <input type='number' class='producto' name="com1_{{$value->id}}@-{{$sabor}}" id="com1_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"  min="0" step="1"  {{$com1act}}> <!--placeholder="{{$com1text}}"-->
-                                    </div>
-                                    <!-- ------- Segund celda de pedido com2 ---------- -->
-                                    <div style="margin-left:0.5rem; display:flex;">
-                                        @if($value->entrega == 'comid') 
-                                            <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" readonly>
-                                        @else
-                                            <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"   min="0" step="1"   {{$com2act}} >  <!-- placeholder="{{$com2text}}"-->
-                                        @endif
-                                        
-                                        <!-- ------- Pedido mínimo ---------- -->
-                                        <?php
-                                            if($value->mintipo=='1'){
-                                                $SeHaPedido=0; $faltantes='0';
-                                                foreach($YaPedido as $ya){
-                                                    if($ya->ped_prodid == $value->id){
-                                                        $SeHaPedido=$ya->total;
-                                                    }
-                                                }
-                                                $faltantes = $value->min - $SeHaPedido;
-                                            }else{$faltantes='0';}
-                                        ?>
-                                        
-                                        @if($value->mintipo=='1' AND $faltantes >'0')
-                                            <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:70%; font-size:70%; margin:2px; border-radius:100%;padding:2px;">
-                                                {{$faltantes}}                                                
-                                            </span>
-                                        @endif
-                                        </div>     
-                                </div>   
+                                <input type="hidden" name="Anualidad" value="{{$PagaAnual}}">
+                                <input type="hidden" id="com1_Anualidad" value="1">
+                                <input type="hidden" id="com2_Anualidad" value="0">
                             </div>
-
-                            <!-- ----------------------  Subtotal  ----------------------- -->
-                            <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">   
+                            <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">
+                                
                                 <div style="font-size:2rem; color:var(--cuadroTotal); ">
-                                    $ <b><span class="CalculadoraSubtotal" id="subtot_{{$value->id}}{{$sabor}}">0</span></b>
+                                    $ <b><span class="CalculadoraSubtotal" id="subtot_Anualidad" >0</span></b>
                                 </div>
-                            </div>
-
-                            <!-- ---------------------- Espacio en blanco ----------------------- -->
-                            <div class="col-lg-1 col-md-1 col-sm-0"></div>
-
-                            <!--- ------------------------------- Seccion DE INFO OCULTA ------------------------------------------------>
-                            <div class="col-lg-12 col-md-12 col-sm-12 " id="sale_{{$key}}{{$value->id}}{{$sabor}}" style='display:none; font-size:0.9rem; margin-top:1rem;'> 
-                                <div style="overflow:auto;">
-                                    @if($value->img == '' || is_null($value->img))
-                                        <img src="{{ asset('/logo.png') }}" style='width:150px; margin:15px; float:left;'><br>
-                                    @else                                        
-                                        <img src={{asset("$value->img")}} style="width:150px; margin:15px; float:left;"><br>
-                                    @endif
-
-                                    <p style="font-size:1.5rem;"> {{$value->descripcion}}</p>
-                                    <p style="font-size:1.5rem;">Presentación: {{$value->presentacion}} </p>
-                                    @if( auth()->user()->estatus == 'act')
-                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Act $ {{$value->precioact}} </div>  &nbsp; &nbsp;
-                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Reg $ {{$value->precioreg}} </div>   &nbsp; &nbsp;
-                                        <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Pub $ {{$value->preciopub}} </div> 
-                                    @endif
-
-                                    <p style="font-size:1.5rem;">Responsable: {{$value->responsable}}</p>
-                                    
-                                    @if($value->mintipo == '0')
-                                        <p style="font-size:1.5rem;"> Este producto no requiere ningún mínimo de volumen para que el proveedor lo traiga.</p>
-                                    @elseif($value->mintipo =='1')
-                                        <p style="font-size:1.5rem;"> Se requiere un mínimo de {{$value->min}} unidades de este producto para que el proveedor lo traiga.</p>
-                                    @elseif($value->mintipo =='2')
-                                        <p style="font-size:1.5rem;"> Se requiere un mínimo de compra de $ {{$value->min}} pesos al proveedor para que nos  traiga sus productos.</p>
-                                    @endif
-                                </div>
-
-                                <div>
-                                    <b> &nbsp; Productor:</b>  <a href='../productores.php#{{$value->proveedor}}' style='color: inherit; text-decoration: none' target='new'>{{$value->proveedor}}</a>
-                                </div>
-
-                                <!-- ------------------------------ BOTÓN DE EDITAR ----------------------- -->
-                                @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
-                                    <div style="font-size:2rem;margin:1rem;">
-                                        <button type="button" style="float:right;" class="btn btn-primary" wire:click="AbrirModal('edit',{{$value->id}})" data-toggle="modal" data-target="#EditarProducto">
-                                            <i class="bi bi-pencil-square"></i> 
-                                            Editar producto 
-                                        </button>
-                                    </div>
-                                @endif
                             </div>
                         </td>
                     </tr>
+                @endif
+
+                @foreach($todo as $key=>$value)
+                    <?php
+                        #### Genera vector de sabores   
+                        $sabores=explode(',', $value->variantes);
+                        $num=count($sabores);
+                        ### Quita palabras repetidas de nombre (cuando ya está en gpo)
+                        $value->nombre = preg_replace("/$value->gpo/i","",$value->nombre);
+                        ### Determina precio
+                        if( auth()->user()->estatus == 'act'){$precio = $value->precioact;}else{ $precio = $value->precioreg; }
+                        ### Determina comportamiento según entrega:
+                        if($value->entrega == 'com1'){
+                            $com1act=""; $com1text="Com 1"; $com2act="disabled"; $com2text="";
+                        }else if($value->entrega == 'com2'){
+                            $com1act="disabled"; $com1text=""; $com2act=""; $com2text="Com 2";
+                        }else if($value->entrega =='com12'){
+                            $com1act=""; $com1text="Com 1"; $com2act=""; $com2text="Com 2";
+                        }else if($value->entrega == 'comid'){
+                            $com1act=""; $com1text="Com ID x 2"; $com2act="disabled"; $com2text="Com ID x 2";
+                        }
+                    ?>
+                    @foreach($sabores as $sabor)
+                        <?php $faltan='0';?>
+                        <tr>
+                            <td>
+                                <!-- ---------------------- Nombre   ----------------------- -->
+                                <div class="col-lg-5 col-md-4 col-sm-12">
+                                    <span onclick="VerNoVer('{{$key}}','{{$value->id}}{{$sabor}}');";>
+                                        <i class='fa fa-info-circle' style='font-size:18px;color:#BDBDBD' ></i>
+                                        <span style="font-size:1.7rem; font-weight:bold;">{{$value->gpo}} {{$value->nombre}} 
+                                            <span style="color:gray;font-size:1.6rem">{{preg_replace("/_/"," ",$sabor)}}</span>
+                                        </span>                                
+                                    </span>
+                                </div>
+                                
+                                <!-- ---------------------- Precio   ----------------------- -->
+                                <div class="col-lg-1 col-md-2 col-sm-12">
+                                    <span style="font-size:1.7rem; color:var(--cuadroTotal);">
+                                        $ {{$precio}}
+                                        @if($value->entrega=='comid')
+                                        <span style="color:gray;"> x2</span>
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <!-- ---------------------- Celdas de pedidos ------------------ -->
+                                <div class="col-lg-2 col-md-3 col-md-12">
+                                    <div style="display:flex;">  
+                                        <!-- ------- Primer celda de pedido com1 ---------- -->
+                                        <div style="display:flex;"> 
+                                            <input type='number' class='producto' name="com1_{{$value->id}}@-{{$sabor}}" id="com1_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"  min="0" step="1"  {{$com1act}}> <!--placeholder="{{$com1text}}"-->
+                                        </div>
+                                        <!-- ------- Segund celda de pedido com2 ---------- -->
+                                        <div style="margin-left:0.5rem; display:flex;">
+                                            @if($value->entrega == 'comid') 
+                                                <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" readonly>
+                                            @else
+                                                <input type='number' class='producto' name="com2_{{$value->id}}@-{{$sabor}}" id="com2_{{$value->id}}{{$sabor}}" onkeyup="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');" onchange="subtotal('{{$value->id}}{{$sabor}}','{{$value->entrega}}','{{$precio}}');"   min="0" step="1"   {{$com2act}} >  <!-- placeholder="{{$com2text}}"-->
+                                            @endif
+                                            
+                                            <!-- ------- Pedido mínimo ---------- -->
+                                            <?php
+                                                if($value->mintipo=='1'){
+                                                    $SeHaPedido=0; $faltantes='0';
+                                                    foreach($YaPedido as $ya){
+                                                        if($ya->ped_prodid == $value->id){
+                                                            $SeHaPedido=$ya->total;
+                                                        }
+                                                    }
+                                                    $faltantes = $value->min - $SeHaPedido;
+                                                }else{$faltantes='0';}
+                                            ?>
+                                            
+                                            @if($value->mintipo=='1' AND $faltantes >'0')
+                                                <span style="border:1px solid rgb(158, 158, 158); background-color: rgb(176, 177, 160); color:darkgreen; height:70%; font-size:70%; margin:2px; border-radius:100%;padding:2px;">
+                                                    {{$faltantes}}                                                
+                                                </span>
+                                            @endif
+                                            </div>     
+                                    </div>   
+                                </div>
+
+                                <!-- ----------------------  Subtotal  ----------------------- -->
+                                <div class="col-lg-1 col-md-2 col-sm-12" style="text-align:right;">   
+                                    <div style="font-size:2rem; color:var(--cuadroTotal); ">
+                                        $ <b><span class="CalculadoraSubtotal" id="subtot_{{$value->id}}{{$sabor}}">0</span></b>
+                                    </div>
+                                </div>
+
+                                <!-- ---------------------- Espacio en blanco ----------------------- -->
+                                <div class="col-lg-1 col-md-1 col-sm-0"></div>
+
+                                <!--- ------------------------------- Seccion DE INFO OCULTA ------------------------------------------------>
+                                <div class="col-lg-12 col-md-12 col-sm-12 " id="sale_{{$key}}{{$value->id}}{{$sabor}}" style='display:none; font-size:0.9rem; margin-top:1rem;'> 
+                                    <div style="overflow:auto;">
+                                        @if($value->img == '' || is_null($value->img))
+                                            <img src="{{ asset('/logo.png') }}" style='width:150px; margin:15px; float:left;'><br>
+                                        @else                                        
+                                            <img src={{asset("$value->img")}} style="width:150px; margin:15px; float:left;"><br>
+                                        @endif
+
+                                        <p style="font-size:1.5rem;"> {{$value->descripcion}}</p>
+                                        <p style="font-size:1.5rem;">Presentación: {{$value->presentacion}} </p>
+                                        @if( auth()->user()->estatus == 'act')
+                                            <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Act $ {{$value->precioact}} </div>  &nbsp; &nbsp;
+                                            <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Reg $ {{$value->precioreg}} </div>   &nbsp; &nbsp;
+                                            <div style="font-size:1.5rem;font-style:italic;display:inline-block;">Pub $ {{$value->preciopub}} </div> 
+                                        @endif
+
+                                        <p style="font-size:1.5rem;">Responsable: {{$value->responsable}}</p>
+                                        
+                                        @if($value->mintipo == '0')
+                                            <p style="font-size:1.5rem;"> Este producto no requiere ningún mínimo de volumen para que el proveedor lo traiga.</p>
+                                        @elseif($value->mintipo =='1')
+                                            <p style="font-size:1.5rem;"> Se requiere un mínimo de {{$value->min}} unidades de este producto para que el proveedor lo traiga.</p>
+                                        @elseif($value->mintipo =='2')
+                                            <p style="font-size:1.5rem;"> Se requiere un mínimo de compra de $ {{$value->min}} pesos al proveedor para que nos  traiga sus productos.</p>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <b> &nbsp; Productor:</b>  <a href='../productores.php#{{$value->proveedor}}' style='color: inherit; text-decoration: none' target='new'>{{$value->proveedor}}</a>
+                                    </div>
+
+                                    <!-- ------------------------------ BOTÓN DE EDITAR ----------------------- -->
+                                    @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
+                                        <div style="font-size:2rem;margin:1rem;">
+                                            <button type="button" style="float:right;" class="btn btn-primary" wire:click="AbrirModal('edit',{{$value->id}})" data-toggle="modal" data-target="#EditarProducto">
+                                                <i class="bi bi-pencil-square"></i> 
+                                                Editar producto 
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                 @endforeach
-            @endforeach
-        </tbody>
-    </table>
-    <!-- ------------------------- LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ------------------- -->
+            </tbody>
+        </table>
+    
+    @endif
+
+
+    <!-- ################################### LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ################################### -->
+    <!-- ################################### LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ################################### -->
+    <!-- ################################### LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ################################### -->
     @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
-        <!-- ------------ Lista de inactivos -------------- -->
-        <h3>Productos ocultos  o sin entrega:</h3>   
-        @foreach($inacts as $i)
-            <li><span style="cursor:pointer"  wire:click="AbrirModal('edit',{{$i->id}})" data-toggle="modal" data-target="#EditarProducto"> {{$i->nombre}}  
-                @if($i->entrega=='no') 
-                    <span style="color:rgb(151, 151, 151);"> (Solo venta en tienda) </span> 
-                @endif
-                @if($i->activo =='0')
-                    <span style="background-color:rgb(221, 221, 221);"> (Oculto) </span> 
-                @endif
-
-            </li>
-        @endforeach
-
         <div style="font-size:2rem;margin:1rem;">
             <button type="button" class="btn btn-primary" wire:click="AbrirModal('nvo','')"  data-toggle="modal" data-target="#EditarProducto"><i class="bi bi-plus-square-fill"></i> Ingresar nuevo producto</button>
         </div>
+        <!-- ------------ Lista de inactivos -------------- -->
+        <div style="padding:2rem;">
+            <h3>Productos ocultos  o sin entrega:</h3>   
+            @foreach($inacts as $i)
+                <li style="margin:0.7rem;padding:0.5">
+                    <span style="cursor:pointer"  wire:click="AbrirModal('edit',{{$i->id}})" data-toggle="modal" data-target="#EditarProducto"> 
+                        {{$i->nombre}}  
+                        @if($i->entrega=='no') 
+                            <span style="color:rgb(204, 101, 4);"> (Solo venta en tienda) </span> 
+                        @elseif($i->entrega=='oca')
+                            <span style="color:rgb(2, 175, 89);"> (Producto de Ocasión) </span>
+                        @endif
+
+                        @if($i->activo =='0')
+                            <span style="background-color:rgb(221, 221, 221);"> (Oculto) </span> 
+                        @endif
+                    </span>
+                </li>
+            @endforeach
+            @if(count($inacts)<1)
+                No hay
+            @endif
+        </div>
+
+        
+
+
+        <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
+        <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
+        <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
+        <div style="padding:2rem">
+            <h3>Productos de Ocasión:</h3> 
+            <label>Pedidos de ocasión</label><br>
+            <label class="switch">
+                <input type="checkbox" wire:model="EnOcasion" wire:click="CambiaEstadoOcasion">
+                <div class="slider round"></div> 
+            </label>  
+            @if(session('ocasion')=='1')
+                <span style="color:darkgreen;">Sí se está ofreciendo productos de ocasión.</span> 
+                <h4>Productos de ocasión que se están ofreciendo:</h4>
+            @else
+                <span style="color:gray;">No se ofrecen productos de ocasión.</span> <!--span style="color:gray;"> Abasto Desactivo</span-->
+                <h4>Productos de ocasión que se van a ofrecer cuando se active:</h4>
+            @endif
+            
+            <div style="margin-left:70px;">
+                @if(count($ocasion) == 0) -- no hay productos a ofrecer -- @endif
+                <ol>
+                    @foreach($ocasion as $i)
+                        <li style="margin:1rem;">
+                            <span style="cursor:pointer"  wire:click="AbrirModal('edit',{{$i->id}})" data-toggle="modal" data-target="#EditarProducto"> 
+                                {{$i->nombre}}  
+                            </span>
+                            &nbsp; 
+                            <span style="cursor:pointer"  wire:click="OcultaOcasion({{$i->id}})"><i class="bi bi-eye-slash"></i> </span>
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+
     @endif
 
 
@@ -330,7 +397,7 @@
     <!-- ######################################################################################################################################################-->
     <!-- ######################################################################################################################################################-->
     <div class="modal fade " id="EditarProducto" tabindex="-1"  wire:ignore.self >
-        <div class="modal-dialog " role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(51, 51, 173);color:white;">
                     <div class="row container" >
@@ -378,7 +445,7 @@
                         <!-- ------------------------------- gpo (Pronombre) --------------------------- -->
                         <div class="form-group col-md-6 col-sm-12">
                             <label>Pronombre:  <red>*</red></label>
-                            <select class="form-control  @error('gpo')error @enderror" " wire:model="gpo" value="{{old('gpo')}}" >  
+                            <select class="form-control  @error('gpo')error @enderror"  wire:model="gpo" value="{{old('gpo')}}" >  
                                 <option value="">Selccionar Pronombre</option>
                                 @foreach($Grupos as $i)
                                     <option value="{{$i->gpo}}">{{$i->gpo}}</option>
@@ -430,13 +497,14 @@
                         <!-- ------------------------------- Entrega --------------------------- -->
                         <div class="form-group col-md-6 col-sm-12">
                             <label>Entrega:  <red>*</red></label>
-                            <select class="form-control  @error('entrega')error @enderror" " wire:model="entrega" value="{{old('entrega')}}" >  
+                            <select class="form-control  @error('entrega')error @enderror"  wire:model="entrega" value="{{old('entrega')}}" >  
                                 <option value="">Selccionar Entrega</option>
                                 <option value="com1">Solo en Com1</option>
                                 <option value="com2">Solo en Com2</option>
                                 <option value="com12">En 1 y 2 independientes</option>
                                 <option value="comid">En 1 y 2 idénticas</option>
                                 <option value="no">No en entrega</option>
+                                <option value="oca">Producto de Ocasión</option>
                             </select>
                             @error('entrega')<error>{{$message}}</error> @enderror 
                         </div>
@@ -444,7 +512,7 @@
                         <!-- ------------------------------- Venta en tienda --------------------------- -->
                         <div class="form-group col-md-6 col-sm-12">
                             <label>Venta en tienda:  <red>*</red></label>
-                            <select class="form-control @error('venta')error @enderror" " wire:model="venta" value="{{old('venta')}}" >  
+                            <select class="form-control @error('venta')error @enderror"  wire:model="venta" value="{{old('venta')}}" >  
                                 <option value="">Selccionar</option>
                                 <option value="no">No en venta</option>
                                 <option value="si">Si en venta</option>
@@ -577,9 +645,9 @@
                         </div>
                         <div class="col-md-4">
                             @if($text1=='Nuevo')
-                                <button type="button" id='CierraModal' wire:click="GuardaEdita('00')"  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Agregar producto</button>
+                                <button type="button" id='CierraModal1' wire:click="GuardaEdita('00')"  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Agregar producto</button>
                             @elseif($text1=="Editar")
-                                <button type="button" id='CierraModal' wire:click="GuardaEdita({{$prodid}})" class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Editar evento {{$prodid}}</button>
+                                <button type="button" id='CierraModal2' wire:click="GuardaEdita('{{$prodid}}')" class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Editar evento {{$prodid}}</button>
                             @endif
                         </div>
                     </div>
@@ -587,8 +655,79 @@
             </div>
         </div>
     </div>
-</form>
 
+
+
+
+
+    <!-- ######################################################################################################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <!-- ############################################# MODAL PARA PRODUCTOS DE OCASIÓN  #######################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <!-- ######################################################################################################################################################-->
+    <div class="modal fade " id="PedidoOcasion" tabindex="-1"  wire:ignore.self >
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(51, 51, 173);color:white;">
+                    <div class="row container" >
+                        <H1> Pedir producto de ocasión</H1>
+                    </div>
+                </div>                
+                <div class="modal-body">
+                    @if(count($ocasion)==0) ! Lo sentimos ¡ <br>  No hay ningún producto de ocasión para ofrecer  <br>@endif
+                    @if(session('EnPedido')=='1')
+                        <span style="color:red;">Atención</span>: Los pedidos de ocasión son independientes de los prepedidos.<br><br> 
+                    @endif
+
+                    @foreach($ocasion as $i)
+                        <?php
+                            #### Genera vector de sabores   
+                            $sabores=explode(',', $i->variantes);
+                        ?>
+                        @foreach($sabores as $sabor)
+                            <div style="row" style="border:1px solid black;">
+                                <!-- ------------------------------- Producto de ocasión --------------------------- -->
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12" style="border-bottom:1px solid rgb(51, 51, 173)";>
+                                    <label>
+                                        {{$i->nombre}} {{$sabor}}:  $ 
+                                        @if(auth()->user()->estatus == 'act') {{$i->precioact}} 
+                                        @elseif(auth()->user()->estatus == 'reg') {{$i->precioreg}}
+                                        @else {{$i->preciopub}}
+                                        @endif
+                                    </label>
+                                    <div style="  text-align:right; float: right;">
+                                        <input type="number" class="form-control" style="width:80px; display:inline-block;" id="" name="oca_{{$i->id}}@-{{$sabor}}">
+                                    </div>
+                                    <br>
+                                    {{$i->descripcion}}<br>
+                                    {{$i->presentacion}}. <br>
+                                    Productor: {{$i->proveedor}}
+                                    @if($i->img != '')
+                                        <img src="" style="width:30%;">
+                                    @endif
+                                    <hr class="hr" style="width:80%;">
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
+
+                    <!-- ------------------------------------ Pie de modal de productos de ocasión  ---------------------------- -->
+                    <div class="modal-footer"> 
+                        <div class="row" style="padding: 1rem; ">
+                            <div class="col-md-12">
+                                <button type="reset" class="btn btn-secondary"  data-dismiss="modal" style="margin:5px;"><i class="fa fa-close"></i>Cancelar</button></a>
+                                <button type="submit" id='CierraModal3'  class="btn btn-success" style="margin:5px;"><i class="fas fa-plus"></i> Pedir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+                        
+    
 
 <!-- --------------------------------------------------------------- JAVASCRIPT ------------------------------------------------------------ -->
 <!-- --------------------------------------------------------------- JAVASCRIPT ------------------------------------------------------------ -->

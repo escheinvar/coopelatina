@@ -117,7 +117,7 @@
                                     <a class="dropdown-item" href="/abastecer">4) Recibir proveedores</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/trabajos">Alta de apoyos</a>
-                                    <a class="dropdown-item disabled" href="#">Productos Ocasión</a> 
+                                    <!--a class="dropdown-item" href="/ocasion">Productos Ocasión</a--> 
                                     <a class="dropdown-item disabled" href="#">Pizarrón</a>                                   
                                 </div>
                             </li>
@@ -238,11 +238,11 @@
                                     </a>
                                 </li>
                                 
-                                <li class="nav-item disabled" > <!-- ------------ Menú: Prod-ocasión ----- -->
+                                {{--<li class="nav-item disabled" > <!-- ------------ Menú: Prod-ocasión ----- -->
                                     <a href="#" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">
                                         <i class="bi bi-gift"></i>  <span class="ms-1 d-none d-sm-inline">Pedido de ocasión</span>
                                     </a>
-                                </li>
+                                </li>--}}
 
                                 <li class="nav-item"> <!-- ------------ Menú: Pedidos Activos ----- -->
                                     <a href="/MisPedidos/{{auth()->user()->usr}}" class="nav-link align-middle px-0" style="color:rgb(70, 70, 70); font-size:20px;">

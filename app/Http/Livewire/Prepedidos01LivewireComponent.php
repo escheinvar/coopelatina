@@ -11,6 +11,7 @@ use App\Models\ProductosModel;
 class Prepedidos01LivewireComponent extends Component
 {
     public $prepedido, $anualidad, $com1=[], $com2=[], $ProxCom1, $ProxCom2;
+    public $oca=[];
     public $total, $GranTotal;
     public $oculta="inline-block";
 
@@ -43,10 +44,12 @@ class Prepedidos01LivewireComponent extends Component
             
             if($entrega == 'com1'){
                 $this->com1[$key]=['com'=>$entrega, 'prodId'=>$prodId, 'prodName'=>$prodName, 'presenta'=>$presenta, 'sabor'=>$sabor,'cant'=>$value, 'precio'=>$precio];
-            }else{
+            }elseif($entrega== 'com2'){
                 $this->com2[$key]=['com'=>$entrega, 'prodId'=>$prodId, 'prodName'=>$prodName, 'presenta'=>$presenta, 'sabor'=>$sabor,'cant'=>$value, 'precio'=>$precio];
+            }elseif($entrega== 'oca'){
+                $this->oca[$key]=['com'=>$entrega, 'prodId'=>$prodId, 'prodName'=>$prodName, 'presenta'=>$presenta, 'sabor'=>$sabor,'cant'=>$value, 'precio'=>$precio];
             }
-        }        
+        }   
         return view('livewire.prepedidos01-livewire-component');
     }
     
@@ -90,10 +93,15 @@ class Prepedidos01LivewireComponent extends Component
         ##### GuardaProductos
         foreach($this->prepedido as $key=>$value){
             $entrega=preg_replace("/_.*/","",$key);
-            $prodId=preg_replace("/^...._/","",$key); 
+            if(preg_match("/com/", $key)){
+                $prodId=preg_replace("/^com._/","",$key); 
+            }elseif(preg_match("/oca/",$key)){
+                $prodId=preg_replace("/^oca_/","",$key); 
+            }
             $prodId=preg_replace("/@-.*/","",$prodId);
             $sabor=preg_replace("/.*@-/","",$key);
-            
+            #dd($entrega, $prodId,$sabor);
+
             ### Obtiene nombre
             $name1=ProductosModel::where('id',$prodId)->value('gpo');
             $name2=ProductosModel::where('id',$prodId)->value('nombre');

@@ -5,7 +5,7 @@
 
 2.- Generé liga en storage: 
 $php artisan storage:link 
-(lo cual hace que todos los archivos en /storege/app/public se publiquen en : www.com/storage/bla.png)
+(lo cual hace que todos los archivos en /storage/app/public se publiquen en : www.com/storage/bla.png)
 
 
 3.- Instalé SweetAlert:

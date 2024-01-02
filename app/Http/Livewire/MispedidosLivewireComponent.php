@@ -85,23 +85,21 @@ class MispedidosLivewireComponent extends Component
             ->where('fol_mes','>=',$mesHoy)
             ->where('fol_anio','>=',$anioHoy)
             ->get();
-
+        
         $foliosInact=DB::table('folios')
             ->where('fol_act','1')
             ->where('fol_usrid', auth()->user()->id)
-            ->where(
-                function($q){
-                    $mesHoy=Date("m");  $anioHoy=Date("Y");
-                    return $q
-                    ->where('fol_mes','<',$mesHoy)
-                    ->where('fol_anio',$anioHoy);
-                })
+            ->where(function($q){
+                $mesHoy=Date("m");  $anioHoy=Date("Y");
+                $q->where('fol_mes','<',$mesHoy);
+                #$q->where('fol_anio',$anioHoy);
+            })
             ->orWhere('fol_anio','<',$anioHoy)              
             ->get();
-
         
         if($this->GranVariable=='activos'){
             $this->folios=$foliosAct;
+            #dd($mesHoy,$anioHoy,$this->folios,$foliosAct,$foliosInact);
             return view('livewire.mispedidos-livewire-component', [
                 'mesHoy'=>$mesHoy, 
                 #'folios'=>$folios,

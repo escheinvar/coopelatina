@@ -24,44 +24,65 @@
         @endif
 
         <!-- ----------------------------------- PRIMER ENTREGA -------------------------------------------------- -->
-        <div class="col-md-5 col-sm-12" style="background-color:rgb(234, 236, 255); margin:1rem;padding:1rem;">            
-            <div style="background-color:rgb(75, 66, 102);color:white; padding:8px; ">
-                <b>Primer entrega</b><br> 
-                {{ $diaSem[session('ProxCom1date')['diasem']] }} {{ session('ProxCom1date')['dia'] }} de {{$meses[session('ProxCom1date')['mes']]}}
+        @if($com1)
+            <div class="col-md-5 col-sm-12" style="background-color:rgb(234, 236, 255); margin:1rem;padding:1rem;">            
+                <div style="background-color:rgb(75, 66, 102);color:white; padding:8px; ">
+                    <b>Primer entrega</b><br> 
+                    {{ $diaSem[session('ProxCom1date')['diasem']] }} {{ session('ProxCom1date')['dia'] }} de {{$meses[session('ProxCom1date')['mes']]}}
+                </div>
+                <div style="margin:1.5rem;">
+                    @foreach($com1 as $i)
+                        <?php $suma1=$suma1+$i['cant']; $GranTotal = $GranTotal + ($i['precio'] * $i['cant']); ?>
+                        <div style="display:inline-block; width:90%"><b>{{$i['cant']}}</b> &nbsp; {{$i['prodName']}} (<span style="color:gray;">{{$i['presenta']}}, ${{$i['precio']}}</span>) </div>
+                        <div style="display:inline-block;">${{$i['precio']*$i['cant']}}</div>
+                    @endforeach
+                </div>
+                <div style="background-color:rgb(75, 66, 102);color:white; ">Total: {{$suma1}} productos</div>
             </div>
-            <div style="margin:1.5rem;">
-                @foreach($com1 as $i)
-                    <?php $suma1=$suma1+$i['cant']; $GranTotal = $GranTotal + ($i['precio'] * $i['cant']); ?>
-                    <div style="display:inline-block; width:90%"><b>{{$i['cant']}}</b> &nbsp; {{$i['prodName']}} (<span style="color:gray;">{{$i['presenta']}}, ${{$i['precio']}}</span>) </div>
-                    <div style="display:inline-block;">${{$i['precio']*$i['cant']}}</div>
-                @endforeach
-            </div>
-            <div style="background-color:rgb(75, 66, 102);color:white; ">Total: {{$suma1}} productos</div>
-        </div>
+        @endif
 
         <!-- ----------------------------------- SEGUNDO ENTREGA -------------------------------------------------- -->
-        <div class="col-md-5 col-sm-12" style="background-color:rgb(234, 236, 255); margin:1rem;padding:1rem;">
-            <div style="background-color:rgb(75, 66, 102);color:white; padding:8px; ">
-                <b>Segunda entrega</b><br>
-                {{ $diaSem[session('ProxCom2date')['diasem']] }} {{ session('ProxCom2date')['dia'] }} de {{$meses[session('ProxCom2date')['mes']]}}
+        @if($com2)
+            <div class="col-md-5 col-sm-12" style="background-color:rgb(234, 236, 255); margin:1rem;padding:1rem;">
+                <div style="background-color:rgb(75, 66, 102);color:white; padding:8px; ">
+                    <b>Segunda entrega</b><br>
+                    {{ $diaSem[session('ProxCom2date')['diasem']] }} {{ session('ProxCom2date')['dia'] }} de {{$meses[session('ProxCom2date')['mes']]}}
+                </div>
+                <div style="margin:1.5rem;">
+                    @foreach($com2 as $i)
+                        <?php $suma2=$suma2+$i['cant']; $GranTotal = $GranTotal + ($i['precio'] * $i['cant']);?>
+                        <div style="display:inline-block; width:90%"><b>{{$i['cant']}}</b> &nbsp; {{$i['prodName']}} (<span style="color:gray;">{{$i['presenta']}}, ${{$i['precio']}}</span>) </div>
+                        <div style="display:inline-block;">${{$i['precio']*$i['cant']}}</div>
+                    @endforeach
+                </div>
+                <div style="background-color:rgb(75, 66, 102);color:white;">Total: {{$suma2}} productos</div>
             </div>
-            <div style="margin:1.5rem;">
-                @foreach($com2 as $i)
-                    <?php $suma2=$suma2+$i['cant']; $GranTotal = $GranTotal + ($i['precio'] * $i['cant']);?>
-                    <div style="display:inline-block; width:90%"><b>{{$i['cant']}}</b> &nbsp; {{$i['prodName']}} (<span style="color:gray;">{{$i['presenta']}}, ${{$i['precio']}}</span>) </div>
-                    <div style="display:inline-block;">${{$i['precio']*$i['cant']}}</div>
-                @endforeach
+        @endif
+
+         <!-- ----------------------------------- PRODUCTO DE OCASIÓN -------------------------------------------------- -->
+         @if($oca)
+            <div class="col-md-10 col-sm-12" style="background-color:rgb(236, 255, 234); margin:1rem;padding:1rem;">
+                <div style="background-color:rgb(66, 102, 74);color:white; padding:8px; ">
+                    <b>Producto de ocasión</b><br>
+                </div>
+                <div style="margin:1.5rem;">
+                    @foreach($oca as $i)
+                        <?php $suma2=$suma2+$i['cant']; $GranTotal = $GranTotal + ($i['precio'] * $i['cant']);?>
+                        <div style="display:inline-block; width:90%"><b>{{$i['cant']}}</b> &nbsp; {{$i['prodName']}} (<span style="color:gray;">{{$i['presenta']}}, ${{$i['precio']}}</span>) </div>
+                        <div style="display:inline-block;">${{$i['precio']*$i['cant']}}</div>
+                    @endforeach
+                </div>
+                <div style="background-color:rgb(66, 102, 74);color:white;">Total: {{$suma2}} productos</div>
             </div>
-            <div style="background-color:rgb(75, 66, 102);color:white;">Total: {{$suma2}} productos</div>
-        </div>
-        
-        
-        <div class="col-md-12 col-sm-12">
-            <div style="font-size:2.5rem;"><br>
-                Tienes hasta el {{ $diaSem[session('ProxPedend')['diasem']] }}  {{ session('ProxPedend')['dia'] }}  {{ $meses[session('ProxPedend')['mes']] }}  para realizar tu pago.
-                De lo contrario, este pre pedido será cancelado.<br>
+            
+            
+            <div class="col-md-12 col-sm-12">
+                <div style="font-size:2.5rem;"><br>
+                    Tienes hasta el {{ $diaSem[session('ProxPedend')['diasem']] }}  {{ session('ProxPedend')['dia'] }}  {{ $meses[session('ProxPedend')['mes']] }}  para realizar tu pago.
+                    De lo contrario, este pre pedido será cancelado.<br>
+                </div>
             </div>
-        </div>
+        @endif
         
         <!-- ----------------------------------------- BOTÓN --------------------------------------------------- -->
         <div class="col-md-12 col-sm-12"><br>

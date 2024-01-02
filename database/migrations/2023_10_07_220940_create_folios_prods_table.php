@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('ped_entregado',['0','1'])->default('0');
 
             $table->string('ped_producto');                 #### com1:id@sabor 
-            $table->enum('ped_entrega',['com1','com2']);    #### com1 o com2 
+            $table->enum('ped_entrega',['com1','com2','oca']);    #### com1 o com2 u ocasión
             $table->integer('ped_prodid');                  #### 123
             $table->string('ped_prod');                     #### Malbabiscos
             $table->string('ped_prodvar')->nullable();      #### de Menta

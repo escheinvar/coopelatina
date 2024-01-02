@@ -90,7 +90,7 @@
         </div>  
 
         <button class="btn btn-light" type="button" style="margin:1rem;" onclick="VerNoVer('ver','caja');">Ver caja</button>
-        <button class="btn btn-success" type="button" style="margin:1rem;" onclick="VerNoVer('ver','caja');">Corte de caja</button>
+        <button class="btn btn-success" type="button" style="margin:1rem;" onclick="VerNoVer('corte','caja');">Corte de caja</button>
 
 
 
@@ -206,5 +206,18 @@
                         --no hay registros de caja--
                 @endif
             </div>
+        </div>
+
+
+
+
+
+        <!--######################################################################################################################-->
+        <!--######################################################################################################################-->
+        <!--################################################# CORTE DE CAJA ######################################################-->
+        <!--######################################################################################################################-->
+        <div id="sale_cortecaja" style="display:block;">
+            <h1>Corte de caja</h1>
+            @include('calculadora')
         </div>
     </div>

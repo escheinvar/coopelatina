@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('variantes')->nullable();
             $table->string('presentacion');
-            $table->enum('entrega',['no','com1','com2','com12','comid'])->default('no');
+            $table->enum('entrega',['no','oca','com1','com2','com12','comid'])->default('com1');
             $table->enum('venta',['si','no'])->default('no');
             $table->integer('existencias')->default(0);
             $table->decimal('costo',6,1)->default('0');

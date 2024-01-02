@@ -39,7 +39,7 @@ class TrabajosLivewireComponent extends Component
         $mes=preg_replace("/....-/","",$this->FechaTrabajo);
         $mes=preg_replace("/-../","",$mes);
 
-        TrabajosModel::insert([
+        TrabajosModel::create([
             'work_act'=>'1',
             'work_usrid'=>$this->usuarioBusca,
             'work_usr'=>$nombre->nombre." ".$nombre->ap_pat." ".$nombre->ap_mat,

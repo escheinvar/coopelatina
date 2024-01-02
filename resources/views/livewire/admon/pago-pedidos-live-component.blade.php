@@ -3,13 +3,7 @@
     <h1>Validar pagos a partir de {{session('arrayMeses')[$mes]}}</h1>
     @include('plantillas.MarcadorDeEstado')
 
-    <!--div>
-        @if(session('EnPedido')=='1')
-            Estamos en período de pedidos, los cooperativistas todavía pueden subir sus pagos
-        @else
-            Ya finalizó el período de pedidos, los cooperativistas ya no pueden subir pagos
-        @endif
-    </div->
+
     <!-- ----------------------- Switch de Estado ------------------------ -->
     @if( in_array(auth()->user()->priv, $petitCmte) && session('EnPedido')=='0') 
         

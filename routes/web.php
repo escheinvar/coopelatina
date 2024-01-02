@@ -16,8 +16,10 @@ use App\Http\Controllers\admon\CajaVentasController;
 use App\Http\Controllers\coop_productoresController;
 use App\Http\Controllers\admon\PagoPedidosController;
 use App\Http\Controllers\admon\ListasAbastoController;
+use App\Http\Controllers\admon\OcasionController;
 use App\Http\Controllers\admon\RecuperarPasswordController;
 use App\Http\Controllers\admon\RecuperarPasswordController2;
+use App\Http\Livewire\OcasionLivewireComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +76,9 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
     ################################ Administración de Listas de abasto
     Route::get('/cajaVentas', [CajaVentasController::class, 'index'])->name('ventas');
     Route::post('/cajaVentas', [CajaVentasController::class, 'store']);
+
+    ################################ Administrar productos de ocasión
+    Route::get('/ocasion', [OcasionController::class, 'index'])->name('ocasion');
 
 });
 
