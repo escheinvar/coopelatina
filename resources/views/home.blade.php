@@ -16,19 +16,11 @@
 <style>
    
 </style>
-    {{--
-     <!-- ------------------------------------------- -->
-     Session(EnPedido)={{session('EnPedido')}}<br>
-     Session(EnEntrega)={{session('EnEntrega')}}<br>
-     Session(EnPago)={{session('EnPagos')}}<br>
-     Session(Ocasion)={{session('Ocasion')}}<br>
-     <!-- ------------------------------------------- -->
-     --}}
     <div class="row" style="margin:1rem;">
         <!-- ------------------------------------------------ ARRIBA ----------------------------------------------- -->
         <div class="col-md-12" style="text-align:right;">
             
-            Hoy es {{ session('arraySemana')[0] }}  {{date('n')}} de {{session('arrayMeses')[date('n')]}} de {{date('Y')}}
+            Hoy es {{ session('arraySemana')[0] }}  {{date('j')}} de {{session('arrayMeses')[date('n')]}} de {{date('Y')}}
         </div>
     </div>
 
@@ -90,12 +82,12 @@
                         @elseif(session('FinMembre') <= '45')
                             <li> Tu anualidad está por vencer. Le quedan {{session('FinMembre')}} días.
                         @else
-                            <?php 
-                                $fecha=new DateTime(auth()->user()->membrefin);
-                                $diaMes=date("d",strtotime(auth()->user()->membrefin));
-                                $Mes=session('arrayMeses')[date("m",strtotime(auth()->user()->membrefin))];
+                            {{--<?php 
+                                #$fecha=new DateTime(auth()->user()->membrefin);
+                                #$diaMes=date("d",strtotime(auth()->user()->membrefin));
+                                #$Mes=session('arrayMeses')[date("m",strtotime(auth()->user()->membrefin))];
                             ?>
-                            <li> Anualidad vigente (vence el {{$diaMes}} de {{$Mes}}).
+                            <li> Anualidad vigente (vence el {{$diaMes}} de {{$Mes}}).--}}
                         @endif 
                     
                     </div>

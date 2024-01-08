@@ -53,7 +53,7 @@
                 @elseif(auth()->user()->estatus == 'pru' and session('vigencia') =='0' )
                     <span class="cintillo" style="background-color:red; color:black;">Tu período de prueba ya venció</span>
                 @else
-                    @if(session('vigencia') == '0')
+                    @if(session('vigencia') == '0') 
                         <span class="cintillo" style="background-color:red; color:black;">Tu anualidad venció hace {{session('FinMembre')}} días </span>
                             
                     
@@ -64,7 +64,7 @@
                         <?php 
                             $fecha=new DateTime(auth()->user()->membrefin);
                             $diaMes=date("d",strtotime(auth()->user()->membrefin));
-                            $Mes=session('arrayMeses')[date("m",strtotime(auth()->user()->membrefin))];
+                            $Mes=session('arrayMeses')[date("n",strtotime(auth()->user()->membrefin))];
                             $Anio=date("y",strtotime(auth()->user()->membrefin));
                         ?>
                         Anualidad vigente (vence el {{$diaMes}} de {{$Mes}} del {{$Anio}})
