@@ -51,7 +51,7 @@
                         <th wire:click="orden('dateregistro')" style="cursor:pointer;" scope="col">Antigüedad<br>Año/mes/dia</th>
                         <th wire:click="orden('priv')" style="cursor:pointer;" scope="col">Privs</th>
                         <th wire:click="orden('estatus')" style="cursor:pointer;" scope="col">Estatus</th>
-                        <th></th>
+                        
                     </tr>
                 </thead>
 
@@ -59,7 +59,7 @@
                     @foreach($usuarios as $i)
                         <tr>  <!-- --------------------------- nombre, aps, usrs, tel, mail ------------------------- -->
                             <th scope="row">{{$i->usr}}</th>
-                            <td>{{$i->nombre}}</td>
+                            <td><a href="#" data-toggle="modal" data-target="#NuevoUsr"  wire:click="defineType('edita','{{$i->id}}')">{{$i->nombre}}</a></td>
                             <td>{{$i->ap_pat}} {{$i->ap_mat}}</td>
                             
                             <td>{{$i->tel}} </td>
@@ -91,11 +91,11 @@
                                 {{$i->estatus}}
                             </td>
                             
-                            <td> <!-- --------------------------- Opciones ------------------------- -->
+                            {{--<td> <!-- --------------------------- Opciones ------------------------- -->
                                 <a href="#" data-toggle="modal" data-target="#NuevoUsr"  wire:click="defineType('edita','{{$i->id}}')">
                                     <i class='fas fa-edit'>Editar</i>
                                 </a> 
-                            </td>
+                            </td>--}}
                         </tr>
                     @endforeach
                 </tbody>

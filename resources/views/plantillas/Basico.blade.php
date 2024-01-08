@@ -96,10 +96,10 @@
                                     Catálogos
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/usuarios">Usuarios</a>
-                                    <a class="dropdown-item" href="/productores">Productores</a>
-                                    <a class="dropdown-item" href="/prepedido">Productos</a>
-                                    <a class="dropdown-item disabled" href="#">Envases</a>
+                                    <a class="dropdown-item" href="/usuarios"><i class="bi bi-person"></i> Usuarios</a>
+                                    <a class="dropdown-item" href="/productores"><i class='fas fa-tractor'></i> Productores</a>
+                                    <a class="dropdown-item" href="/catprods"><i class="bi bi-cart4"></i> Productos</a>
+                                    <a class="dropdown-item disabled" href="#"><i class='fas fa-wine-bottle'></i> Envases</a>
                                     <!--div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Something else here</a-->
                                 </div>

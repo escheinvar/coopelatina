@@ -84,6 +84,7 @@ class MispedidosLivewireComponent extends Component
             ->where('fol_usrid', auth()->user()->id)
             ->where('fol_mes','>=',$mesHoy)
             ->where('fol_anio','>=',$anioHoy)
+            ->orderBy('fol_id','desc')
             ->get();
         
         $foliosInact=DB::table('folios')
@@ -92,9 +93,9 @@ class MispedidosLivewireComponent extends Component
             ->where(function($q){
                 $mesHoy=Date("m");  $anioHoy=Date("Y");
                 $q->where('fol_mes','<',$mesHoy);
-                #$q->where('fol_anio',$anioHoy);
             })
-            ->orWhere('fol_anio','<',$anioHoy)              
+            ->orWhere('fol_anio','<',$anioHoy)     
+            ->orderBy('fol_id','desc')         
             ->get();
         
         if($this->GranVariable=='activos'){
@@ -102,8 +103,6 @@ class MispedidosLivewireComponent extends Component
             #dd($mesHoy,$anioHoy,$this->folios,$foliosAct,$foliosInact);
             return view('livewire.mispedidos-livewire-component', [
                 'mesHoy'=>$mesHoy, 
-                #'folios'=>$folios,
-                #'prods'=>$this->prods,
             ]);
 
         }elseif($this->GranVariable=='inactivos') {

@@ -68,9 +68,10 @@
                         @if($folio->fol_edo == '5') <span style="padding:1rem; color:red; padding:5px;border:1px solid rgb(230, 233, 253);border-radius:14px;"><b>Anualidad</b> @endif </span>
                     </div>
                     <!-- ----- Botones de comanda ---- -->
-                    <div class="col-lg-3 col-md-3 col-sm-12" style="display:inline-block;"> 
+                    <div class="col-lg-4 col-md-4 col-sm-12" style="display:inline-block;"> 
                         <span onclick="VerNoVer('com1','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});" id="com1Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(214, 219, 249); border-radius:5px; @if($folio->fol_edo == '0')text-decoration:line-through; @endif">Entrega1</span>
                         <span onclick="VerNoVer('com2','{{$folio->fol_id}}');VerColor('com2Boton',{{$folio->fol_id}});" id="com2Boton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(230, 233, 253); border-radius:5px; @if($folio->fol_edo == '0')text-decoration:line-through; @endif">Entrega2</span>
+                        <span onclick="VerNoVer('oca','{{$folio->fol_id}}');VerColor('ocaBoton',{{$folio->fol_id}});" id="ocaBoton{{$folio->fol_id}}" style="background-color:aliceblue; cursor:pointer; font-size:80%; margin:2rem; padding:.5rem; border:1px solid rgb(230, 233, 253); border-radius:5px; @if($folio->fol_edo == '0')text-decoration:line-through; @endif">Ocasión</span>
                     </div>
                 </div>
 
@@ -188,6 +189,42 @@
                         </div>
                     </div>
                 </div> 
+
+
+                <!-- ------------------------- lista de ocasión ------------------------ -->
+                <div class="col-md-11 my-md-2 my-sm-5" style="display:none; background-color:white; border-radius:20px; border:1px solid gray;" id="sale_oca{{$folio->fol_id}}">
+                    <b style="cursor:pointer;@if($folio->fol_edo == '0')text-decoration:line-through; @endif" onclick="VerNoVer('oca','{{$folio->fol_id}}');VerColor('com1Boton',{{$folio->fol_id}});">
+                        Productos de ocasión
+                    </b>
+                    <div style="margin:2rem;">
+                        @foreach($prods as $prod)
+                            <?php $subt=0; ?>
+                            @if($prod->ped_folio == $folio->fol_id && $prod->ped_entrega =='oca')
+                                <?php       $num2=$num2 + $prod->ped_cant;      $subt = $prod->ped_cant * $prod->ped_costo;   $tot2= $tot2 + $subt; ?>
+                                <div style="border-bottom:1px solid gray;"> 
+                                    @if($folio->fol_edo == '3' OR $folio->fol_edo == '2')<!-- Si está en entrega -->
+                                        <input type="checkbox" style="width:20px;height:20px;"> 
+                                    @else 
+                                        <span style="color:gray">&#10004;</span> 
+                                    @endif
+                                    {{$prod->ped_cant}} {{$prod->ped_prod}} {{$prod->ped_prodvar}} 
+                                    <small style="color:gray;">({{$prod->ped_prodpresenta}} ${{$prod->ped_costo}})</small>
+                                    @if($folio->fol_edo >='4' &&  (is_null($folio->fol_pagoimg)|| $folio->fol_pagoimg=='' )) 
+                                        &nbsp; <small style="color:gray;"><i class="bi bi-trash" style="cursor:pointer;" wire:click="borrarProducto({{$prod->ped_id}})"></i> </small>
+                                    @endif
+                                    <span style="float: right;">${{$subt}}
+                                </div>
+                            @endif
+                        @endforeach
+                        @if($num2 == '0') <br>- No pedista nada - <br> @endif
+                        <b>Total: ${{$tot2}}</b>
+                    </div>
+                </div>
+
+
+
+
+
                 
                 <!--################################################################################################################################-->
                 <!-- ------------------------------------ Área que  Muestra imágen de comprobante de pago ----------------------------------------- -->         
@@ -227,7 +264,7 @@
 
     <!-- ------------------------ Inicia Subir Comprobante    ----------------------------- -->
     <div class="row" id="sale_pagarA" style="display:block; padding:5px;">
-        @if(count($mandaAbajo)>0 && session('EnPedido')==1 )
+        @if(count($mandaAbajo)>0 && (session('EnPedido')==1 || session('ocasion')=='1' ))
             <form wire:submit.prevent="SubirPago"> <!-- prevent --> 
                 @csrf
                 <div class="mb-1">

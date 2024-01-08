@@ -17,6 +17,7 @@ use App\Http\Controllers\coop_productoresController;
 use App\Http\Controllers\admon\PagoPedidosController;
 use App\Http\Controllers\admon\ListasAbastoController;
 use App\Http\Controllers\admon\OcasionController;
+use App\Http\Controllers\admon\ProductosController;
 use App\Http\Controllers\admon\RecuperarPasswordController;
 use App\Http\Controllers\admon\RecuperarPasswordController2;
 use App\Http\Livewire\OcasionLivewireComponent;
@@ -79,6 +80,9 @@ Route::middleware(['soloCoops','soloAdmins'])->group(function(){
 
     ################################ Administrar productos de ocasión
     Route::get('/ocasion', [OcasionController::class, 'index'])->name('ocasion');
+
+    ################################ Administrar catálogo de productos
+    Route::get('/catprods', [ProductosController::class, 'index'])->name('productosCat');
 
 });
 

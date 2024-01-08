@@ -293,6 +293,7 @@
                                     </div>
 
                                     <!-- ------------------------------ BOTÓN DE EDITAR ----------------------- -->
+                                    {{--
                                     @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
                                         <div style="font-size:2rem;margin:1rem;">
                                             <button type="button" style="float:right;" class="btn btn-primary" wire:click="AbrirModal('edit',{{$value->id}})" data-toggle="modal" data-target="#EditarProducto">
@@ -301,6 +302,7 @@
                                             </button>
                                         </div>
                                     @endif
+                                    --}}
                                 </div>
                             </td>
                         </tr>
@@ -316,7 +318,7 @@
     <!-- ################################### LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ################################### -->
     <!-- ################################### LISTA DE INACTIVOS Y BOTÓN PARA INGRESAR UN NUEVO PRODUCTO ################################### -->
     @if(in_array(auth()->user()->priv,  ['root','teso','admon']))
-        <div style="font-size:2rem;margin:1rem;">
+        {{--<div style="font-size:2rem;margin:1rem;">
             <button type="button" class="btn btn-primary" wire:click="AbrirModal('nvo','')"  data-toggle="modal" data-target="#EditarProducto"><i class="bi bi-plus-square-fill"></i> Ingresar nuevo producto</button>
         </div>
         <!-- ------------ Lista de inactivos -------------- -->
@@ -341,7 +343,7 @@
             @if(count($inacts)<1)
                 No hay
             @endif
-        </div>
+        </div>--}}
 
         
 
@@ -349,7 +351,7 @@
         <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
         <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
         <!-- ################################### Switch de Estado de PRODUCTO DE OCASIÓN ################################### -->
-        <div style="padding:2rem">
+        {{--<div style="padding:2rem">
             <h3>Productos de Ocasión:</h3> 
             <label>Pedidos de ocasión</label><br>
             <label class="switch">
@@ -378,7 +380,7 @@
                     @endforeach
                 </ol>
             </div>
-        </div>
+        </div>--}}
 
 
     @endif
@@ -396,6 +398,7 @@
     <!-- ############################################# MODAL PARA EDITAR o AGREGAR PRODUCTO  ##################################################################-->
     <!-- ######################################################################################################################################################-->
     <!-- ######################################################################################################################################################-->
+    {{--
     <div class="modal fade " id="EditarProducto" tabindex="-1"  wire:ignore.self >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -655,6 +658,7 @@
             </div>
         </div>
     </div>
+    --}}
 
 
 

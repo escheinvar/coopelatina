@@ -1,38 +1,52 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Admon;
 
-use DateTime;
 use App\Models\User;
 use Livewire\Component;
-use App\Models\Calendario;
 use App\Models\EstadosModel;
-use Illuminate\Http\Request;
-use App\Models\TrabajosModel;
-use Livewire\WithFileUploads;
 use App\Models\ProductosModel;
 use App\Models\ProductoresModel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
-class PrepedidosLivewireComponent extends Component
+
+class ProductosLivewireComponent extends Component
 {
-    public $VerAnual='block', $NoVerAnual='none';
-    public $trabajos=[];
-    public $text1, $datos;
-    public $prodid, $activo, $gpo, $nombre, $variantes, $presentacion, $entrega, $venta, $costo, $precioact, $precioreg;
-    public $preciopub, $mintipo, $min, $proveedor, $categoria, $responsable, $descripcion, $img, $orden;
-    public $Grupos, $gpo2, $productores, $responsables, $categorias, $SubeImagen;
-    public $EnOcasion;
-    use WithFileUploads;
+    public $Grupos, $productores,$categorias,$responsables;
+    public $ordenTabla, $sentidoTabla;
+    public $EnOcasion, $text1, $prodid, $activo;
+    public $gpo, $gpo2, $nombre, $variantes, $presentacion, $entrega, $venta, $costo, $precioact, $precioreg;
+    public $preciopub, $mintipo, $min, $proveedor, $categoria, $responsable, $descripcion, $img;
+    public $orden, $SubeImagen;
 
-    public function PagarAnualidad(){
-        $this->VerAnual='none';
-        $this->NoVerAnual='block';
+    public function mount(){
+        $this->ordenTabla="id";
+        $this->sentidoTabla="asc";
+        if(session('ocasion')=='1'){$this->EnOcasion='1';}
     }
 
-/*
+    public function reordenaTabla($x){
+        if($this->sentidoTabla=='asc'){
+            $this->sentidoTabla='desc';
+        }else{
+            $this->sentidoTabla='asc';
+        }
+        $this->orden=$x;
+    }
+
+    public function CambiaEstadoOcasion(){
+        if(session('ocasion')=='1' ){
+            $this->EnOcasion='';
+            session(['ocasion'=>'']);
+            EstadosModel::where('edo_name','Ocasion')->update(['edo_edo'=>'']);
+        }else{
+            $this->EnOcasion='1';
+            session(['ocasion'=>'1']);
+            EstadosModel::where('edo_name','Ocasion')->update(['edo_edo'=>'1']);
+        }
+    }
+
     public function AbrirModal($tipo,$idprod){
-        
         if($tipo=='edit'){
             $this->text1='Editar';
             $datos=ProductosModel::where('id',$idprod)->first();
@@ -134,68 +148,17 @@ class PrepedidosLivewireComponent extends Component
        
     }
 
-    public function OcultaOcasion($prodid){
-        ProductosModel::where('id',$prodid)->update(['activo'=>'0']);
-    }
-
-
-    public function CambiaEstadoOcasion(){
-        if(session('ocasion')=='1'){
-            $this->EnOcasion='';
-            session(['ocasion'=>'']);
-            EstadosModel::where('edo_name','Ocasion')->update(['edo_edo'=>'']);
-        }else{
-            $this->EnOcasion='1';
-            session(['ocasion'=>'1']);
-            EstadosModel::where('edo_name','Ocasion')->update(['edo_edo'=>'1']);
-        }
-    }
-*/
+    
     public function render(){
-        #dd(session()->all());
-        if($this->activo =='0'){$this->activo='';}
-
+        $productos=ProductosModel::orderBy($this->ordenTabla,$this->sentidoTabla)->get();
+        $ocasion=ProductosModel::where('activo','1')->where('entrega','oca')->get();
         $this->Grupos=ProductosModel::distinct('gpo')->get('gpo');
         $this->productores=ProductoresModel::where('prod_act','1')->distinct('prod_nombrecorto')->get('prod_nombrecorto');  
         $this->categorias=ProductosModel::distinct('categoria')->get('categoria'); 
         $this->responsables=User::where('activo','1')->where('estatus','act')->get();
-        
-        ##### Obtiene lista de productosproveedorproveedor
-        $todo = ProductosModel::where('activo','1')
-            ->where('entrega','not like','no')
-            ->where('entrega','not like','oca')
-            ->orderBy('gpo','asc')
-            ->get();
 
-        $Inacts = ProductosModel::where('activo','0')
-            ->orWhere('entrega','no')
-            ->orderBy('gpo','asc')
-            ->get();
-        
-        $ocasion= ProductosModel::where('activo','1')
-            ->where('entrega','oca')
-            ->orderBy('gpo','asc')
-            ->get();
-
-        ######### GENERA LISTA DE TOTAL DE PRODUCTOS POR TIPO DEL MES DE USUARIOS (NO TIENDA): genera tabla con dos campos:
-        ######### "total": Suma de número de productos
-        ######### "prod": Producto definido como:   ped_entrega:ped_prod@ped_prodvar       x   ej: com1:Amaranto Obleas@Coco
-        #########                                        Ojo:   ped_prod=gpo+" "+nombre    y   ped_prodvar = 1 sabor(variante)
-        ######### Excluye pedidos y folios inactivos, productos ya entregados, folios en estado distinto a 3 y pedidos de tienda
-        $mes=session('ProxPedido')['mes']; 
-        $anio=session('ProxPedido')['anio']; 
-
-        
-        $YaPedidos=DB::select(
-            "SELECT SUM(ped_cant) AS total, ped_prodid FROM folios_prods 
-            JOIN folios ON folios_prods.ped_folio=folios.fol_id
-            WHERE ped_act='1' AND  fol_act='1' AND fol_edo>='3' AND fol_anio=$anio AND fol_mes=$mes
-            GROUP BY ped_prodid");
-        #dd($YaPedidos);
-
-        if(session('ocasion')=='1'){$this->EnOcasion='1';}
-        #dd(auth()->user()->estatus);
-
-        return view('livewire.prepedidos-livewire-component',compact('todo'),['YaPedido'=>$YaPedidos,'inacts'=>$Inacts, 'ocasion'=>$ocasion]);
+        return view('livewire.admon.productos-livewire-component', compact('productos'), [
+            'ocasion'=>$ocasion,
+        ]);
     }
 }

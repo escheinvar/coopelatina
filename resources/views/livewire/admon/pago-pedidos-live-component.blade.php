@@ -27,18 +27,18 @@
     $mandaAbajo=[];
     ?>
 
-<!-- ---------------------- selector de tipo de caja (banco, tesoreria o caja ) ---------------------- -->
-@if( in_array(auth()->user()->priv, $petitCmte) && (session('EnPagos')==true || session('EnPedido')=='1'))
-    <div class="form-group" style="display:inline-block;" > 
-        <label>Tipo de transacción:</label> 
-        <select  class="form-control" wire:model="destinoLanas">
-            <option value="">Indica el destino del dinero</option>
-            <option value="banco">a banco</option>
-            <option value="teso">a teso</option>
-            <option value="caja">a caja</option>
-        </select>
-    </div>  
-@endif
+    <!-- ---------------------- selector de tipo de caja (banco, tesoreria o caja ) ---------------------- -->
+    @if( in_array(auth()->user()->priv, $petitCmte) && (session('EnPagos')==true || session('EnPedido')=='1'))
+        <div class="form-group" style="display:inline-block;" > 
+            <label>Tipo de transacción:</label> 
+            <select  class="form-control" wire:model="destinoLanas">
+                <option value="">Indica el destino del dinero</option>
+                <option value="banco">a banco</option>
+                <option value="teso">a teso</option>
+                <option value="caja">a caja</option>
+            </select>
+        </div>  
+    @endif
 
 <!-- ---------------------- selector de mes ---------------------- -->
 <div class="form-group"  style="display:inline-block;" > 

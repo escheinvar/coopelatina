@@ -148,7 +148,7 @@ class PagoPedidosLiveComponent extends Component
     public function render() {
         #dd(session());
         $this->EnPagos=session('EnPagos');
-        $mesHoy=Date("m");
+        $mesHoy=Date("n");
         $anioHoy=Date("Y");
         
         $this->MesesExistentes=FoliosModel::where('fol_act','1')->distinct('fol_mes')->get();
